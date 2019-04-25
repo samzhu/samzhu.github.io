@@ -181,6 +181,18 @@ Custom domain 設定時 github 就會幫我們新增一個 CNAME 檔到 master �
 
 Enforce HTTPS 則是 Github 跟 Let's Encrypt 合作的 從申請到完成都是自動化, 所以你也省去了自己管憑證的麻煩
 
+
+## 新增寫作
+
+```
+hexo new [layout] <title>
+
+hexo new 如何透過Hexo與Githubpages建立部落格
+```
+
+就會在 source/_posts 下建立新的 MD
+/github/blog/source/_posts/如何透過Hexo與Githubpages建立部落格.md
+
 ## 參考資料
 
 [使用 Github Pages + Hexo 搭建个人博客](https://gelomen.github.io/Hexo/%E4%BD%BF%E7%94%A8Github-Pages-Hexo-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2.html)
