@@ -36,13 +36,13 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       # run tests!
-#      - run: yarn test
+      - run: yarn run build
 
       - run:
           name: test
           command: |
                 TAG=0.1.$CIRCLE_BUILD_NUM
-                yarn global add hexo-deployer-git --save
+                #yarn global add hexo-deployer-git --save
                 hexo clean
                 hexo generate
                 hexo deploy
