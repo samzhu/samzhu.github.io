@@ -37,6 +37,8 @@ jobs:
 
       # run tests!
 #      - run: yarn run build
+      - run: ls
+      - run: pwd
 
       - run:
           name: test
