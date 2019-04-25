@@ -34,4 +34,11 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       # run tests!
-      - run: yarn test
+#      - run: yarn test
+
+      - run:
+          name: test
+          command: |
+
+                TAG=0.1.$CIRCLE_BUILD_NUM
+                ls
