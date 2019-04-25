@@ -41,4 +41,7 @@ jobs:
           command: |
                 TAG=0.1.$CIRCLE_BUILD_NUM
                 npm install hexo-deployer-git --save
+                hexo clean
+                hexo generate
+                hexo deploy
                 ls
