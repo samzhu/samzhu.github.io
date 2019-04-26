@@ -28,7 +28,7 @@ jobs:
 
       - run: yarn install
 
-#      - run: npm install
+      - run: yarn global add hexo-cli
 
 #      - save_cache:
 #          paths:
