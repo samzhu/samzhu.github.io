@@ -55,9 +55,16 @@ jobs:
           command: |
                 hexo generate
 
-
-
       - run:
           name: hexo deploy
           command: |
                 hexo deploy
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: hexo
