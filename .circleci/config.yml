@@ -37,11 +37,22 @@ jobs:
       - run: pwd
 
       - run:
-          name: test
+          name: set git info
           command: |
                 git config --global user.email "spike19820318@gmail.com"
                 git config --global user.name "sam.chu"
+
+      - run:
+          name: hexo clean
+          command: |
                 hexo clean
+
+      - run:
+          name: hexo generate
+          command: |
                 hexo generate
+
+      - run:
+          name: hexo deploy
+          command: |
                 hexo deploy
-                ls
