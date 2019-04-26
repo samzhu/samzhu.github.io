@@ -9,11 +9,6 @@ jobs:
       # specify the version you desire here
       - image: circleci/node:10.15.3
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
-
     working_directory: ~/repo
 
     steps:
@@ -24,13 +19,11 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
             # fallback to using the latest cache if no exact match is found
-            #- v1-dependencies-
+            - v1-dependencies-
 
       - run: npm install
       - run: npm install hexo-cli --save -g
       - run: npm install hexo-deployer-git --save -g
-
-#      - run: yarn global add hexo-cli
 
       - save_cache:
           paths:
@@ -40,15 +33,13 @@ jobs:
       # run tests!
 #      - run: yarn run build
       - run: ls
+
       - run: pwd
 
       - run:
           name: test
           command: |
                 TAG=0.1.$CIRCLE_BUILD_NUM
-                ls
-#                ./node_modules/.bin/hexo clean
-                #yarn global add hexo-deployer-git --save
                 hexo clean
                 hexo generate
                 hexo deploy
