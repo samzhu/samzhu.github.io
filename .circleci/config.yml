@@ -7,12 +7,11 @@ jobs:
   build:
     filters:
       branches:
-        only:
-          - hexo
+        ignore:
+          - master
 
     docker:
       - image: circleci/node:10.15.3
-
     
     working_directory: ~/repo
 
@@ -62,12 +61,3 @@ jobs:
           name: hexo deploy
           command: |
                 hexo deploy
-
-workflows:
-  version: 2
-  main:
-    jobs:
-      - build:
-          filters:
-            branches:
-              only: hexo
