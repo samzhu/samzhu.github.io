@@ -35,7 +35,7 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - run: ls
+      - run: ls ./source
 
       - run: pwd
 
