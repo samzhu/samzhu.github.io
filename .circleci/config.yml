@@ -39,7 +39,8 @@ jobs:
       - run:
           name: test
           command: |
-                TAG=0.1.$CIRCLE_BUILD_NUM
+                git config --global user.email "spike19820318@gmail.com"
+                git config --global user.name "sam.chu"
                 hexo clean
                 hexo generate
                 hexo deploy
