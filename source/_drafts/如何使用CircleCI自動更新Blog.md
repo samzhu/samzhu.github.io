@@ -11,6 +11,8 @@ tags:
 
 所以利用免費服務來自動幫我 [CircleCI](https://circleci.com), 來更新 GitHub Page 啦.  
 
+<!--more-->
+
 ## 建立 CI 檔案
 CI 的資料夾
 ```
