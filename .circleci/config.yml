@@ -22,8 +22,8 @@ jobs:
             - v1-dependencies-
 
       - run: npm install
-      - run: npm install hexo-cli --save -g
-      - run: npm install hexo-deployer-git --save -g
+      - run: sudo npm install hexo-cli --save -g
+      - run: sudo npm install hexo-deployer-git --save -g
 
       - save_cache:
           paths:
