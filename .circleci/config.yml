@@ -50,6 +50,10 @@ jobs:
           command: |
                 hexo generate
 
+      - add_ssh_keys:
+          fingerprints:
+            - "e8:46:ef:fb:04:11:f5:12:92:6e:50:a1:be:9e:8f:96"
+
       - run:
           name: hexo deploy
           command: |
