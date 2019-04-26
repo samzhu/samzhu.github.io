@@ -5,12 +5,14 @@
 version: 2
 jobs:
   build:
-    branches:
-      only:
-        - hexo
+    filters:
+      branches:
+        only:
+          - hexo
 
     docker:
       - image: circleci/node:10.15.3
+
     
     working_directory: ~/repo
 
