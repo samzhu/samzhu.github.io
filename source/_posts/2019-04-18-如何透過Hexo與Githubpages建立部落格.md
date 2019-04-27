@@ -206,3 +206,5 @@ hexo new 如何透過Hexo與Githubpages建立部落格
 [Hexo + Github Pages：教你設定部落格的專屬網址，含網域購買教學](https://www.larrynote.com/website-service/50343/)
 
 [How to setup google domain for github pages](https://trentyang.com/how-to-setup-google-domain-for-github-pages/)
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/tw/"><img alt="創用 CC 授權條款" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/3.0/tw/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">SAM的程式筆記</span>由<a xmlns:cc="http://creativecommons.org/ns#" href="https://blog.samchu.dev/" property="cc:attributionName" rel="cc:attributionURL">朱尚禮</a>製作，以<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/tw/">創用CC 姓名標示-非商業性-相同方式分享 3.0 台灣 授權條款</a>釋出。
