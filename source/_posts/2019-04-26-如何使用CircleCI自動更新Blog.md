@@ -1,5 +1,5 @@
 ---
-title: 如何使用CircleCI自動更新Blog
+title: 如何使用 CircleCI 自動更新 Blog
 date: 2019-04-26 17:57:32
 categories:
   - 日常
