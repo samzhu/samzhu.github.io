@@ -1,12 +1,12 @@
 ---
 title: 如何使用CircleCI自動更新Blog
 date: 2019-04-26 17:57:32
+categories:
+  - 日常
 tags:
   - Hexo
   - GitHub Pages
   - CircleCI
-categories:
-  - 日常
 ---
 
 科技來自於惰性, 當然更新也需要自動化啦  
