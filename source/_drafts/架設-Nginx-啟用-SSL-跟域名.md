@@ -1,4 +1,264 @@
 ---
 title: 架設 Nginx 啟用 SSL 跟域名
+categories:
+  - DevOps
 tags:
+  - DockerCompose
+  - Nginx
 ---
+架設好 Gitlab 後, 我們先來設定前面的 Nginx 跟 SSL, 方便我們使用跟設定, 因為要是用 IP 來註冊 Runner, 萬一有變動還要去改設定檔也是麻煩。
+
+如何用 DockerCompose 快速架設 Nginx
+<!--more-->
+
+docker-compose.yml
+``` yml
+version: "3.7"
+
+services:
+  proxy:
+    image: "nginx"
+    container_name: "proxy"
+    network_mode: "host"
+    volumes:
+      - "./conf_file/nginx.conf:/etc/nginx/nginx.conf"
+      - "./conf_file/conf.d:/etc/nginx/conf.d"
+      - "./conf_file/certs:/etc/nginx/ssl"
+```
+
+使用官方影像檔, 設定也都放在外面, 這樣一來就很方便我們修改設定
+
+那佈署時我們的檔案結構
+``` bash
+$ tree
+.
+├── conf_file
+│   ├── certs
+│   │   ├── STAR.samchu.com.crt
+│   │   └── STAR.samchu.com.key
+│   ├── conf.d
+│   │   ├── default.conf
+│   │   └── gzip.conf
+│   └── nginx.conf
+└── docker-compose.yml
+
+3 directories, 6 files
+```
+
+接著看主要設定檔
+conf_file/nginx.conf
+```
+user  nginx;
+worker_processes  1;
+
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+    
+    client_max_body_size 0;
+
+    keepalive_timeout  65;
+
+    #gzip  on;
+
+    include /etc/nginx/conf.d/*.conf;
+}
+```
+
+conf_file/conf.d/default.conf
+```
+#user nginx;
+#worker_processes auto;
+error_log /var/log/nginx/error.log;
+#pid /run/nginx.pid;
+
+#include /usr/share/nginx/modules/*.conf;
+
+#worker_rlimit_nofile 51200;
+
+#events {
+#  use epoll;
+#  worker_connections 51200;
+#  multi_accept on;
+#}
+
+#http {
+#  log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+#  '$status $body_bytes_sent "$http_referer" '
+#  '"$http_user_agent" "$http_x_forwarded_for"';
+
+#  access_log /var/log/nginx/access.log main;
+
+#  sendfile on;
+#  tcp_nopush on;
+#  tcp_nodelay on;
+#  keepalive_timeout 65;
+#  types_hash_max_size 2048;
+
+#  include /etc/nginx/mime.types;
+#  default_type application/octet-stream;
+  # Optimization
+#  server_names_hash_bucket_size 128;
+#  client_header_buffer_size 4k;
+#  large_client_header_buffers 4 4k;
+#  client_max_body_size 500m;
+
+#  fastcgi_connect_timeout 300;
+#  fastcgi_send_timeout 300;
+#  fastcgi_read_timeout 300;
+#  fastcgi_buffer_size 16k;
+#  fastcgi_buffers 16 16k;
+#  fastcgi_busy_buffers_size 16k;
+#  fastcgi_temp_file_write_size 16k;
+#  fastcgi_intercept_errors on;
+  # Hide version number
+#  server_tokens off;
+
+  #include /etc/nginx/conf.d/*.conf;
+
+  # gzip
+  #include /data/usr-data/nginx/conf/*.conf;
+  # proxy
+  #include /data/usr-data/nginx/upstream/*.conf;
+  # vhosts
+  #include /data/usr-data/nginx/vhosts/*.conf;
+
+  server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name _;
+    root /usr/share/nginx/html;
+
+    # Load configuration files for the default server block.
+    #include /etc/nginx/default.d/*.conf;
+  }
+  upstream gitlab.server {
+    server 172.31.33.187:80;
+  }
+  server {
+    listen 80;
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name dev-gitlab.samchu.com;
+    index index.html index.htm;
+    ssl_certificate /etc/nginx/ssl/STAR.samchu.com.crt;
+    ssl_certificate_key /etc/nginx/ssl/STAR.samchu.com.key;
+    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers on;
+    #include /etc/nginx/default.d/*.conf;
+    location / {
+      proxy_pass http://gitlab.server;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-Scheme $scheme;
+    }
+    if ($scheme != "https") {
+      return 301 https://$host$request_uri;
+    }
+    error_page 404 /404.html;
+    location = /40x.html {
+    }
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+    }
+  }
+  upstream nexus.server {
+    server 172.31.47.24:80;
+  }
+  server {
+    listen 80;
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name dev-nexus.samchu.com;
+    index index.html index.htm;
+    ssl_certificate /etc/nginx/ssl/STAR.samchu.com.crt;
+    ssl_certificate_key /etc/nginx/ssl/STAR.samchu.com.key;
+    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers on;
+#    include /etc/nginx/default.d/*.conf;
+    location / {
+      proxy_pass http://nexus.server;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-Scheme $scheme;
+    }
+    if ($scheme != "https") {
+      return 301 https://$host$request_uri;
+    }
+    error_page 404 /404.html;
+    location = /40x.html {
+    }
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+    }
+  }
+  upstream docker.server {
+    server 172.31.47.24:15000;
+  }
+  server {
+    listen 80;
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name dev-docker-registry.samchu.com;
+    index index.html index.htm;
+    ssl_certificate /etc/nginx/ssl/STAR.samchu.com.crt;
+    ssl_certificate_key /etc/nginx/ssl/STAR.samchu.com.key;
+    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers on;
+#    include /etc/nginx/default.d/*.conf;
+    location / {
+      proxy_pass http://docker.server;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-Scheme $scheme;
+    }
+    if ($scheme != "https") {
+      return 301 https://$host$request_uri;
+    }
+    error_page 404 /404.html;
+    location = /40x.html {
+    }
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+    }
+  }
+#}
+```
+
+上面設定檔就可以透過 Nginx 來代理我們 gitlab, docker registry &  nexus 還用不到可以先關掉.
+
+接下來
+``` bash
+sudo docker-compose up -d
+```
+
+就完成了架設, 再去 DNS 指向一下就收工啦.
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/tw/"><img alt="創用 CC 授權條款" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/3.0/tw/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">SAM的程式筆記</span>由<a xmlns:cc="http://creativecommons.org/ns#" href="https://blog.samchu.dev/" property="cc:attributionName" rel="cc:attributionURL">朱尚禮</a>製作，以<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/tw/">創用CC 姓名標示-非商業性-相同方式分享 3.0 台灣 授權條款</a>釋出。
