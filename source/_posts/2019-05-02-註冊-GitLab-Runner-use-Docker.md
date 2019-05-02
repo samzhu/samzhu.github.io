@@ -81,7 +81,7 @@ check_interval = 0
 [root@cs-gitlab-runner ~]# sed -i -e '/volumes/d' \
 >   -e '/^    shm_size/a\    volumes = ["/cache", "/var/run/docker.sock:/run/docker.sock"]' \
 >   -e '/^    shm_size/a\    network_mode = "host"' /path/to/config/config.toml
-```  
+```
 
 執行完後的檔案變這樣
 ```
