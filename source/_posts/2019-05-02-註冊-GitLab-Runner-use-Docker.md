@@ -1,11 +1,13 @@
 ---
 title: 註冊 GitLab Runner use Docker
-categories:
-  - DevOps
 tags:
   - GitLab
   - Docker
+categories:
+  - DevOps
+date: 2019-05-02 14:33:00
 ---
+
 程式寫完, 接著就是要打包輸出了  
 
 這個 CI 階段, 我是選擇用 GitLab Runner ( Docker in Docker 方案 )
@@ -56,7 +58,7 @@ check_interval = 0
 
 [[runners]]
   name = "docker-runner"
-  url = "http://gitlab.xxxxx.com/"
+  url = "http://gitlab.samchu.com/"
   token = "ckfxxxxxxm6"
   executor = "docker"
   [runners.docker]
@@ -92,7 +94,7 @@ check_interval = 0
 
 [[runners]]
   name = "docker-runner"
-  url = "http://gitlab.xxxxx.com/"
+  url = "http://gitlab.samchu.com/"
   token = "ckxxxxCm6"
   executor = "docker"
   [runners.docker]
