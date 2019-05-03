@@ -1,12 +1,14 @@
 ---
 title: 設定 GitLab Runner 進行打包作業
-categories:
-  - DevOps
 tags:
   - GitLab
   - Docker
   - CI
+categories:
+  - DevOps
+date: 2019-05-03 10:49:51
 ---
+
 設定好 Runner 後, 我們就來準備 CI 的腳本啦  
 我手邊都是 Java 專案, 就以 Maven 打包來說明吧
 
