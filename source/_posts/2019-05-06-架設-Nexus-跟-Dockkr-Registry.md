@@ -89,6 +89,9 @@ git push
 
 ## 系統設定
 
+### 登入
+admin / admin123
+
 ### Create Blob Stores
 ![Imgur](https://i.imgur.com/M44UJPh.png)
 ![Imgur](https://i.imgur.com/acwIGkG.png)
@@ -96,6 +99,10 @@ git push
 ![Imgur](https://i.imgur.com/xxcYPla.png)
 
 ### Create Repositories
+管理齒輪 -> Repository -> Repositories -> Create repository -> docker (hosted)
+Name= docker-csnt
+HTTP= 15000
+不用 https 是因為我們前面有架設 Nginx
 ![Imgur](https://i.imgur.com/hnvN3qP.png)
 ![Imgur](https://i.imgur.com/ZOMzTyt.png)
 ![Imgur](https://i.imgur.com/QU8y0N7.png)
