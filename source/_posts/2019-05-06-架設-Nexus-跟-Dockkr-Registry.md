@@ -1,11 +1,13 @@
 ---
-title: 架設 Nexus
+title: 架設 Nexus 跟 Dockkr Registry
 tags:
   - DockerCompose
   - Nexus
 categories:
   - DevOps
+date: 2019-05-06 11:51:28
 ---
+
 
 既然程式已經編譯打包好了, 那就需要有個地方交付儲存,  
 以前是交付 Jar, 但現在都是用 Docker 了, 所以我們交付的完成品就是 Docker Image,  
