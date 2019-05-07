@@ -1,7 +1,9 @@
 ---
 title: 架設 APM Pinpoint Server
+date: 2019-05-07 18:03:33
 tags:
 ---
+
 
 Pinpoint 是 Line 背後公司開源的一種 Application Performance Management (APM)  
 [Pinpoint 官網](https://naver.github.io/pinpoint/) 在這裡  
