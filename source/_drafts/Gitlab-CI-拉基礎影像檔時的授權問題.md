@@ -1,4 +1,69 @@
 ---
 title: Gitlab CI 拉基礎影像檔時的授權問題
 tags:
+  - Gitlab
+  - CI
+  - Docker Registry
+categories:
+  - DevOps
 ---
+事情是這樣的, 原本跑得好好的流水線, 因為資安要求東封西封, 所以就沒辦法從 DockerHub 拉影像檔下來的, 只好把基礎影像檔上傳一份到自己的 Docker Registry 但我們自己的是有權限控制的, 所以當 CI 本身要用的影像檔要下載時就會發生....
+
+``` sh
+Running with gitlab-runner 11.7.0 (8bb608ff)
+  on docker-runner ckf36eMz
+Using Docker executor with image docker-registry.samchu.com/node:10-alpine ...
+Pulling docker image docker-registry.samchu.com/node:10-alpine ...
+ERROR: Preparation failed: Error response from daemon: Get https://docker-registry.samchu.com/v2/node/manifests/10-alpine: no basic auth credentials (executor_docker.go:168:0s)
+Will be retried in 3s ...
+Using Docker executor with image docker-registry.samchu.com/node:10-alpine ...
+Pulling docker image docker-registry.samchu.com/node:10-alpine ...
+ERROR: Preparation failed: Error response from daemon: Get https://docker-registry.samchu.com/v2/node/manifests/10-alpine: no basic auth credentials (executor_docker.go:168:0s)
+Will be retried in 3s ...
+Using Docker executor with image docker-registry.samchu.com/node:10-alpine ...
+Pulling docker image docker-registry.samchu.com/node:10-alpine ...
+ERROR: Preparation failed: Error response from daemon: Get https://docker-registry.samchu.com/v2/node/manifests/10-alpine: no basic auth credentials (executor_docker.go:168:0s)
+Will be retried in 3s ...
+ERROR: Job failed (system failure): Error response from daemon: Get https://docker-registry.samchu.com/v2/node/manifests/10-alpine: no basic auth credentials (executor_docker.go:168:0s)
+```
+
+<!--more-->
+
+流水線會先下載 需要的影像檔
+``` yml
+.job_npm_build_template: &job_npm_build
+  image: docker-registry.samchu.com/node:10-alpine
+  cache:
+    paths:
+      - node_modules/
+  before_script:    
+    - source build-vars.sh
+    - npm install
+  script:
+    - npm run clean --scripts-prepend-node-path=auto
+    - npm run build:${SERVER_ENV} --scripts-prepend-node-path=auto
+    - cat dist/index.html
+    - tar cvf dist-${SERVER_ENV}.tar dist
+  artifacts:
+    paths:
+      - dist-${SERVER_ENV}.tar
+```
+
+這邊找一篇[Can't Access Private MySQL Docker Image From Gitlab CI](https://stackoverflow.com/questions/51580858/cant-access-private-mysql-docker-image-from-gitlab-ci)
+
+只要在 GitLab 介面 -> Settings -> CI / CD -> Variables  
+增加變數定義 DOCKER_AUTH_CONFIG
+裡面的值
+``` json
+{
+  "auths": {
+    "docker-registry.samchu.com": {
+      "auth": "xxxxxxxxxxxxxxxxxxxxxxxxxxxx" // base 64 encoded username:password
+    }
+  }
+}
+```
+
+結束 下班 XD
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/tw/"><img alt="創用 CC 授權條款" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/3.0/tw/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">SAM的程式筆記</span>由<a xmlns:cc="http://creativecommons.org/ns#" href="https://blog.samchu.dev/" property="cc:attributionName" rel="cc:attributionURL">朱尚禮</a>製作，以<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/tw/">創用CC 姓名標示-非商業性-相同方式分享 3.0 台灣 授權條款</a>釋出。
