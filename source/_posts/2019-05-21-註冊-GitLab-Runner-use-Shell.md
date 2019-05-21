@@ -8,14 +8,14 @@ date: 2019-05-21 12:18:26
 ---
 
 
-原本是在 Runner 內使用 ssh 直接去做佈署, 但是這樣很沒有效率 失誤率也很高, 所以之後會打算使用 Ansible 來做佈署動作, 不過不管哪一種都是需要使用將GitLab Runner 安裝在宿主主機上, 而不是透過 (GitLab Runner in Docker)[https://blog.samchu.dev/2019/05/02/%E8%A8%BB%E5%86%8A-GitLab-Runner-use-Docker/] 的這種方式, 因為不管要存取 SSH 金鑰還是鑰呼叫 ansible-playbook 都是直接安裝在宿主主機比較方便啊.
+原本是在 Runner 內使用 ssh 直接去做佈署, 但是這樣很沒有效率 失誤率也很高, 所以之後會打算使用 Ansible 來做佈署動作, 不過不管哪一種都是需要使用將GitLab Runner 安裝在宿主主機上, 而不是透過 [GitLab Runner in Docker](https://blog.samchu.dev/2019/05/02/%E8%A8%BB%E5%86%8A-GitLab-Runner-use-Docker/) 的這種方式, 因為不管要存取 SSH 金鑰還是鑰呼叫 ansible-playbook 都是直接安裝在宿主主機比較方便啊.
 
 這邊就簡單介紹如何配置跟註冊, 並使用簡單的 shell 來操作遠端機器
 
 <!--more-->
 
 ## Install GitLab Runner using the official GitLab repositories
-教學網址 (Install GitLab Runner using the official GitLab repositories)[https://docs.gitlab.com/runner/install/linux-repository.html]  
+教學網址 [Install GitLab Runner using the official GitLab repositories](https://docs.gitlab.com/runner/install/linux-repository.html)
 
 我是使用 CentOS 就按照步驟做吧  
 
