@@ -2,6 +2,9 @@
 title: 架設 APM Pinpoint Server
 date: 2019-05-07 18:03:33
 tags:
+  - pinpoint
+categories:
+  - DevOps
 ---
 
 
