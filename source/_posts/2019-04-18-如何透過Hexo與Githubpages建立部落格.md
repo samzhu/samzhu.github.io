@@ -1,11 +1,11 @@
 ---
 title: 如何透過 Hexo 與 Githubpages 建立部落格
-date: 2019-04-18 13:31:45
-categories:
-  - 日常
 tags:
   - Hexo
-  - GitHub Pages
+  - GitHub
+categories:
+  - 日常
+date: 2019-04-18 13:31:45
 ---
 這篇教你如何用 Hexo 跟 GitHub Pages 建立部落格或履歷頁面XD
 
