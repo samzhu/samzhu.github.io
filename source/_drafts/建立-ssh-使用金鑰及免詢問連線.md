@@ -1,4 +1,134 @@
 ---
 title: 建立 ssh 使用金鑰及免詢問連線
 tags:
+  - OS
+categories:
+  - DevOps
 ---
+
+假如我新開一台機器, 除了基本初始化後, 還需要有個執行應用的專門帳號來佈署使用
+
+<!--more-->
+
+## 建立受控主機帳密
+新增帳號密碼並設置可提權
+``` bash
+useradd devops && passwd LNs3y#wt
+usermod -aG wheel devops
+```
+
+``` bash
+sudo visudo
+```
+開啟了 /etc/sudoers
+
+加上
+```
+devops ALL=NOPASSWD: ALL
+```
+
+## 修改 ssh 閒置時間
+
+單位是分鐘
+sudo vi /etc/ssh/sshd_config
+
+ClientAliveInterval 300
+ClientAliveInterval 1800
+
+
+ClientAliveCountMax 0
+
+ClientAliveCountMax 60
+
+systemctl restart sshd.service
+
+
+## 產生金鑰
+如果你拿到的是 pem 格式的可以這樣轉  
+PuTTYgen -> Load existing private key -> Parameters (RSA 2048) -> Converdions -> Export OpenSSH Key
+
+如果你不確定機器上有沒有可以檢查
+``` bash
+$ ls ~/.ssh/id_rsa*
+ls: cannot access /home/sam/.ssh/id_rsa*: No such file or directory
+```
+
+如果沒有可以用的, 那就直接自己產生吧
+``` bash
+$ ssh-keygen -b 4096
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/sam/.ssh/id_rsa):
+Created directory '/home/sam/.ssh'.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/sam/.ssh/id_rsa.
+Your public key has been saved in /home/sam/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:H39JL7jENrRFYoKGhssbyZrpDvJPqASPc1elEvkMrCw sam@localhost.localdomain
+The key's randomart image is:
++---[RSA 4096]----+
+|                 |
+|   . o . .       |
+|    * o + . o .  |
+| . + O +   o o   |
+|E o B = S . . o  |
+|.+ = =   . = = o |
+|=.B +     . O + .|
+|oB o       o + . |
+|..+..       .    |
++----[SHA256]-----+
+```
+
+這樣你就有公私鑰了
+``` bash
+$ ls ~/.ssh/id_rsa*
+/home/sam/.ssh/id_rsa  /home/sam/.ssh/id_rsa.pub
+```
+
+## 設定受控主機的公鑰
+
+複製公鑰過去
+``` bash
+scp ~/.ssh/id_rsa.pub devops@${TARGET_IP}:~/.ssh/authorized_keys
+```
+
+在受控主機上變更一下存取權限
+``` bash
+sudo chmod 700 -R ~/.ssh && chmod 600 ~/.ssh/authorized_keys
+```
+
+## 已經有固定的金鑰
+
+開完新機器 建完帳密 你直接做這些事就結束了  
+linode 主機上執行(root)
+``` bash
+mkdir -p /home/devops/.ssh
+sudo chown devops:devops /home/devops/.ssh -R
+sudo chmod -R 700 /home/devops/.ssh/
+
+cat << 'EOF' > /home/devops/.ssh/authorized_keys
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDNx0v6+eftUgswdJaNyafRpK4mO2+D93FYOT10k+7KHSAacgkd4n/L7M0qlvb066RahCsuiowmEtp9kjLxVlqF9uQDlRMVN+Yorduui+8A3mXvqNPfMYvCYVinP6adl/+9SrOadSP20bBXQHXBpgz0q1SHBTsI4ETfplBKwfAx2hCy08IcZwcafITVOSRa5/SN+w== sam@zhushanglide-MacBook-Air.local
+EOF
+
+chmod 700 -R  /home/devops/.ssh && chmod 600 /home/devops/.ssh/authorized_keys
+```
+
+## Disallow root logins over SSH
+設定好 devops 帳號免密碼登入後 root 就可以關避遠端登入了
+``` bash
+sudo vi /etc/ssh/sshd_config
+# Authentication:
+...
+PermitRootLogin no
+```
+
+Disable SSH password authentication
+``` bash
+sudo vi /etc/ssh/sshd_config
+# Change to no to disable tunnelled clear text passwords
+PasswordAuthentication no
+```
+
+
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="創用 CC 授權條款" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">SAM的程式筆記 </span>由<a xmlns:cc="http://creativecommons.org/ns#" href="https://blog.samchu.dev/" property="cc:attributionName" rel="cc:attributionURL">朱尚禮</a>製作，以<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">創用CC 姓名標示-非商業性-相同方式分享 4.0 國際 授權條款</a>釋出。
