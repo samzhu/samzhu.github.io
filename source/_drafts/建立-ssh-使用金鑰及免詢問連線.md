@@ -29,19 +29,20 @@ devops ALL=NOPASSWD: ALL
 
 ## 修改 ssh 閒置時間
 
-單位是分鐘
+如果安裝到一半被踢掉, 可能是被當作閒置
+``` bash
 sudo vi /etc/ssh/sshd_config
-
+```
+把
 ClientAliveInterval 300
+
+改成
 ClientAliveInterval 1800
 
-
-ClientAliveCountMax 0
-
-ClientAliveCountMax 60
-
+重啟 bash
+```
 systemctl restart sshd.service
-
+```
 
 ## 產生金鑰
 如果你拿到的是 pem 格式的可以這樣轉  
