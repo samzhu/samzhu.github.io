@@ -1,5 +1,5 @@
 ---
-title: 架設 Nexus 跟 Dockkr Registry
+title: 架設 Nexus 跟 Docker Registry
 tags:
   - DockerCompose
   - Nexus
