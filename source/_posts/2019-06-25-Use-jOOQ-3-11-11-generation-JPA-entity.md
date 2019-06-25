@@ -4,7 +4,9 @@ tags:
   - jooq
 categories:
   - Java
+date: 2019-06-25 14:58:56
 ---
+
 
 自從 Oracle JDK 喊說要收費後, 就陸續將開發機換成 OpenJDK,  
 但是以 Windows 來說 Amazon Corretto 提供的最方便安裝了,  
