@@ -33,7 +33,7 @@ jobs:
       - run: npm install
       - run: sudo npm install hexo-cli --save -g
       - run: sudo npm install hexo-deployer-git --save -g
-      - run: git clone https://github.com/theme-next/hexo-theme-next themes/next
+#      - run: git clone https://github.com/theme-next/hexo-theme-next themes/next
 
       - save_cache:
           paths:
