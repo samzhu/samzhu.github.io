@@ -12,18 +12,18 @@ tags:
 
 ## 新增草稿
 ``` bash
-hexo new draft 如何使用CircleCI自動更新Blog
-INFO  Created: /github/blog/source/_drafts/如何使用CircleCI自動更新Blog.md
+hexo new draft "Install Ansible on Mac"
+INFO  Created: /github/blog/source/_drafts/Install-Ansible-on-Mac.md
 ```
 
 ## 發佈草稿
 ``` bash
-hexo publish 如何使用CircleCI自動更新Blog
-INFO  Published: /github/blog/source/_posts/2019-04-26-如何使用CircleCI自動更新Blog.md
+hexo publish "Install-Ansible-on-Mac"
+INFO  Published: /github/blog/source/_posts/2019-07-02-Install-Ansible-on-Mac.md
 ```
 
 ## 新增文章(直接要發布的)
-```
+``` bash
 hexo new [layout] <title>
 ```
 
