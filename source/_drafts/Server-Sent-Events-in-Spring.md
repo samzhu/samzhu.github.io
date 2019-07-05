@@ -189,7 +189,7 @@ public class SseController {
 }
 ```
 
-其實功能是一樣的, 差別是有沒有自訂 eventType  
+其實功能是一樣的, 差別是有沒有自訂 event 名稱  
 
 如果我們分別用瀏覽器直接打開 API 的網址會看到他一直從後端輸出資料  
 
