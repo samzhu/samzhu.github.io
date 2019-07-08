@@ -6,7 +6,9 @@ tags:
   - SpringBoot
 categories:
   - Spring
+date: 2019-07-08 09:37:24
 ---
+
 
 因為有監控服務是否斷掉的需求, 要做一個 Dashboard 來即時呈現問題點,  
 但用輪詢怕會自己把自己搞死, 所以就看了一下 Server-sent events,  
