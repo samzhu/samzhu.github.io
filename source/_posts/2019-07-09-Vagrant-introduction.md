@@ -5,7 +5,9 @@ tags:
   - VirtualBox
 categories:
   - DevOps
+date: 2019-07-09 09:28:53
 ---
+
 
 要做一些機機器的管理部署, 會很常需要砍掉再重建, 如果你每次都要從安裝開始, 真的是非常花費時間.  
 你要說用 快照機制 也不是不行, 但大家 Lab 的基礎環境就又會不太一樣, 你就會常常遇到 "it work on my machine" !!  
@@ -141,7 +143,8 @@ The error output from the command was:
 mount: unknown filesystem type 'vboxsf'
 ```
 
-這時候只要加裝 plugin 就可以解決了
+這時候只要加裝 plugin 就可以解決了    
+plugin 安裝部分 mac 跟 win 都是一樣.
 ``` bash
 $ vagrant plugin install vagrant-vbguest
 Installing the 'vagrant-vbguest' plugin. This can take a few minutes...
