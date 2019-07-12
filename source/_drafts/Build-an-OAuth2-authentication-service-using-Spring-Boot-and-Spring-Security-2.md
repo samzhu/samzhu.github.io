@@ -53,7 +53,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-public class ServerSecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class MyWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
