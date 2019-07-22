@@ -1,5 +1,5 @@
 ---
-title: The Vagrantfile training to use Ansible
+title: The Vagrantfile to use Ansible training
 tags:
   - ansible
   - vagrant
