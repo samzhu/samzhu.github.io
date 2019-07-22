@@ -50,6 +50,9 @@ end
 ```
 
 After run vagrant up
+
+![https://i.imgur.com/nDa51ID.png](https://i.imgur.com/nDa51ID.png)
+
 ``` bash
 $ vagrant up
 Bringing machine 'myvm' up with 'virtualbox' provider...
