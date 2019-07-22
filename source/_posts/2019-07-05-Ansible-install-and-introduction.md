@@ -1,5 +1,5 @@
 ---
-title: Ansible 安裝及入門
+title: Ansible install and introduction
 tags:
   - Ansible
 categories:
