@@ -17,8 +17,9 @@ Vagrant 是快速建立 VM, Ansible 是快速初始化及管理 VM
 
 ## 回顧
 沒有練習過的回去看這兩篇  
+[Ansible 安裝及入門](https://blog.samchu.dev/2019/07/05/Ansible-install-and-introduction/)  
 [Vagrant introduction](https://blog.samchu.dev/2019/07/09/Vagrant-introduction/)  
-[Ansible 安裝及入門](https://blog.samchu.dev/2019/07/05/Ansible-%E5%AE%89%E8%A3%9D%E5%8F%8A%E5%85%A5%E9%96%80/)  
+
 
 ## 建立適合的 Vagrantfile
 

@@ -1,18 +1,27 @@
 ---
 title: The Vagrantfile to use Ansible training
 tags:
-  - ansible
-  - vagrant
+  - Ansible
+  - Vagrant
 categories:
   - DevOps
 date: 2019-07-22 18:38:54
 ---
 
+好的...我們 Vagrant 練習過, Ansible 也練習過  
+Vagrant 是快速建立 VM, Ansible 是快速初始化及管理 VM  
+兩個怎麼都在一起練習呢?  
 
-The Vagrantfile training to use Ansible
+我們來試驗一下
 
 <!--more-->
 
+## 回顧
+沒有練習過的回去看這兩篇  
+[Ansible 安裝及入門](https://blog.samchu.dev/2019/07/05/Ansible-install-and-introduction/)  
+[Vagrant introduction](https://blog.samchu.dev/2019/07/09/Vagrant-introduction/)  
+
+## 建立適合的 Vagrantfile
 Vagrantfile
 ``` Vagrantfile
 # -*- mode: ruby -*-
