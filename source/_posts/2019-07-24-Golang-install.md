@@ -4,7 +4,9 @@ tags:
   - Golang
 categories:
   - Golang
+date: 2019-07-24 17:29:58
 ---
+
 
 開始要來練習 Golang 了, 所以照舊順便記錄過程
 
