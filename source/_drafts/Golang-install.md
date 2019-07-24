@@ -132,8 +132,12 @@ GORACE=""
 ## 在 vscode 使用 golang
 
 在 MarketPlace 搜尋 go 並安裝擴充套件
+![https://i.imgur.com/QBbJ3GX.png](https://i.imgur.com/QBbJ3GX.png)
 
-安裝完後配置這些屬性, 可以從 go env 查到
+安裝完後配置這些屬性  
+![https://i.imgur.com/6bT6pfP.png](https://i.imgur.com/6bT6pfP.png)
+![https://i.imgur.com/NKwywHh.png](https://i.imgur.com/NKwywHh.png)
+可以從 go env 查到
 ``` json
 {
     "go.goroot": "/home/samchu/.gvm/gos/go1.12.7",
