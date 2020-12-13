@@ -13,7 +13,7 @@ categories:
 
 ## install sdkman
 
-官網在這邊 (sdkman)[https://sdkman.io/install]  
+官網在這邊 [sdkman](https://sdkman.io/install)  
 
 安裝很簡單, 一行指令搞定
 ``` bash
