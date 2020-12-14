@@ -10,6 +10,8 @@ categories:
 
 最近很紅的 Quarkus 也是使用 GraalVM, 並盡量避免使用 反射(Reflection) 達成 快數啟動 低記憶體用量等優點, 等了許久終於等到 SpringBoot 2.4 終於支援了 GraalVM, 所以趕快試用一下
 
+<!--more-->
+
 ## create project
 首先還是透過 https://start.spring.io/ 下載專案模板, 目前是 2.4 並且選擇 Maven 包版工具(Gradle Plugin 還在測試版就不折騰啦)
 ```
