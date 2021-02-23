@@ -122,9 +122,9 @@ exports.receiveParsingEmail = (req, res) => {
 
 以上範例 就可以完成 接收 webhook 再將內容轉發到我們指定的信箱
 
-
-
-
-
-
-
+## References
+[Getting started with the SendGrid API](https://sendgrid.com/docs/for-developers/sending-email/api-getting-started/)  
+[Setting Up The Inbound Parse Webhook](https://sendgrid.com/docs/for-developers/parsing-email/setting-up-the-inbound-parse-webhook/)  
+[Cloud Functions HTTP parse multipart/form-data](https://cloud.google.com/functions/docs/samples/functions-http-form-data#functions_http_form_data-nodejs)  
+  
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="創用 CC 授權條款" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">SAM的程式筆記 </span>由<a xmlns:cc="http://creativecommons.org/ns#" href="https://blog.samzhu.dev/" property="cc:attributionName" rel="cc:attributionURL">朱尚禮</a>製作，以<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">創用CC 姓名標示-非商業性-相同方式分享 4.0 國際 授權條款</a>釋出。
