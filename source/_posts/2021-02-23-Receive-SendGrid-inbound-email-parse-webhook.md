@@ -101,7 +101,7 @@ exports.receiveParsingEmail = (req, res) => {
                     email: toaddr,
                     name: toname
                 }],
-                subject: "CaaS mail notify"
+                subject: "mail notify"
             }],
             content: [{
                 type: "text/plain",
