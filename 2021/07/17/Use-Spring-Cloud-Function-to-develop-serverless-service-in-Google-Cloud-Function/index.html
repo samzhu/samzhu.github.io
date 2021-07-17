@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;blog.samzhu.dev&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Muse&quot;,&quot;version&quot;:&quot;8.5.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;right&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;Searching...&quot;,&quot;empty&quot;:&quot;We didn&#39;t find any results for the search: ${query}&quot;,&quot;hits_time&quot;:&quot;${hits} results found in ${time} ms&quot;,&quot;hits&quot;:&quot;${hits} results found&quot;}}</script><script src="/js/config.js"></script>
+<meta name="description" content="Why use Spring Cloud FunctionWhy choose Spring cloud function to develop serverless services?   Spring framework still provides abstraction capabilities to decouple our serverless services from the p">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Use Spring Cloud Function to develop serverless service in Google Cloud Function">
+<meta property="og:url" content="https://blog.samzhu.dev/2021/07/17/Use-Spring-Cloud-Function-to-develop-serverless-service-in-Google-Cloud-Function/index.html">
+<meta property="og:site_name" content="sam&#39;s program notes">
+<meta property="og:description" content="Why use Spring Cloud FunctionWhy choose Spring cloud function to develop serverless services?   Spring framework still provides abstraction capabilities to decouple our serverless services from the p">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.imgur.com/d12X62D.jpg">
+<meta property="og:image" content="https://i.imgur.com/LEqXOpe.jpg">
+<meta property="og:image" content="https://i.imgur.com/LdJLR38.png">
+<meta property="og:image" content="https://i.imgur.com/R4yZZsh.png">
+<meta property="article:published_time" content="2021-07-16T16:09:41.000Z">
+<meta property="article:modified_time" content="2021-07-17T04:27:19.324Z">
+<meta property="article:author" content="Sam Zhu">
+<meta property="article:tag" content="SpringCloud">
+<meta property="article:tag" content="GCP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/d12X62D.jpg">
+
+
+<link rel="canonical" href="https://blog.samzhu.dev/2021/07/17/Use-Spring-Cloud-Function-to-develop-serverless-service-in-Google-Cloud-Function/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;en&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;blog.samzhu.dev&#x2F;2021&#x2F;07&#x2F;17&#x2F;Use-Spring-Cloud-Function-to-develop-serverless-service-in-Google-Cloud-Function&#x2F;&quot;,&quot;path&quot;:&quot;2021&#x2F;07&#x2F;17&#x2F;Use-Spring-Cloud-Function-to-develop-serverless-service-in-Google-Cloud-Function&#x2F;&quot;,&quot;title&quot;:&quot;Use Spring Cloud Function to develop serverless service in Google Cloud Function&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>Use Spring Cloud Function to develop serverless service in Google Cloud Function | sam's program notes</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138599642-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{&quot;tracking_id&quot;:&quot;UA-138599642-1&quot;,&quot;only_pageview&quot;:false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">sam's program notes</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-use-Spring-Cloud-Function"><span class="nav-number">1.</span> <span class="nav-text">Why use Spring Cloud Function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Cloud-Function"><span class="nav-number">2.</span> <span class="nav-text">Spring Cloud Function</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Start-create-project"><span class="nav-number">2.1.</span> <span class="nav-text">Start create project</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Update-dependency"><span class="nav-number">2.2.</span> <span class="nav-text">Update dependency</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Update-test-dependency"><span class="nav-number">2.3.</span> <span class="nav-text">Update test dependency</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Update-build-plugin"><span class="nav-number">2.4.</span> <span class="nav-text">Update build plugin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-MANIFEST-MF"><span class="nav-number">2.5.</span> <span class="nav-text">Create MANIFEST.MF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Register-Function-Bean"><span class="nav-number">2.6.</span> <span class="nav-text">Register Function Bean</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Test-in-your-local-environments"><span class="nav-number">2.7.</span> <span class="nav-text">Test in your local environments</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Package-to-jar"><span class="nav-number">2.8.</span> <span class="nav-text">Package to jar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Customized-JsonMessageConverter"><span class="nav-number">2.9.</span> <span class="nav-text">Customized JsonMessageConverter</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deploy-to-Google-Cloud-Function"><span class="nav-number">3.</span> <span class="nav-text">Deploy to Google Cloud Function</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#In-cloud-shell"><span class="nav-number">3.1.</span> <span class="nav-text">In cloud shell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#In-local-environments"><span class="nav-number">3.2.</span> <span class="nav-text">In local environments</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Custom-roles"><span class="nav-number">3.3.</span> <span class="nav-text">Custom roles</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#This-Project-Architecture"><span class="nav-number">4.</span> <span class="nav-text">This Project Architecture</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SonarQube"><span class="nav-number">5.</span> <span class="nav-text">SonarQube</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GitLab-CI"><span class="nav-number">6.</span> <span class="nav-text">GitLab CI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Comment-to-commit-on-GitLab"><span class="nav-number">7.</span> <span class="nav-text">Comment to commit on GitLab</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">8.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sam Zhu"
+      src="https://i.imgur.com/eLloI4N.png">
+  <p class="site-author-name" itemprop="name">Sam Zhu</p>
+  <div class="site-description" itemprop="description">SAM的程式筆記</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.samzhu.dev/2021/07/17/Use-Spring-Cloud-Function-to-develop-serverless-service-in-Google-Cloud-Function/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.imgur.com/eLloI4N.png">
+      <meta itemprop="name" content="Sam Zhu">
+      <meta itemprop="description" content="SAM的程式筆記">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sam's program notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Use Spring Cloud Function to develop serverless service in Google Cloud Function
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2021-07-17 00:09:41 / Modified: 12:27:19" itemprop="dateCreated datePublished" datetime="2021-07-17T00:09:41+08:00">2021-07-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><img src="https://i.imgur.com/d12X62D.jpg" alt="Cover"></p>
+<h2 id="Why-use-Spring-Cloud-Function"><a href="#Why-use-Spring-Cloud-Function" class="headerlink" title="Why use Spring Cloud Function"></a>Why use Spring Cloud Function</h2><p>Why choose Spring cloud function to develop serverless services?  </p>
+<p>Spring framework still provides abstraction capabilities to decouple our serverless services from the platform. If the developed services need to be moved to different cloud providers, you almost only need to choose a different adapter without changing the writing and settings. The biggest benefits of decoupling from the different cloud platforms.  </p>
+<p>Currently Spring cloud function provides AWS Adapter, Azure Adapter and GCP Adapter.  </p>
+<p><a target="_blank" rel="noopener" href="https://landscape.cncf.io/serverless?selected=spring-cloud-function&zoom=150">Spring Cloud Function on CNCF landscape</a>  </p>
+<span id="more"></span>
+<h2 id="Spring-Cloud-Function"><a href="#Spring-Cloud-Function" class="headerlink" title="Spring Cloud Function"></a>Spring Cloud Function</h2><h3 id="Start-create-project"><a href="#Start-create-project" class="headerlink" title="Start create project"></a>Start create project</h3><p>Download the project template from <a target="_blank" rel="noopener" href="https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.5.2.RELEASE&packaging=jar&jvmVersion=11&groupId=com.github.cloud-technology&artifactId=slack-off-sonar&name=slack-off-sonar&description=Easily%20view%20sonar%20report%20on%20gitlab&packageName=com.github.ct&dependencies=lombok,cloud-feign">https://start.spring.io/</a></p>
+<h3 id="Update-dependency"><a href="#Update-dependency" class="headerlink" title="Update dependency"></a>Update dependency</h3><ol>
+<li>Add <a target="_blank" rel="noopener" href="https://search.maven.org/artifact/org.springframework.cloud/spring-cloud-function-adapter-gcp">Spring Cloud Function Adapter GCP</a></li>
+<li>Add <a target="_blank" rel="noopener" href="https://search.maven.org/artifact/org.springframework/spring-web">Spring Web</a></li>
+</ol>
+<h3 id="Update-test-dependency"><a href="#Update-test-dependency" class="headerlink" title="Update test dependency"></a>Update test dependency</h3><ol>
+<li>Add <a target="_blank" rel="noopener" href="https://search.maven.org/artifact/com.google.cloud.functions.invoker/java-function-invoker">GCF Java Invoker</a></li>
+</ol>
+<h3 id="Update-build-plugin"><a href="#Update-build-plugin" class="headerlink" title="Update build plugin"></a>Update build plugin</h3><ol>
+<li>Update spring-boot-maven-plugin configuration add outputDirectory=target/deploy</li>
+<li>Update spring-boot-maven-plugin add dependency <a target="_blank" rel="noopener" href="https://search.maven.org/artifact/org.springframework.cloud/spring-cloud-function-adapter-gcp">Spring Cloud Function Adapter GCP</a></li>
+<li>Add plugin <a target="_blank" rel="noopener" href="https://search.maven.org/artifact/com.google.cloud.functions/function-maven-plugin">Functions Framework Plugin</a></li>
+</ol>
+<h3 id="Create-MANIFEST-MF"><a href="#Create-MANIFEST-MF" class="headerlink" title="Create MANIFEST.MF"></a>Create MANIFEST.MF</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p src/main/resources/META-INF</span><br></pre></td></tr></table></figure>
+
+<p>Main-Class is your springboot main program</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt; <span class="string">&#x27;EOF&#x27;</span> &gt; src/main/resources/META-INF/MANIFEST.MF</span><br><span class="line">Main-Class: com.github.ct.SlackOffSonarApplication</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="Register-Function-Bean"><a href="#Register-Function-Bean" class="headerlink" title="Register Function Bean"></a>Register Function Bean</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Function&lt;String, String&gt; <span class="title">uppercase</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> value -&gt; value.toUpperCase();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Test-in-your-local-environments"><a href="#Test-in-your-local-environments" class="headerlink" title="Test in your local environments"></a>Test in your local environments</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./mvnw <span class="keyword">function</span>:run</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -H <span class="string">&quot;Content-Type: text/plain&quot;</span> localhost:8080/uppercase -d Hello</span><br></pre></td></tr></table></figure>
+<p>(Example output)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HELLO</span><br></pre></td></tr></table></figure>
+
+<h3 id="Package-to-jar"><a href="#Package-to-jar" class="headerlink" title="Package to jar"></a>Package to jar</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./mvnw clean package</span><br></pre></td></tr></table></figure>
+
+<p>Get the Jar file to be deployed in target/deploy/slack-off-sonar-0.0.1.jar </p>
+<h3 id="Customized-JsonMessageConverter"><a href="#Customized-JsonMessageConverter" class="headerlink" title="Customized JsonMessageConverter"></a>Customized JsonMessageConverter</h3><p>Because the default is to use Gson and it is not very convenient, we can customize it or change it to our customary JackSon.  </p>
+<p><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-cloud-function/docs/3.1.3/reference/html/spring-cloud-function.html#_note_on_json_options">Note on JSON options</a><br>In this page that you can use spring.cloud.function.preferred-json-mapper=jackson to adjust, but I tested it and it didn’t change, so I tried to use Java Bean to replicate the configuration.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * reference</span></span><br><span class="line"><span class="comment"> * https://github.com/spring-cloud/spring-cloud-function/blob/main/spring-cloud-function-context/src/main/java/org/springframework/cloud/function/context/config/ContextFunctionCatalogAutoConfiguration.java</span></span><br><span class="line"><span class="comment"> * https://github.com/spring-cloud/spring-cloud-function/blob/main/spring-cloud-function-context/src/main/java/org/springframework/cloud/function/context/config/JsonMessageConverter.java</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyJsonMessageConverter</span> <span class="keyword">extends</span> <span class="title">AbstractMessageConverter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> JsonMapper jsonMapper;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyJsonMessageConverter</span><span class="params">(JsonMapper jsonMapper)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(jsonMapper, <span class="keyword">new</span> MimeType(<span class="string">&quot;application&quot;</span>, <span class="string">&quot;json&quot;</span>),</span><br><span class="line">                <span class="keyword">new</span> MimeType(CloudEventMessageUtils.APPLICATION_CLOUDEVENTS.getType(),</span><br><span class="line">                        CloudEventMessageUtils.APPLICATION_CLOUDEVENTS.getSubtype() + <span class="string">&quot;+json&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyJsonMessageConverter</span><span class="params">(JsonMapper jsonMapper, MimeType... supportedMimeTypes)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(supportedMimeTypes);</span><br><span class="line">		<span class="keyword">this</span>.jsonMapper = jsonMapper;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">supports</span><span class="params">(Class&lt;?&gt; clazz)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// should not be called, since we override canConvertFrom/canConvertTo instead</span></span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> UnsupportedOperationException();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">canConvertTo</span><span class="params">(Object payload, <span class="meta">@Nullable</span> MessageHeaders headers)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (!supportsMimeType(headers)) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">canConvertFrom</span><span class="params">(Message&lt;?&gt; message, <span class="meta">@Nullable</span> Class&lt;?&gt; targetClass)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (targetClass == <span class="keyword">null</span> || !supportsMimeType(message.getHeaders())) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> Object <span class="title">convertFromInternal</span><span class="params">(Message&lt;?&gt; message, Class&lt;?&gt; targetClass, <span class="meta">@Nullable</span> Object conversionHint)</span> </span>&#123;</span><br><span class="line">		log.info(<span class="string">&quot;message=&#123;&#125;, targetClass=&#123;&#125;, conversionHint=&#123;&#125;&quot;</span>, message, targetClass, conversionHint);</span><br><span class="line">        <span class="keyword">if</span> (targetClass.isInstance(message.getPayload()) &amp;&amp; !(message.getPayload() <span class="keyword">instanceof</span> Collection&lt;?&gt;)) &#123;</span><br><span class="line">			<span class="keyword">return</span> message.getPayload();</span><br><span class="line">		&#125;</span><br><span class="line">		Type convertToType = conversionHint == <span class="keyword">null</span> ? targetClass : (Type) conversionHint;</span><br><span class="line">		<span class="keyword">if</span> (targetClass == <span class="keyword">byte</span>[].class &amp;&amp; message.getPayload() <span class="keyword">instanceof</span> String) &#123;</span><br><span class="line">			<span class="keyword">return</span> ((String) message.getPayload()).getBytes(StandardCharsets.UTF_8);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">this</span>.jsonMapper.fromJson(message.getPayload(), convertToType);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">				<span class="keyword">if</span> (message.getPayload() <span class="keyword">instanceof</span> <span class="keyword">byte</span>[] &amp;&amp; targetClass.isAssignableFrom(String.class)) &#123;</span><br><span class="line">					<span class="keyword">return</span> <span class="keyword">new</span> String((<span class="keyword">byte</span>[]) message.getPayload(), StandardCharsets.UTF_8);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> Object <span class="title">convertToInternal</span><span class="params">(Object payload, <span class="meta">@Nullable</span> MessageHeaders headers,</span></span></span><br><span class="line"><span class="params"><span class="function">			<span class="meta">@Nullable</span> Object conversionHint)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> jsonMapper.toJson(payload);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Than Register MyJsonMessageConverter Bean</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> MyJsonMessageConverter <span class="title">customMessageConverter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> MyJsonMessageConverter(<span class="keyword">new</span> JacksonMapper(<span class="keyword">new</span> ObjectMapper()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Deploy-to-Google-Cloud-Function"><a href="#Deploy-to-Google-Cloud-Function" class="headerlink" title="Deploy to Google Cloud Function"></a>Deploy to Google Cloud Function</h2><h3 id="In-cloud-shell"><a href="#In-cloud-shell" class="headerlink" title="In cloud shell"></a>In cloud shell</h3><p>Enable</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">gcloud services list --available</span><br><span class="line"></span><br><span class="line">gcloud services <span class="built_in">enable</span> cloudfunctions.googleapis.com</span><br><span class="line">gcloud services <span class="built_in">enable</span> cloudbuild.googleapis.com</span><br><span class="line">gcloud services <span class="built_in">enable</span> cloudresourcemanager.googleapis.com</span><br></pre></td></tr></table></figure>
+<p>(Example output)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Operation <span class="string">&quot;operations/acf.p2-288759886290-b5aed878-b12d-4de3-a0f1-351771b95812&quot;</span> finished successfully.</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://cloud.google.com/sdk/gcloud/reference/iam/service-accounts/create">Create Service Account</a><br>SYNOPSIS</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gcloud iam service-accounts create SERVICE_ACCOUNT_ID \</span><br><span class="line">    --description=<span class="string">&quot;DESCRIPTION&quot;</span> \</span><br><span class="line">    --display-name=<span class="string">&quot;DISPLAY_NAME&quot;</span></span><br></pre></td></tr></table></figure>
+<p>EXAMPLES</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> SERVICE_ACCOUNT_ID=sam-cloud-deploy</span><br><span class="line"></span><br><span class="line">gcloud iam service-accounts create <span class="variable">$&#123;SERVICE_ACCOUNT_ID&#125;</span> \</span><br><span class="line">    --description=<span class="string">&quot;customize-cloud-function-deploy-sa on github&quot;</span> \</span><br><span class="line">    --display-name=<span class="string">&quot;customize-cloud-function-deploy-sa&quot;</span></span><br></pre></td></tr></table></figure>
+<p>(Example output)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Created service account [sam-cloud-deploy].</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://cloud.google.com/sdk/gcloud/reference/projects/add-iam-policy-binding">Add policy binding to service account</a><br>SYNOPSIS</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gcloud projects add-iam-policy-binding PROJECT_ID \</span><br><span class="line">    --member=<span class="string">&quot;serviceAccount:SERVICE_ACCOUNT_ID@PROJECT_ID.iam.gserviceaccount.com&quot;</span> \</span><br><span class="line">    --role=<span class="string">&quot;ROLE_NAME&quot;</span></span><br></pre></td></tr></table></figure>
+<p>EXAMPLES</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PROJECT_ID=cloudfunction-305305</span><br><span class="line"><span class="built_in">export</span> SERVICE_ACCOUNT_ID=sam-cloud-deploy</span><br><span class="line"></span><br><span class="line">gcloud projects add-iam-policy-binding <span class="variable">$&#123;PROJECT_ID&#125;</span> \</span><br><span class="line">    --member=<span class="string">&quot;serviceAccount:<span class="variable">$&#123;SERVICE_ACCOUNT_ID&#125;</span>@<span class="variable">$&#123;PROJECT_ID&#125;</span>.iam.gserviceaccount.com&quot;</span> \</span><br><span class="line">    --role=<span class="string">&quot;roles/cloudfunctions.admin&quot;</span></span><br><span class="line"></span><br><span class="line">gcloud projects add-iam-policy-binding <span class="variable">$&#123;PROJECT_ID&#125;</span> \</span><br><span class="line">    --member=<span class="string">&quot;serviceAccount:<span class="variable">$&#123;SERVICE_ACCOUNT_ID&#125;</span>@<span class="variable">$&#123;PROJECT_ID&#125;</span>.iam.gserviceaccount.com&quot;</span> \</span><br><span class="line">    --role=<span class="string">&quot;roles/iam.serviceAccountUser&quot;</span></span><br></pre></td></tr></table></figure>
+<p>(Example output)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Updated IAM policy <span class="keyword">for</span> project [cloudfunction-305305].</span><br><span class="line">bindings:</span><br><span class="line">- members:</span><br><span class="line">  - serviceAccount:288759886290@cloudbuild.gserviceaccount.com</span><br><span class="line">  role: roles/cloudbuild.builds.builder</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">etag: BwXHGHgC9CI=</span><br><span class="line">version: 1</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://cloud.google.com/iam/docs/creating-managing-service-account-keys">Creating service account keys</a><br>SYNOPSIS</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcloud iam service-accounts keys create key-file \</span><br><span class="line">    --iam-account=sa-name@project-id.iam.gserviceaccount.com</span><br></pre></td></tr></table></figure>
+<p>EXAMPLES</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PROJECT_ID=cloudfunction-305305</span><br><span class="line"><span class="built_in">export</span> SERVICE_ACCOUNT_ID=sam-cloud-deploy</span><br><span class="line"><span class="built_in">export</span> KEY_FILE=./deploy.json</span><br><span class="line"></span><br><span class="line">gcloud iam service-accounts keys create <span class="variable">$&#123;KEY_FILE&#125;</span> \</span><br><span class="line">    --iam-account=<span class="variable">$&#123;SERVICE_ACCOUNT_ID&#125;</span>@<span class="variable">$&#123;PROJECT_ID&#125;</span>.iam.gserviceaccount.com</span><br></pre></td></tr></table></figure>
+<p>(Example output)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">created key [3f5ba69de4e7ed604d3453e12bebf3d1d7787df1] of <span class="built_in">type</span> [json] as [./deploy.json] <span class="keyword">for</span> [sam-cloud-deploy@cloudfunction-305305.iam.gserviceaccount.com]</span><br></pre></td></tr></table></figure>
+<p>Then you can download deploy.json to use on your local machine.</p>
+<h3 id="In-local-environments"><a href="#In-local-environments" class="headerlink" title="In local environments"></a>In local environments</h3><p>Update and clear auth</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcloud components update</span><br><span class="line">gcloud auth revoke --all</span><br></pre></td></tr></table></figure>
+
+<p>Service account authorization</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PROJECT_ID=cloudfunction-305305</span><br><span class="line"><span class="built_in">export</span> SERVICE_ACCOUNT_ID=sam-cloud-deploy</span><br><span class="line"><span class="built_in">export</span> KEY_FILE=./deploy.json</span><br><span class="line"></span><br><span class="line">gcloud auth activate-service-account <span class="variable">$&#123;SERVICE_ACCOUNT_ID&#125;</span>@<span class="variable">$&#123;PROJECT_ID&#125;</span>.iam.gserviceaccount.com --key-file=<span class="variable">$&#123;KEY_FILE&#125;</span> --project=<span class="variable">$&#123;PROJECT_ID&#125;</span></span><br></pre></td></tr></table></figure>
+<p>(Example output)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Activated service account credentials for: [sam-cloud-deploy@cloudfunction-305305.iam.gserviceaccount.com]</span><br></pre></td></tr></table></figure>
+
+<p>Cloud function deploy</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PROJECT_ID=cloudfunction-305305</span><br><span class="line"><span class="built_in">export</span> SERVICE_ACCOUNT_ID=sam-cloud-deploy</span><br><span class="line"><span class="built_in">export</span> REGION=asia-east1</span><br><span class="line"><span class="built_in">export</span> FUNCTION_NAME=function-sample-gcp-http</span><br><span class="line"><span class="built_in">export</span> GITLAB_TOKEN=12345678</span><br><span class="line"><span class="built_in">export</span> SONAR_TOKEN=12345678974651468487To=</span><br><span class="line"><span class="built_in">export</span> SONAR_URL=https://sonarqube.com.tw/api</span><br><span class="line"></span><br><span class="line">gcloud <span class="built_in">functions</span> deploy <span class="variable">$&#123;FUNCTION_NAME&#125;</span> \</span><br><span class="line">--region=<span class="variable">$&#123;REGION&#125;</span> \</span><br><span class="line">--service-account=<span class="variable">$&#123;SERVICE_ACCOUNT_ID&#125;</span>@<span class="variable">$&#123;PROJECT_ID&#125;</span>.iam.gserviceaccount.com \</span><br><span class="line">--entry-point org.springframework.cloud.function.adapter.gcp.GcfJarLauncher \</span><br><span class="line">--allow-unauthenticated \</span><br><span class="line">--runtime java11 \</span><br><span class="line">--trigger-http \</span><br><span class="line">--<span class="built_in">source</span> target/deploy \</span><br><span class="line">--memory 512MB \</span><br><span class="line">--set-env-vars gitlabToken=<span class="variable">$&#123;GITLAB_TOKEN&#125;</span>,sonarToken=<span class="variable">$&#123;SONAR_TOKEN&#125;</span>,sonarUrl=<span class="variable">$&#123;SONAR_URL&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Custom-roles"><a href="#Custom-roles" class="headerlink" title="Custom roles"></a>Custom roles</h3><p>If you want to reduce the permissions, you can refer to <a target="_blank" rel="noopener" href="https://cloud.google.com/iam/docs/creating-custom-roles">Creating and managing custom roles</a> and <a target="_blank" rel="noopener" href="https://github.com/cloud-technology/slack-off-sonar/blob/main/gcp/DeployRole.yml">gcp/DeployRole.yml</a>  </p>
+<p>SYNOPSIS</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcloud iam roles create role-id --project=project-id \</span><br><span class="line">  --file=yaml-file-path</span><br></pre></td></tr></table></figure>
+
+<p>EXAMPLES</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PROJECT_ID=cloudfunction-305305</span><br><span class="line"><span class="built_in">export</span> YAML_FILE_PATH=gcp/DeployRole.yml</span><br><span class="line"><span class="built_in">export</span> ROLE_ID=SamCloudfunctionTest</span><br><span class="line"></span><br><span class="line">gcloud iam roles create <span class="variable">$&#123;ROLE_ID&#125;</span> --project=<span class="variable">$&#123;PROJECT_ID&#125;</span> \</span><br><span class="line">  --file=<span class="variable">$&#123;YAML_FILE_PATH&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>(Example output)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Created role [SamCloudfunctionTest].</span><br><span class="line">description: custom role to deploy cloud <span class="keyword">function</span></span><br><span class="line">etag: BwXHNs_mK1Q=</span><br><span class="line">includedPermissions:</span><br><span class="line">- cloudfunctions.functions.create</span><br><span class="line">- cloudfunctions.functions.get</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">stage: GA</span><br><span class="line">title: Deploy cloud <span class="keyword">function</span> role</span><br></pre></td></tr></table></figure>
+
+<p>if you need update role</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcloud iam roles update <span class="variable">$&#123;ROLE_ID&#125;</span> --project=<span class="variable">$&#123;PROJECT_ID&#125;</span> \</span><br><span class="line">  --file=<span class="variable">$&#123;YAML_FILE_PATH&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>remove roles/cloudfunctions.admin and add custom role</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PROJECT_ID=cloudfunction-305305</span><br><span class="line"><span class="built_in">export</span> SERVICE_ACCOUNT_ID=sam-cloud-deploy</span><br><span class="line"></span><br><span class="line">gcloud projects remove-iam-policy-binding <span class="variable">$&#123;PROJECT_ID&#125;</span> \</span><br><span class="line">    --member=<span class="string">&quot;serviceAccount:<span class="variable">$&#123;SERVICE_ACCOUNT_ID&#125;</span>@<span class="variable">$&#123;PROJECT_ID&#125;</span>.iam.gserviceaccount.com&quot;</span> \</span><br><span class="line">    --role=<span class="string">&quot;roles/cloudfunctions.admin&quot;</span></span><br><span class="line"></span><br><span class="line">gcloud projects add-iam-policy-binding <span class="variable">$&#123;PROJECT_ID&#125;</span> \</span><br><span class="line">    --member=<span class="string">&quot;serviceAccount:<span class="variable">$&#123;SERVICE_ACCOUNT_ID&#125;</span>@<span class="variable">$&#123;PROJECT_ID&#125;</span>.iam.gserviceaccount.com&quot;</span> \</span><br><span class="line">    --role=<span class="string">&quot;projects/<span class="variable">$&#123;PROJECT_ID&#125;</span>/roles/<span class="variable">$&#123;ROLE_ID&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://cloud.google.com/functions/docs/reference/iam/permissions">Cloud Functions IAM Permissions</a></p>
+<h2 id="This-Project-Architecture"><a href="#This-Project-Architecture" class="headerlink" title="This Project Architecture"></a>This Project Architecture</h2><p>This project is to make it easier for people to read SonarQube analysis results in GitLab, so the design is as follows.<br><img src="https://i.imgur.com/LEqXOpe.jpg" alt="SystemArchitecture"></p>
+<h2 id="SonarQube"><a href="#SonarQube" class="headerlink" title="SonarQube"></a>SonarQube</h2><p>Setup webhook to Google Cloud Function<br><img src="https://i.imgur.com/LdJLR38.png" alt="Setup webhook"></p>
+<h2 id="GitLab-CI"><a href="#GitLab-CI" class="headerlink" title="GitLab CI"></a>GitLab CI</h2><p>.gitlab-ci.yml</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">stages:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">analysis</span></span><br><span class="line"></span><br><span class="line"><span class="attr">sonar:</span></span><br><span class="line">  <span class="attr">extends:</span> <span class="string">.job_sonarqube_template</span></span><br><span class="line">  <span class="attr">variables:</span></span><br><span class="line">    <span class="attr">SONAR_HOST_URL:</span> <span class="string">&quot;$&#123;SONAR_HOST_URL&#125;&quot;</span></span><br><span class="line">    <span class="attr">SONAR_TOKEN:</span> <span class="string">&quot;$&#123;SONAR_TOKEN&#125;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="string">.job_sonarqube_template:</span></span><br><span class="line">  <span class="attr">stage:</span> <span class="string">analysis</span></span><br><span class="line">  <span class="attr">image:</span> <span class="string">gradle:7.1.1-jdk11-hotspot</span></span><br><span class="line">  <span class="attr">variables:</span></span><br><span class="line">    <span class="attr">SONAR_HOST_URL:</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="attr">SONAR_TOKEN:</span> <span class="string">&quot;&quot;</span></span><br><span class="line">  <span class="attr">script:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">|</span></span><br><span class="line"><span class="string">      gradle sonarqube -Dsonar.qualitygate.wait=true \</span></span><br><span class="line"><span class="string">      -Dsonar.analysis.gitPlatform=&quot;GitLab&quot; \</span></span><br><span class="line"><span class="string">      -Dsonar.analysis.projectID=&quot;$&#123;CI_PROJECT_ID&#125;&quot; \</span></span><br><span class="line"><span class="string">      -Dsonar.analysis.commitTitle=&quot;$&#123;CI_COMMIT_TITLE&#125;&quot; \</span></span><br><span class="line"><span class="string">      -Dsonar.analysis.commitSha=&quot;$&#123;CI_COMMIT_SHORT_SHA&#125;&quot; \</span></span><br><span class="line"><span class="string">      -Dsonar.analysis.commitBranch=&quot;$&#123;CI_COMMIT_BRANCH&#125;&quot; \</span></span><br><span class="line"><span class="string">      -Dsonar.analysis.mergeRequestIID=&quot;$&#123;CI_MERGE_REQUEST_IID&#125;&quot; \</span></span><br><span class="line"><span class="string">      -Dsonar.analysis.commitTAG=&quot;$&#123;CI_COMMIT_TAG&#125;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>In the analysis phase, the parameters at the beginning of sonar.analysis are added during the sonarqube analysis, and SonarQube will transmit these parameters to the Cloud Function during the webhook.</p>
+<h2 id="Comment-to-commit-on-GitLab"><a href="#Comment-to-commit-on-GitLab" class="headerlink" title="Comment to commit on GitLab"></a>Comment to commit on GitLab</h2><p><img src="https://i.imgur.com/R4yZZsh.png" alt="Comment to commit"></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-cloud-function/docs/3.1.3/reference/html/">Spring Cloud Function Reference Documentation</a><br><a target="_blank" rel="noopener" href="https://youtu.be/61aOCovpz5Y">Event-Driven with Spring Cloud Function and Spring Cloud Stream</a><br><a target="_blank" rel="noopener" href="https://github.com/GoogleCloudPlatform/functions-framework-java">GoogleCloudPlatform/functions-framework-java</a><br><a target="_blank" rel="noopener" href="https://dotblogs.com.tw/explooosion/2020/10/09/143330">GCP - 使用 Github Actions 部署 React 到 Cloud Run</a><br><a target="_blank" rel="noopener" href="https://github.com/google-github-actions/setup-gcloud">google-github-actions/setup-gcloud</a>  </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>Sam Zhu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.samzhu.dev/2021/07/17/Use-Spring-Cloud-Function-to-develop-serverless-service-in-Google-Cloud-Function/" title="Use Spring Cloud Function to develop serverless service in Google Cloud Function">https://blog.samzhu.dev/2021/07/17/Use-Spring-Cloud-Function-to-develop-serverless-service-in-Google-Cloud-Function/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/SpringCloud/" rel="tag"># SpringCloud</a>
+              <a href="/tags/GCP/" rel="tag"># GCP</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/06/10/Use-Liquibase-to-Safely-Evolve-Your-Database-Schema/" rel="prev" title="Use Liquibase to Safely Evolve Your Database Schema">
+                  <i class="fa fa-chevron-left"></i> Use Liquibase to Safely Evolve Your Database Schema
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sam Zhu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

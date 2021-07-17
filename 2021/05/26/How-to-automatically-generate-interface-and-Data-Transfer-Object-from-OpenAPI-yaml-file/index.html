@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;blog.samzhu.dev&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Muse&quot;,&quot;version&quot;:&quot;8.5.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;right&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;Searching...&quot;,&quot;empty&quot;:&quot;We didn&#39;t find any results for the search: ${query}&quot;,&quot;hits_time&quot;:&quot;${hits} results found in ${time} ms&quot;,&quot;hits&quot;:&quot;${hits} results found&quot;}}</script><script src="/js/config.js"></script>
+<meta name="description" content="How to automatically generate interface and Data Transfer Object from OpenAPI yaml file.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to automatically generate interface and Data Transfer Object from OpenAPI yaml file">
+<meta property="og:url" content="https://blog.samzhu.dev/2021/05/26/How-to-automatically-generate-interface-and-Data-Transfer-Object-from-OpenAPI-yaml-file/index.html">
+<meta property="og:site_name" content="sam&#39;s program notes">
+<meta property="og:description" content="How to automatically generate interface and Data Transfer Object from OpenAPI yaml file.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.imgur.com/rO1SMXV.png">
+<meta property="og:image" content="https://i.imgur.com/O2Rrlec.png">
+<meta property="article:published_time" content="2021-05-25T17:05:47.000Z">
+<meta property="article:modified_time" content="2021-07-17T04:27:19.324Z">
+<meta property="article:author" content="Sam Zhu">
+<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="OpenAPI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/rO1SMXV.png">
+
+
+<link rel="canonical" href="https://blog.samzhu.dev/2021/05/26/How-to-automatically-generate-interface-and-Data-Transfer-Object-from-OpenAPI-yaml-file/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;en&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;blog.samzhu.dev&#x2F;2021&#x2F;05&#x2F;26&#x2F;How-to-automatically-generate-interface-and-Data-Transfer-Object-from-OpenAPI-yaml-file&#x2F;&quot;,&quot;path&quot;:&quot;2021&#x2F;05&#x2F;26&#x2F;How-to-automatically-generate-interface-and-Data-Transfer-Object-from-OpenAPI-yaml-file&#x2F;&quot;,&quot;title&quot;:&quot;How to automatically generate interface and Data Transfer Object from OpenAPI yaml file&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>How to automatically generate interface and Data Transfer Object from OpenAPI yaml file | sam's program notes</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138599642-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{&quot;tracking_id&quot;:&quot;UA-138599642-1&quot;,&quot;only_pageview&quot;:false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">sam's program notes</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#OpenAPI-yaml-file"><span class="nav-number">1.</span> <span class="nav-text">OpenAPI yaml file</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Add-gradle-plugin"><span class="nav-number">2.</span> <span class="nav-text">Add gradle plugin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Validate-task"><span class="nav-number">3.</span> <span class="nav-text">Validate task</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Generate-task"><span class="nav-number">4.</span> <span class="nav-text">Generate task</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Generate-Client"><span class="nav-number">5.</span> <span class="nav-text">Generate Client</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FeignClient"><span class="nav-number">5.1.</span> <span class="nav-text">FeignClient</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Angular"><span class="nav-number">5.2.</span> <span class="nav-text">Angular</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Golang"><span class="nav-number">5.3.</span> <span class="nav-text">Golang</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate"><span class="nav-number">5.4.</span> <span class="nav-text">Generate</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Customization"><span class="nav-number">6.</span> <span class="nav-text">Customization</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#openapi-generator-ignore"><span class="nav-number">7.</span> <span class="nav-text">openapi generator ignore</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sam Zhu"
+      src="https://i.imgur.com/eLloI4N.png">
+  <p class="site-author-name" itemprop="name">Sam Zhu</p>
+  <div class="site-description" itemprop="description">SAM的程式筆記</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.samzhu.dev/2021/05/26/How-to-automatically-generate-interface-and-Data-Transfer-Object-from-OpenAPI-yaml-file/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.imgur.com/eLloI4N.png">
+      <meta itemprop="name" content="Sam Zhu">
+      <meta itemprop="description" content="SAM的程式筆記">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sam's program notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          How to automatically generate interface and Data Transfer Object from OpenAPI yaml file
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-05-26 01:05:47" itemprop="dateCreated datePublished" datetime="2021-05-26T01:05:47+08:00">2021-05-26</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-07-17 12:27:19" itemprop="dateModified" datetime="2021-07-17T12:27:19+08:00">2021-07-17</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>How to automatically generate interface and Data Transfer Object from OpenAPI yaml file.</p>
+<span id="more"></span>
+
+<h2 id="OpenAPI-yaml-file"><a href="#OpenAPI-yaml-file" class="headerlink" title="OpenAPI yaml file"></a>OpenAPI yaml file</h2><p>I put the OpenAPI specification file in specs/openapi.yaml  </p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">openapi:</span> <span class="number">3.0</span><span class="number">.3</span></span><br><span class="line"><span class="attr">info:</span></span><br><span class="line">  <span class="attr">title:</span> <span class="string">goods</span> <span class="string">service</span></span><br><span class="line">  <span class="attr">version:</span> <span class="number">1.0</span><span class="number">.0</span></span><br><span class="line">  <span class="attr">description:</span> <span class="string">|-</span></span><br><span class="line"><span class="string">    This is a goods service  </span></span><br><span class="line"><span class="string">    Provide price query and inventory management functions</span></span><br><span class="line"><span class="string"></span>  <span class="attr">license:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">Apache</span> <span class="number">2.0</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">&#x27;https://www.apache.org/licenses/LICENSE-2.0&#x27;</span></span><br><span class="line">  <span class="attr">contact:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">samzhu</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">&#x27;https://blog.samzhu.dev/&#x27;</span></span><br><span class="line">    <span class="attr">email:</span> <span class="string">spike19820318@gmail.com</span></span><br></pre></td></tr></table></figure>
+<p>I will use the gradle plugin to generate code, but only supports up to 3.0.3 specifications.</p>
+<h2 id="Add-gradle-plugin"><a href="#Add-gradle-plugin" class="headerlink" title="Add gradle plugin"></a>Add gradle plugin</h2><p><a target="_blank" rel="noopener" href="https://plugins.gradle.org/plugin/org.openapi.generator">org.openapi.generator</a><br>Currently plugin only supports 6.9, 7.0 is a problem, you can use the following commands to adjust.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./gradlew wrapper --gradle-version 6.9</span><br></pre></td></tr></table></figure>
+<p>build.gradle add  </p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">plugins &#123;</span><br><span class="line">	id <span class="string">&#x27;org.openapi.generator&#x27;</span> version <span class="string">&#x27;5.1.1&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>build.gradle add Extra properties</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ext &#123;</span><br><span class="line">	<span class="comment">// OpenAPI input file</span></span><br><span class="line">	set(<span class="string">&#x27;openapiInputSpec&#x27;</span>, <span class="string">&quot;$&#123;rootDir&#125;/specs/openapi.yaml&quot;</span>)</span><br><span class="line">	<span class="comment">// Output dir</span></span><br><span class="line">	set(<span class="string">&#x27;openapiOutputDir&#x27;</span>, <span class="string">&quot;$&#123;rootDir&#125;/generated/springboot&quot;</span>)</span><br><span class="line">	<span class="comment">// If customization need add template dir</span></span><br><span class="line">	set(<span class="string">&#x27;openapiTemplateDir&#x27;</span>, <span class="string">&quot;$&#123;rootDir&#125;/template&quot;</span>)</span><br><span class="line">	<span class="comment">// root package (have OpenAPI2SpringBoot.java &amp; RFC3339DateFormat.java) </span></span><br><span class="line">	set(<span class="string">&#x27;openapiInvokerPackage&#x27;</span>, <span class="string">&quot;$&#123;group&#125;&quot;</span>)</span><br><span class="line">	<span class="comment">// Controller</span></span><br><span class="line">	set(<span class="string">&#x27;openapiApiPackage&#x27;</span>, <span class="string">&quot;$&#123;openapiInvokerPackage&#125;.$&#123;rootProject.name&#125;.interfaces.rest&quot;</span>)</span><br><span class="line">	<span class="comment">// Models</span></span><br><span class="line">	set(<span class="string">&#x27;openapiModelPackage&#x27;</span>, <span class="string">&quot;$&#123;openapiInvokerPackage&#125;.$&#123;rootProject.name&#125;.interfaces.rest.dto&quot;</span>)</span><br><span class="line">	<span class="comment">// JavaConfig</span></span><br><span class="line">	set(<span class="string">&#x27;openapiConfigPackage&#x27;</span>, <span class="string">&quot;$&#123;openapiInvokerPackage&#125;.configuration&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The above is roughly finished, and finally you really want to generate it directly into the project, you can directly change openapiOutputDir to the project directory</p>
+<h2 id="Validate-task"><a href="#Validate-task" class="headerlink" title="Validate task"></a>Validate task</h2><p>build.gradle add</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">openApiValidate &#123;</span><br><span class="line">	inputSpec = <span class="string">&quot;$&#123;openapiInputSpec&#125;&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>executive task with this command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./gradlew openApiValidate</span><br></pre></td></tr></table></figure>
+<p>(Example output)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt; Task :openApiValidate</span><br><span class="line">Validating spec /Users/samzhu/workspace/cloud-technology/goods-service/specs/openapi.yaml</span><br><span class="line">Spec is valid.</span><br><span class="line"></span><br><span class="line">Deprecated Gradle features were used <span class="keyword">in</span> this build, making it incompatible with Gradle 7.0.</span><br><span class="line">Use <span class="string">&#x27;--warning-mode all&#x27;</span> to show the individual deprecation warnings.</span><br><span class="line">See https://docs.gradle.org/6.9/userguide/command_line_interface.html<span class="comment">#sec:command_line_warnings</span></span><br><span class="line"></span><br><span class="line">BUILD SUCCESSFUL <span class="keyword">in</span> 1s</span><br><span class="line">1 actionable task: 1 executed</span><br></pre></td></tr></table></figure>
+
+<h2 id="Generate-task"><a href="#Generate-task" class="headerlink" title="Generate task"></a>Generate task</h2><p>Generate Server-side Springboot interface &amp; DTO  </p>
+<p>build.gradle add</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">openApiGenerate &#123;</span><br><span class="line">    generatorName = <span class="string">&quot;spring&quot;</span></span><br><span class="line">	library = <span class="string">&quot;spring-boot&quot;</span></span><br><span class="line">	inputSpec = <span class="string">&quot;$&#123;openapiInputSpec&#125;&quot;</span></span><br><span class="line">    outputDir = <span class="string">&quot;$&#123;openapiOutputDir&#125;&quot;</span></span><br><span class="line">	templateDir = <span class="string">&quot;$&#123;openapiTemplateDir&#125;&quot;</span></span><br><span class="line">	invokerPackage = <span class="string">&quot;$&#123;openapiInvokerPackage&#125;&quot;</span></span><br><span class="line">	apiPackage = <span class="string">&quot;$&#123;openapiApiPackage&#125;&quot;</span></span><br><span class="line">    modelPackage = <span class="string">&quot;$&#123;openapiModelPackage&#125;&quot;</span></span><br><span class="line">    configOptions = [</span><br><span class="line">		<span class="symbol">configPackage:</span> <span class="string">&quot;$&#123;openapiConfigPackage&#125;&quot;</span>,</span><br><span class="line">        <span class="symbol">dateLibrary:</span> <span class="string">&quot;java8&quot;</span>,</span><br><span class="line">		<span class="symbol">openApiNullable:</span> <span class="string">&quot;false&quot;</span>,</span><br><span class="line">		<span class="symbol">disallowAdditionalPropertiesIfNotPresent:</span> <span class="string">&quot;false&quot;</span>,</span><br><span class="line">		<span class="symbol">groupId:</span> <span class="string">&quot;$&#123;group&#125;&quot;</span>,</span><br><span class="line">        <span class="symbol">hateoas:</span> <span class="string">&quot;false&quot;</span>,</span><br><span class="line">        <span class="symbol">interfaceOnly:</span> <span class="string">&quot;true&quot;</span>,</span><br><span class="line">		<span class="symbol">licenseName:</span> <span class="string">&quot;Unlicense&quot;</span>,</span><br><span class="line">		<span class="symbol">singleContentTypes:</span> <span class="string">&quot;true&quot;</span>, <span class="comment">// Whether to select only one produces/consumes content-type by operation.</span></span><br><span class="line">		<span class="symbol">title:</span> <span class="string">&quot;$&#123;rootProject.name&#125;&quot;</span>,</span><br><span class="line">		<span class="symbol">unhandledException:</span> <span class="string">&quot;true&quot;</span>, <span class="comment">// Declare operation methods to throw a generic exception and allow unhandled exceptions</span></span><br><span class="line">		<span class="symbol">useTags:</span> <span class="string">&quot;true&quot;</span>, <span class="comment">// use tags for creating interface and controller classnames</span></span><br><span class="line">		<span class="symbol">useOptional:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Reference:<br><a target="_blank" rel="noopener" href="https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator-gradle-plugin#openapigenerate">openapi-generator-gradle-plugin</a><br><a target="_blank" rel="noopener" href="https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/spring.md">configOptions(spring)</a>  </p>
+<p>executive task with this command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./gradlew openApiGenerate</span><br></pre></td></tr></table></figure>
+<p>(Example output)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt; Task :openApiGenerate</span><br><span class="line"><span class="comment">################################################################################</span></span><br><span class="line"><span class="comment"># Thanks for using OpenAPI Generator.                                          #</span></span><br><span class="line"><span class="comment"># Please consider donation to help us maintain this project 🙏                 #</span></span><br><span class="line"><span class="comment"># https://opencollective.com/openapi_generator/donate                          #</span></span><br><span class="line"><span class="comment">################################################################################</span></span><br><span class="line">Successfully generated code to /Users/samzhu/workspace/cloud-technology/goods-service/generated/springboot</span><br><span class="line"></span><br><span class="line">BUILD SUCCESSFUL <span class="keyword">in</span> 1s</span><br><span class="line">1 actionable task: 1 executed</span><br></pre></td></tr></table></figure>
+<p>Then you will get the result.<br><img src="https://i.imgur.com/rO1SMXV.png" alt="https://i.imgur.com/rO1SMXV.png"></p>
+<h2 id="Generate-Client"><a href="#Generate-Client" class="headerlink" title="Generate Client"></a>Generate Client</h2><h3 id="FeignClient"><a href="#FeignClient" class="headerlink" title="FeignClient"></a>FeignClient</h3><p>build.gradle add</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">task buildFeignSDK(<span class="attr">type:</span> org.openapitools.generator.gradle.plugin.tasks.GenerateTask)&#123;</span><br><span class="line">	generatorName = <span class="string">&quot;spring&quot;</span></span><br><span class="line">	library= <span class="string">&quot;spring-cloud&quot;</span></span><br><span class="line">	inputSpec = <span class="string">&quot;$&#123;openapiInputSpec&#125;&quot;</span></span><br><span class="line">	outputDir = <span class="string">&quot;$&#123;rootDir&#125;/generated/client/feign&quot;</span>.toString()</span><br><span class="line">	templateDir = <span class="string">&quot;$&#123;openapiTemplateDir&#125;&quot;</span></span><br><span class="line">	invokerPackage = <span class="string">&quot;$&#123;openapiInvokerPackage&#125;&quot;</span></span><br><span class="line">	apiPackage = <span class="string">&quot;$&#123;openapiInvokerPackage&#125;.$&#123;rootProject.name&#125;.application.internal.outboundservices.acl&quot;</span></span><br><span class="line">	modelPackage = <span class="string">&quot;$&#123;openapiInvokerPackage&#125;.shareddomain.$&#123;rootProject.name&#125;.interfaces.rest.dto&quot;</span></span><br><span class="line">	configOptions = [</span><br><span class="line">		<span class="symbol">configPackage:</span> <span class="string">&quot;$&#123;openapiConfigPackage&#125;&quot;</span>,</span><br><span class="line">		<span class="symbol">dateLibrary:</span> <span class="string">&quot;java8&quot;</span>,</span><br><span class="line">		<span class="symbol">openApiNullable:</span> <span class="string">&quot;false&quot;</span>,</span><br><span class="line">		<span class="symbol">disallowAdditionalPropertiesIfNotPresent:</span> <span class="string">&quot;false&quot;</span>,</span><br><span class="line">		<span class="symbol">groupId:</span> <span class="string">&quot;$&#123;group&#125;&quot;</span>,</span><br><span class="line">		<span class="symbol">hateoas:</span> <span class="string">&quot;false&quot;</span>,</span><br><span class="line">		<span class="symbol">interfaceOnly:</span> <span class="string">&quot;false&quot;</span>,</span><br><span class="line">		<span class="symbol">licenseName:</span> <span class="string">&quot;Unlicense&quot;</span>,</span><br><span class="line">		<span class="symbol">singleContentTypes:</span> <span class="string">&quot;true&quot;</span>,</span><br><span class="line">		<span class="symbol">title:</span> <span class="string">&quot;$&#123;rootProject.name&#125;&quot;</span>,</span><br><span class="line">		<span class="symbol">unhandledException:</span> <span class="string">&quot;true&quot;</span>,</span><br><span class="line">		<span class="symbol">useTags:</span> <span class="string">&quot;true&quot;</span>,</span><br><span class="line">		<span class="symbol">useOptional:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">	]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Angular"><a href="#Angular" class="headerlink" title="Angular"></a>Angular</h3><p>build.gradle add</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">task buildAngularSdk(<span class="attr">type:</span> org.openapitools.generator.gradle.plugin.tasks.GenerateTask)&#123;</span><br><span class="line">	generatorName = <span class="string">&quot;typescript-angular&quot;</span></span><br><span class="line">	inputSpec = <span class="string">&quot;$&#123;openapiInputSpec&#125;&quot;</span></span><br><span class="line">	outputDir = <span class="string">&quot;$&#123;rootDir&#125;/generated/client/angular&quot;</span>.toString()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Golang"><a href="#Golang" class="headerlink" title="Golang"></a>Golang</h3><p>build.gradle add</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">task buildGoSdk(<span class="attr">type:</span> org.openapitools.generator.gradle.plugin.tasks.GenerateTask)&#123;</span><br><span class="line">	generatorName = <span class="string">&quot;go&quot;</span></span><br><span class="line">	inputSpec = <span class="string">&quot;$&#123;openapiInputSpec&#125;&quot;</span></span><br><span class="line">	outputDir = <span class="string">&quot;$&#123;rootDir&#125;/generated/client/go&quot;</span>.toString()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Generate"><a href="#Generate" class="headerlink" title="Generate"></a>Generate</h3><p>executive task with this command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./gradlew buildFeignSDK buildAngularSdk buildGoSdk</span><br></pre></td></tr></table></figure>
+<p>(Example output)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&gt; Task :buildFeignSDK</span><br><span class="line"><span class="comment">################################################################################</span></span><br><span class="line"><span class="comment"># Thanks for using OpenAPI Generator.                                          #</span></span><br><span class="line"><span class="comment"># Please consider donation to help us maintain this project 🙏                 #</span></span><br><span class="line"><span class="comment"># https://opencollective.com/openapi_generator/donate                          #</span></span><br><span class="line"><span class="comment">################################################################################</span></span><br><span class="line">Successfully generated code to /Users/samzhu/workspace/cloud-technology/goods-service/generated/client/feign</span><br><span class="line"></span><br><span class="line">&gt; Task :buildAngularSdk</span><br><span class="line"><span class="comment">################################################################################</span></span><br><span class="line"><span class="comment"># Thanks for using OpenAPI Generator.                                          #</span></span><br><span class="line"><span class="comment"># Please consider donation to help us maintain this project 🙏                 #</span></span><br><span class="line"><span class="comment"># https://opencollective.com/openapi_generator/donate                          #</span></span><br><span class="line"><span class="comment">################################################################################</span></span><br><span class="line">Successfully generated code to /Users/samzhu/workspace/cloud-technology/goods-service/generated/client/angular</span><br><span class="line"></span><br><span class="line">&gt; Task :buildGoSdk</span><br><span class="line"><span class="comment">################################################################################</span></span><br><span class="line"><span class="comment"># Thanks for using OpenAPI Generator.                                          #</span></span><br><span class="line"><span class="comment"># Please consider donation to help us maintain this project 🙏                 #</span></span><br><span class="line"><span class="comment"># https://opencollective.com/openapi_generator/donate                          #</span></span><br><span class="line"><span class="comment">################################################################################</span></span><br><span class="line">Successfully generated code to /Users/samzhu/workspace/cloud-technology/goods-service/generated/client/go</span><br><span class="line"></span><br><span class="line">BUILD SUCCESSFUL <span class="keyword">in</span> 1s</span><br><span class="line">3 actionable tasks: 3 executed</span><br></pre></td></tr></table></figure>
+
+<p>Then you will get the result.<br><img src="https://i.imgur.com/O2Rrlec.png" alt="https://i.imgur.com/O2Rrlec.png"></p>
+<h2 id="Customization"><a href="#Customization" class="headerlink" title="Customization"></a>Customization</h2><p>In <code>template/pojo.mustache</code> I have customized to add java annotations.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;#vendorExtensions.x-java-class-annotations&#125;&#125;</span><br><span class="line">&#123;&#123;.&#125;&#125;</span><br><span class="line">&#123;&#123;/vendorExtensions.x-java-class-annotations&#125;&#125;</span><br><span class="line">public class &#123;&#123;classname&#125;&#125; &#123;&#123;#parent&#125;&#125;extends ....&#123;</span><br><span class="line"></span><br><span class="line">  &#123;&#123;#vendorExtensions.x-java-field-annotations&#125;&#125;</span><br><span class="line">  &#123;&#123;.&#125;&#125;</span><br><span class="line">  &#123;&#123;/vendorExtensions.x-java-field-annotations&#125;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>source<br><a target="_blank" rel="noopener" href="https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator/src/main/resources/JavaSpring/pojo.mustache">pojo.mustache</a>  </p>
+<p>In the OpenAPI specifications can be directly used in the definition of java annotations.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">GoodsViewDto:</span></span><br><span class="line">  <span class="attr">title:</span> <span class="string">goodsViewDto</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">object</span></span><br><span class="line">  <span class="attr">description:</span> <span class="string">Goods</span> <span class="string">object</span> <span class="string">view</span> <span class="string">Data</span> <span class="string">Transfer</span> <span class="string">Object</span></span><br><span class="line">  <span class="attr">x-java-class-annotations:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;@lombok.Builder&#x27;</span></span><br><span class="line">  <span class="attr">properties:</span></span><br><span class="line">    <span class="attr">goodsId:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">string</span></span><br><span class="line">      <span class="attr">description:</span> <span class="string">goods</span> <span class="string">ID</span></span><br><span class="line">      <span class="attr">x-java-field-annotations:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&#x27;@javax.validation.constraints.NotBlank&#x27;</span></span><br><span class="line">    <span class="attr">goodsName:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">string</span></span><br><span class="line">      <span class="attr">description:</span> <span class="string">goods</span> <span class="string">name</span></span><br></pre></td></tr></table></figure>
+<p>Then you will get the result.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Goods object view Data Transfer Object</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@ApiModel(description = &quot;Goods object view Data Transfer Object&quot;)</span></span><br><span class="line"><span class="meta">@lombok</span>.Builder</span><br><span class="line"><span class="meta">@javax</span>.annotation.Generated(value = <span class="string">&quot;org.openapitools.codegen.languages.SpringCodegen&quot;</span>, date = <span class="string">&quot;2021-05-26T23:36:13.783246+08:00[Asia/Taipei]&quot;</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GoodsViewDto</span> <span class="keyword">extends</span> <span class="title">RepresentationModel</span>&lt;<span class="title">GoodsViewDto</span>&gt;   </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@javax</span>.validation.constraints.NotBlank</span><br><span class="line">  <span class="meta">@JsonProperty(&quot;goodsId&quot;)</span></span><br><span class="line">  <span class="keyword">private</span> String goodsId;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>and<br>source<br><a target="_blank" rel="noopener" href="https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator/src/main/resources/JavaSpring/https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator/src/main/resources/JavaSpring/api.mustache">api.mustache</a><br>add tags  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@Api(value = &quot;&#123;&#123;&#123;baseName&#125;&#125;&#125;&quot;, description = &quot;the &#123;&#123;&#123;baseName&#125;&#125;&#125; API&quot;, tags=&#123; &quot;&#123;&#123;&#123;baseName&#125;&#125;&#125;&quot; &#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="openapi-generator-ignore"><a href="#openapi-generator-ignore" class="headerlink" title="openapi generator ignore"></a>openapi generator ignore</h2><p>If it is generated to the root directory of the project, there will be more files that I don’t need. At this time, I can exclude them through .openapi-generator-ignore, I will exclude the pom.xml &amp; README.md that I don’t need. Examples are as follows  </p>
+<p>.openapi-generator-ignore</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># add generator exclude</span><br><span class="line">pom.xml</span><br><span class="line">README.md</span><br></pre></td></tr></table></figure>
+
+<p>Because usually projects have their own custom configuration, so I set interfaceOnly to true, so that only controller interface and dto will be generated. If you are used to generating a complete project through the generator, you can try setting it to false.  </p>
+<p><a target="_blank" rel="noopener" href="https://github.com/cloud-technology/goods-service">GitHub repository</a>  </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>Sam Zhu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.samzhu.dev/2021/05/26/How-to-automatically-generate-interface-and-Data-Transfer-Object-from-OpenAPI-yaml-file/" title="How to automatically generate interface and Data Transfer Object from OpenAPI yaml file">https://blog.samzhu.dev/2021/05/26/How-to-automatically-generate-interface-and-Data-Transfer-Object-from-OpenAPI-yaml-file/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+              <a href="/tags/OpenAPI/" rel="tag"># OpenAPI</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/02/23/Receive-SendGrid-inbound-email-parse-webhook/" rel="prev" title="Receive SendGrid inbound email parse webhook">
+                  <i class="fa fa-chevron-left"></i> Receive SendGrid inbound email parse webhook
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/06/10/Use-Liquibase-to-Safely-Evolve-Your-Database-Schema/" rel="next" title="Use Liquibase to Safely Evolve Your Database Schema">
+                  Use Liquibase to Safely Evolve Your Database Schema <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sam Zhu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

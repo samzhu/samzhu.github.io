@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;blog.samzhu.dev&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Muse&quot;,&quot;version&quot;:&quot;8.5.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;right&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;Searching...&quot;,&quot;empty&quot;:&quot;We didn&#39;t find any results for the search: ${query}&quot;,&quot;hits_time&quot;:&quot;${hits} results found in ${time} ms&quot;,&quot;hits&quot;:&quot;${hits} results found&quot;}}</script><script src="/js/config.js"></script>
+<meta name="description" content="最近搞了好一陣子自動化, 接下來會整理整個 CI CD 怎麼處理 首先你要先初始化幾台基礎服務, 首先就是 初始化作業系統XD">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何初始化 CentOS">
+<meta property="og:url" content="https://blog.samzhu.dev/2019/04/30/%E5%A6%82%E4%BD%95%E5%88%9D%E5%A7%8B%E5%8C%96CentOS/index.html">
+<meta property="og:site_name" content="sam&#39;s program notes">
+<meta property="og:description" content="最近搞了好一陣子自動化, 接下來會整理整個 CI CD 怎麼處理 首先你要先初始化幾台基礎服務, 首先就是 初始化作業系統XD">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png">
+<meta property="article:published_time" content="2019-04-30T04:00:00.000Z">
+<meta property="article:modified_time" content="2021-07-17T04:27:19.320Z">
+<meta property="article:author" content="Sam Zhu">
+<meta property="article:tag" content="OS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png">
+
+
+<link rel="canonical" href="https://blog.samzhu.dev/2019/04/30/%E5%A6%82%E4%BD%95%E5%88%9D%E5%A7%8B%E5%8C%96CentOS/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;en&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;blog.samzhu.dev&#x2F;2019&#x2F;04&#x2F;30&#x2F;%E5%A6%82%E4%BD%95%E5%88%9D%E5%A7%8B%E5%8C%96CentOS&#x2F;&quot;,&quot;path&quot;:&quot;2019&#x2F;04&#x2F;30&#x2F;如何初始化CentOS&#x2F;&quot;,&quot;title&quot;:&quot;如何初始化 CentOS&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>如何初始化 CentOS | sam's program notes</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138599642-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{&quot;tracking_id&quot;:&quot;UA-138599642-1&quot;,&quot;only_pageview&quot;:false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">sam's program notes</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%9C%E9%96%89SELINUX-%E5%BB%BA%E8%AD%B0%E5%9F%B7%E8%A1%8C"><span class="nav-number">1.</span> <span class="nav-text">關閉SELINUX (建議執行)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AA%A2%E6%9F%A5"><span class="nav-number">1.1.</span> <span class="nav-text">檢查</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AB%8B%E5%8D%B3%E7%94%9F%E6%95%88"><span class="nav-number">1.2.</span> <span class="nav-text">立即生效</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B0%B8%E4%B9%85%E7%94%9F%E6%95%88"><span class="nav-number">1.3.</span> <span class="nav-text">永久生效</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A8%AD%E5%AE%9A%E6%99%82%E5%8D%80"><span class="nav-number">2.</span> <span class="nav-text">設定時區</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A6%81%E7%94%A8SSH-%E9%81%A0%E7%A8%8B%E4%B8%BB%E6%A9%9F%E7%9A%84%E5%85%AC%E9%91%B0%E6%AA%A2%E6%9F%A5%E8%A9%A2%E5%95%8F"><span class="nav-number">3.</span> <span class="nav-text">禁用SSH 遠程主機的公鑰檢查詢問</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E5%95%9FSSH%E6%9C%8D%E5%8B%99%E4%BD%BF%E5%85%B6%E7%94%9F%E6%95%88"><span class="nav-number">3.1.</span> <span class="nav-text">重啟SSH服務使其生效</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%9D%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7"><span class="nav-number">4.</span> <span class="nav-text">安裝常用工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker"><span class="nav-number">5.</span> <span class="nav-text">Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%9D"><span class="nav-number">5.1.</span> <span class="nav-text">安裝</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A8%AD%E5%AE%9A%E9%96%8B%E6%A9%9F%E5%95%9F%E5%8B%95"><span class="nav-number">5.2.</span> <span class="nav-text">設定開機啟動</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%8B%E5%8B%95%E5%95%9F%E5%8B%95"><span class="nav-number">5.3.</span> <span class="nav-text">手動啟動</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker-Compose"><span class="nav-number">6.</span> <span class="nav-text">Docker Compose</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%9D-1"><span class="nav-number">6.1.</span> <span class="nav-text">安裝</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E6%8D%B7%E5%BE%91%E7%B5%A6-sudo-%E4%BD%BF%E7%94%A8"><span class="nav-number">6.2.</span> <span class="nav-text">建立捷徑給 sudo 使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%87%E7%95%B6%E5%89%8D%E7%94%A8%E6%88%B6%E5%8A%A0%E5%85%A5-Docker-%E7%BE%A4%E7%B5%84-%E4%B8%8D%E6%8E%A1%E7%94%A8"><span class="nav-number">6.3.</span> <span class="nav-text">將當前用戶加入 Docker 群組(不採用)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B2%92%E6%9C%89-%E5%85%A7%E9%83%A8DNS-%E6%89%80%E4%BB%A5%E5%9F%9F%E5%90%8D%E6%9C%83%E5%B0%8D%E6%87%89%E5%88%B0%E5%A4%96%E9%83%A8-IP-%E5%AE%89%E5%85%A8%E8%A6%8F%E5%89%87%E9%99%90%E5%88%B6%E6%9C%83%E4%B8%8D%E9%80%9A"><span class="nav-number">7.</span> <span class="nav-text">沒有 內部DNS 所以域名會對應到外部 IP, 安全規則限制會不通</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%8C%E6%88%90-%E9%87%8D%E9%96%8B%E6%A9%9F"><span class="nav-number">8.</span> <span class="nav-text">完成 重開機</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sam Zhu"
+      src="https://i.imgur.com/eLloI4N.png">
+  <p class="site-author-name" itemprop="name">Sam Zhu</p>
+  <div class="site-description" itemprop="description">SAM的程式筆記</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.samzhu.dev/2019/04/30/%E5%A6%82%E4%BD%95%E5%88%9D%E5%A7%8B%E5%8C%96CentOS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.imgur.com/eLloI4N.png">
+      <meta itemprop="name" content="Sam Zhu">
+      <meta itemprop="description" content="SAM的程式筆記">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sam's program notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          如何初始化 CentOS
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2019-04-30 12:00:00" itemprop="dateCreated datePublished" datetime="2019-04-30T12:00:00+08:00">2019-04-30</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-07-17 12:27:19" itemprop="dateModified" datetime="2021-07-17T12:27:19+08:00">2021-07-17</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/DevOps/" itemprop="url" rel="index"><span itemprop="name">DevOps</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>最近搞了好一陣子自動化, 接下來會整理整個 CI CD 怎麼處理</p>
+<p>首先你要先初始化幾台基礎服務, 首先就是 初始化作業系統XD</p>
+<span id="more"></span>
+
+<h1 id="關閉SELINUX-建議執行"><a href="#關閉SELINUX-建議執行" class="headerlink" title="關閉SELINUX (建議執行)"></a>關閉SELINUX (建議執行)</h1><h2 id="檢查"><a href="#檢查" class="headerlink" title="檢查"></a>檢查</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">getenforce</span><br></pre></td></tr></table></figure>
+<p>Enforcing：強制模式。<br>Permissive：寬容模式。<br>Disabled：停用模式。  </p>
+<p>或是</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sestatus</span><br></pre></td></tr></table></figure>
+
+<h2 id="立即生效"><a href="#立即生效" class="headerlink" title="立即生效"></a>立即生效</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo setenforce 0</span><br></pre></td></tr></table></figure>
+<h2 id="永久生效"><a href="#永久生效" class="headerlink" title="永久生效"></a>永久生效</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sed -i <span class="string">&#x27;s/SELINUX=enforcing/SELINUX=disabled/g&#x27;</span> /etc/selinux/config</span><br></pre></td></tr></table></figure>
+
+<h1 id="設定時區"><a href="#設定時區" class="headerlink" title="設定時區"></a>設定時區</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo timedatectl set-timezone Asia/Shanghai</span><br><span class="line">sudo ls -l /etc/localtime</span><br></pre></td></tr></table></figure>
+<p>常用時區有<br>Asia/Taipei<br>UTC</p>
+<h1 id="禁用SSH-遠程主機的公鑰檢查詢問"><a href="#禁用SSH-遠程主機的公鑰檢查詢問" class="headerlink" title="禁用SSH 遠程主機的公鑰檢查詢問"></a>禁用SSH 遠程主機的公鑰檢查詢問</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sed -i &#x27;s/#   StrictHostKeyChecking ask/StrictHostKeyChecking no/g&#x27; /etc/ssh/ssh_config</span><br></pre></td></tr></table></figure>
+<h2 id="重啟SSH服務使其生效"><a href="#重啟SSH服務使其生效" class="headerlink" title="重啟SSH服務使其生效"></a>重啟SSH服務使其生效</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service sshd restart</span><br></pre></td></tr></table></figure>
+
+<h1 id="安裝常用工具"><a href="#安裝常用工具" class="headerlink" title="安裝常用工具"></a>安裝常用工具</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install epel-release -y</span><br><span class="line">sudo yum update -y</span><br><span class="line">sudo yum install tree -y</span><br><span class="line">sudo yum install telnet -y</span><br><span class="line">sudo yum install net-tools -y</span><br><span class="line">sudo yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure>
+
+<h1 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h1><p><a target="_blank" rel="noopener" href="https://docs.docker.com/install/linux/docker-ce/centos/">https://docs.docker.com/install/linux/docker-ce/centos/</a></p>
+<h2 id="安裝"><a href="#安裝" class="headerlink" title="安裝"></a>安裝</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y yum-utils \</span><br><span class="line">  device-mapper-persistent-data \</span><br><span class="line">  lvm2</span><br><span class="line"></span><br><span class="line">sudo yum-config-manager \</span><br><span class="line">    --add-repo \</span><br><span class="line">    https://download.docker.com/linux/centos/docker-ce.repo</span><br><span class="line"></span><br><span class="line">sudo yum install -y docker-ce</span><br></pre></td></tr></table></figure>
+<h2 id="設定開機啟動"><a href="#設定開機啟動" class="headerlink" title="設定開機啟動"></a>設定開機啟動</h2><p><a target="_blank" rel="noopener" href="https://docs.docker.com/install/linux/linux-postinstall/#configure-docker-to-start-on-boot">https://docs.docker.com/install/linux/linux-postinstall/#configure-docker-to-start-on-boot</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl enable docker</span><br></pre></td></tr></table></figure>
+<h2 id="手動啟動"><a href="#手動啟動" class="headerlink" title="手動啟動"></a>手動啟動</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start docker</span><br></pre></td></tr></table></figure>
+
+<h1 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h1><p><a target="_blank" rel="noopener" href="https://docs.docker.com/compose/install/">https://docs.docker.com/compose/install/</a></p>
+<h2 id="安裝-1"><a href="#安裝-1" class="headerlink" title="安裝"></a>安裝</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo curl -L &quot;https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose</span><br><span class="line">sudo chmod +x /usr/local/bin/docker-compose</span><br></pre></td></tr></table></figure>
+
+<h2 id="建立捷徑給-sudo-使用"><a href="#建立捷徑給-sudo-使用" class="headerlink" title="建立捷徑給 sudo 使用"></a>建立捷徑給 sudo 使用</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose</span><br></pre></td></tr></table></figure>
+<p>之後使用 sudo docker-compose up</p>
+<h2 id="將當前用戶加入-Docker-群組-不採用"><a href="#將當前用戶加入-Docker-群組-不採用" class="headerlink" title="將當前用戶加入 Docker 群組(不採用)"></a>將當前用戶加入 Docker 群組(不採用)</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gpasswd -a $&#123;USER&#125; docker</span><br></pre></td></tr></table></figure>
+<p>之後使用 docker-compose up</p>
+<h1 id="沒有-內部DNS-所以域名會對應到外部-IP-安全規則限制會不通"><a href="#沒有-內部DNS-所以域名會對應到外部-IP-安全規則限制會不通" class="headerlink" title="沒有 內部DNS 所以域名會對應到外部 IP, 安全規則限制會不通"></a>沒有 內部DNS 所以域名會對應到外部 IP, 安全規則限制會不通</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c &#x27;cat &gt; /etc/hosts&#x27; &lt;&lt; &#x27;EOF&#x27;</span><br><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br><span class="line">172.31.43.121  gitlab.samchu.com</span><br><span class="line">172.31.43.121  docker-registry.samchu.com</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h1 id="完成-重開機"><a href="#完成-重開機" class="headerlink" title="完成 重開機"></a>完成 重開機</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo reboot</span><br></pre></td></tr></table></figure>
+
+<p><a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="創用 CC 授權條款" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">SAM的程式筆記 </span>由<a xmlns:cc="http://creativecommons.org/ns#" target="_blank" href="https://blog.samchu.dev/" property="cc:attributionName" rel="cc:attributionURL noopener">朱尚禮</a>製作，以<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">創用CC 姓名標示-非商業性-相同方式分享 4.0 國際 授權條款</a>釋出。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>Sam Zhu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.samzhu.dev/2019/04/30/%E5%A6%82%E4%BD%95%E5%88%9D%E5%A7%8B%E5%8C%96CentOS/" title="如何初始化 CentOS">https://blog.samzhu.dev/2019/04/30/如何初始化CentOS/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/OS/" rel="tag"># OS</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/04/26/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8CircleCI%E8%87%AA%E5%8B%95%E6%9B%B4%E6%96%B0Blog/" rel="prev" title="如何使用 CircleCI 自動更新 Blog">
+                  <i class="fa fa-chevron-left"></i> 如何使用 CircleCI 自動更新 Blog
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/05/01/%E5%BB%BA%E7%AB%8B-GitLab/" rel="next" title="建立 GitLab">
+                  建立 GitLab <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sam Zhu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

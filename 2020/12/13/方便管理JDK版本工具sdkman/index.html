@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;blog.samzhu.dev&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Muse&quot;,&quot;version&quot;:&quot;8.5.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;right&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;Searching...&quot;,&quot;empty&quot;:&quot;We didn&#39;t find any results for the search: ${query}&quot;,&quot;hits_time&quot;:&quot;${hits} results found in ${time} ms&quot;,&quot;hits&quot;:&quot;${hits} results found&quot;}}</script><script src="/js/config.js"></script>
+<meta name="description" content="有時還是有不同的專案對應不同的 JDK 版本, 雖然你可以全都裝, 但管理還是麻煩, 所以裝了這個 JDK 管理工具, 方便做切換">
+<meta property="og:type" content="article">
+<meta property="og:title" content="方便管理JDK版本工具sdkman">
+<meta property="og:url" content="https://blog.samzhu.dev/2020/12/13/%E6%96%B9%E4%BE%BF%E7%AE%A1%E7%90%86JDK%E7%89%88%E6%9C%AC%E5%B7%A5%E5%85%B7sdkman/index.html">
+<meta property="og:site_name" content="sam&#39;s program notes">
+<meta property="og:description" content="有時還是有不同的專案對應不同的 JDK 版本, 雖然你可以全都裝, 但管理還是麻煩, 所以裝了這個 JDK 管理工具, 方便做切換">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-12-13T13:05:22.000Z">
+<meta property="article:modified_time" content="2021-07-17T04:27:19.320Z">
+<meta property="article:author" content="Sam Zhu">
+<meta property="article:tag" content="sdkman">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.samzhu.dev/2020/12/13/%E6%96%B9%E4%BE%BF%E7%AE%A1%E7%90%86JDK%E7%89%88%E6%9C%AC%E5%B7%A5%E5%85%B7sdkman/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;en&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;blog.samzhu.dev&#x2F;2020&#x2F;12&#x2F;13&#x2F;%E6%96%B9%E4%BE%BF%E7%AE%A1%E7%90%86JDK%E7%89%88%E6%9C%AC%E5%B7%A5%E5%85%B7sdkman&#x2F;&quot;,&quot;path&quot;:&quot;2020&#x2F;12&#x2F;13&#x2F;方便管理JDK版本工具sdkman&#x2F;&quot;,&quot;title&quot;:&quot;方便管理JDK版本工具sdkman&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>方便管理JDK版本工具sdkman | sam's program notes</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138599642-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{&quot;tracking_id&quot;:&quot;UA-138599642-1&quot;,&quot;only_pageview&quot;:false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">sam's program notes</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#install-sdkman"><span class="nav-number">1.</span> <span class="nav-text">install sdkman</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#how-to-use"><span class="nav-number">2.</span> <span class="nav-text">how to use</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sam Zhu"
+      src="https://i.imgur.com/eLloI4N.png">
+  <p class="site-author-name" itemprop="name">Sam Zhu</p>
+  <div class="site-description" itemprop="description">SAM的程式筆記</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.samzhu.dev/2020/12/13/%E6%96%B9%E4%BE%BF%E7%AE%A1%E7%90%86JDK%E7%89%88%E6%9C%AC%E5%B7%A5%E5%85%B7sdkman/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.imgur.com/eLloI4N.png">
+      <meta itemprop="name" content="Sam Zhu">
+      <meta itemprop="description" content="SAM的程式筆記">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sam's program notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          方便管理JDK版本工具sdkman
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-12-13 21:05:22" itemprop="dateCreated datePublished" datetime="2020-12-13T21:05:22+08:00">2020-12-13</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-07-17 12:27:19" itemprop="dateModified" datetime="2021-07-17T12:27:19+08:00">2021-07-17</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>有時還是有不同的專案對應不同的 JDK 版本, 雖然你可以全都裝, 但管理還是麻煩, 所以裝了這個 JDK 管理工具, 方便做切換</p>
+<span id="more"></span>
+
+<h2 id="install-sdkman"><a href="#install-sdkman" class="headerlink" title="install sdkman"></a>install sdkman</h2><p>官網在這邊 <a target="_blank" rel="noopener" href="https://sdkman.io/install">sdkman</a>  </p>
+<p>安裝很簡單, 一行指令搞定</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;https://get.sdkman.io&quot;</span> | bash</span><br></pre></td></tr></table></figure>
+
+<h2 id="how-to-use"><a href="#how-to-use" class="headerlink" title="how to use"></a>how to use</h2><p>使用指令, 可以列出所有支援的 Java 版本, 包含 AdoptOpenJDK Amazon Azul Zulu 可說是該有的都有了, 居然還有 GraalVM</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">$ sdk list java</span><br><span class="line">================================================================================</span><br><span class="line">Available Java Versions</span><br><span class="line">================================================================================</span><br><span class="line"> Vendor        | Use | Version      | Dist    | Status     | Identifier</span><br><span class="line">--------------------------------------------------------------------------------</span><br><span class="line"> AdoptOpenJDK  |     | 15.0.1.j9    | adpt    |            | 15.0.1.j9-adpt      </span><br><span class="line">               |     | 15.0.1.hs    | adpt    |            | 15.0.1.hs-adpt      </span><br><span class="line">               |     | 14.0.2.j9    | adpt    |            | 14.0.2.j9-adpt      </span><br><span class="line">               |     | 14.0.2.hs    | adpt    |            | 14.0.2.hs-adpt      </span><br><span class="line">               |     | 13.0.2.j9    | adpt    |            | 13.0.2.j9-adpt      </span><br><span class="line">               |     | 13.0.2.hs    | adpt    |            | 13.0.2.hs-adpt      </span><br><span class="line">               |     | 12.0.2.j9    | adpt    |            | 12.0.2.j9-adpt      </span><br><span class="line">               |     | 12.0.2.hs    | adpt    |            | 12.0.2.hs-adpt      </span><br><span class="line">               |     | 11.0.9.j9    | adpt    |            | 11.0.9.j9-adpt      </span><br><span class="line">               | &gt;&gt;&gt; | 11.0.9.hs    | adpt    | installed  | 11.0.9.hs-adpt      </span><br><span class="line">               |     | 8.0.275.j9   | adpt    |            | 8.0.275.j9-adpt     </span><br><span class="line">               |     | 8.0.275.hs   | adpt    |            | 8.0.275.hs-adpt     </span><br><span class="line">               |     | 8.0.272.hs   | adpt    |            | 8.0.272.hs-adpt     </span><br><span class="line"> Amazon        |     | 15.0.1       | amzn    |            | 15.0.1-amzn         </span><br><span class="line">               |     | 11.0.9       | amzn    |            | 11.0.9-amzn         </span><br><span class="line">               |     | 8.0.275      | amzn    |            | 8.0.275-amzn        </span><br><span class="line"> Azul Zulu     |     | 15.0.1       | zulu    |            | 15.0.1-zulu         </span><br><span class="line">               |     | 15.0.1.fx    | zulu    |            | 15.0.1.fx-zulu      </span><br><span class="line">               |     | 14.0.2       | zulu    |            | 14.0.2-zulu         </span><br><span class="line">               |     | 14.0.2.fx    | zulu    |            | 14.0.2.fx-zulu      </span><br><span class="line">               |     | 13.0.5       | zulu    |            | 13.0.5-zulu         </span><br><span class="line">               |     | 13.0.5.fx    | zulu    |            | 13.0.5.fx-zulu      </span><br><span class="line">               |     | 12.0.2       | zulu    |            | 12.0.2-zulu         </span><br><span class="line">               |     | 11.0.9       | zulu    |            | 11.0.9-zulu         </span><br><span class="line">               |     | 11.0.9.fx    | zulu    |            | 11.0.9.fx-zulu      </span><br><span class="line">               |     | 10.0.2       | zulu    |            | 10.0.2-zulu         </span><br><span class="line">               |     | 9.0.7        | zulu    |            | 9.0.7-zulu          </span><br><span class="line">               |     | 8.0.272      | zulu    |            | 8.0.272-zulu        </span><br><span class="line">               |     | 8.0.272.fx   | zulu    |            | 8.0.272.fx-zulu     </span><br><span class="line">               |     | 8.0.202      | zulu    |            | 8.0.202-zulu        </span><br><span class="line">               |     | 7.0.282      | zulu    |            | 7.0.282-zulu        </span><br><span class="line">               |     | 7.0.181      | zulu    |            | 7.0.181-zulu        </span><br><span class="line"> BellSoft      |     | 15.0.1.fx    | librca  |            | 15.0.1.fx-librca    </span><br><span class="line">               |     | 15.0.1       | librca  |            | 15.0.1-librca       </span><br><span class="line">               |     | 14.0.2.fx    | librca  |            | 14.0.2.fx-librca    </span><br><span class="line">               |     | 14.0.2       | librca  |            | 14.0.2-librca       </span><br><span class="line">               |     | 13.0.2.fx    | librca  |            | 13.0.2.fx-librca    </span><br><span class="line">               |     | 13.0.2       | librca  |            | 13.0.2-librca       </span><br><span class="line">               |     | 12.0.2       | librca  |            | 12.0.2-librca       </span><br><span class="line">               |     | 11.0.9.fx    | librca  |            | 11.0.9.fx-librca    </span><br><span class="line">               |     | 11.0.9       | librca  |            | 11.0.9-librca       </span><br><span class="line">               |     | 8.0.275.fx   | librca  |            | 8.0.275.fx-librca   </span><br><span class="line">               |     | 8.0.275      | librca  |            | 8.0.275-librca      </span><br><span class="line">               |     | 8.0.265.fx   | librca  |            | 8.0.265.fx-librca   </span><br><span class="line"> GraalVM       |     | 20.3.0.r11   | grl     | installed  | 20.3.0.r11-grl      </span><br><span class="line">               |     | 20.3.0.r8    | grl     | installed  | 20.3.0.r8-grl       </span><br><span class="line">               |     | 20.2.0.r11   | grl     | installed  | 20.2.0.r11-grl      </span><br><span class="line">               |     | 20.2.0.r8    | grl     |            | 20.2.0.r8-grl       </span><br><span class="line">               |     | 20.1.0.r11   | grl     |            | 20.1.0.r11-grl      </span><br><span class="line">               |     | 20.1.0.r8    | grl     |            | 20.1.0.r8-grl       </span><br><span class="line">               |     | 20.0.0.r11   | grl     |            | 20.0.0.r11-grl      </span><br><span class="line">               |     | 20.0.0.r8    | grl     |            | 20.0.0.r8-grl       </span><br><span class="line">               |     | 19.3.4.r11   | grl     |            | 19.3.4.r11-grl      </span><br><span class="line">               |     | 19.3.4.r8    | grl     |            | 19.3.4.r8-grl       </span><br><span class="line">               |     | 19.3.1.r11   | grl     |            | 19.3.1.r11-grl      </span><br><span class="line">               |     | 19.3.1.r8    | grl     |            | 19.3.1.r8-grl       </span><br><span class="line"> Java.net      |     | 16.ea.28     | open    |            | 16.ea.28-open       </span><br><span class="line">               |     | 16.ea.9.lm   | open    |            | 16.ea.9.lm-open     </span><br><span class="line">               |     | 16.ea.3.pma  | open    |            | 16.ea.3.pma-open    </span><br><span class="line">               |     | 15.0.1       | open    |            | 15.0.1-open         </span><br><span class="line">               |     | 14.0.2       | open    |            | 14.0.2-open         </span><br><span class="line">               |     | 13.0.2       | open    |            | 13.0.2-open         </span><br><span class="line">               |     | 12.0.2       | open    |            | 12.0.2-open         </span><br><span class="line">               |     | 11.0.2       | open    |            | 11.0.2-open         </span><br><span class="line">               |     | 10.0.2       | open    |            | 10.0.2-open         </span><br><span class="line">               |     | 9.0.4        | open    |            | 9.0.4-open          </span><br><span class="line"> SAP           |     | 15.0.1       | sapmchn |            | 15.0.1-sapmchn      </span><br><span class="line">               |     | 14.0.2       | sapmchn |            | 14.0.2-sapmchn      </span><br><span class="line">               |     | 13.0.2       | sapmchn |            | 13.0.2-sapmchn      </span><br><span class="line">               |     | 12.0.2       | sapmchn |            | 12.0.2-sapmchn      </span><br><span class="line">               |     | 11.0.9       | sapmchn |            | 11.0.9-sapmchn      </span><br><span class="line"> TravaOpenJDK  |     | 11.0.9       | trava   |            | 11.0.9-trava        </span><br><span class="line">               |     | 8.0.232      | trava   |            | 8.0.232-trava       </span><br><span class="line">================================================================================</span><br><span class="line">Use the Identifier <span class="keyword">for</span> installation:</span><br><span class="line"></span><br><span class="line">    $ sdk install java 11.0.3.hs-adpt</span><br><span class="line">================================================================================</span><br></pre></td></tr></table></figure>
+
+<p>安裝指定版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ sdk install java 11.0.9.hs-adpt</span><br><span class="line"></span><br><span class="line">Found a previously downloaded java 11.0.9.hs-adpt archive. Not downloading it again...</span><br><span class="line"></span><br><span class="line">Installing: java 11.0.9.hs-adpt</span><br><span class="line">Done installing!</span><br><span class="line"></span><br><span class="line">Do you want java 11.0.9.hs-adpt to be <span class="built_in">set</span> as default? (Y/n): y</span><br><span class="line"></span><br><span class="line">Setting java 11.0.9.hs-adpt as default.</span><br></pre></td></tr></table></figure>
+
+<p>移除指定版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ sdk uninstall java 11.0.9.hs-adpt</span><br><span class="line"></span><br><span class="line">Deselecting java 11.0.9.hs-adpt...</span><br><span class="line"></span><br><span class="line">Uninstalling java 11.0.9.hs-adpt...</span><br></pre></td></tr></table></figure>
+
+<p>雖然說有多版本要用在切換是很方便, 但還是會有預設版本的需求</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sdk default java 11.0.9.hs-adpt</span><br><span class="line"></span><br><span class="line">Default java version set to 11.0.9.hs-adpt</span><br></pre></td></tr></table></figure>
+
+<p>這時候去驗證一下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ java -version</span><br><span class="line">openjdk version <span class="string">&quot;11.0.9&quot;</span> 2020-10-20</span><br><span class="line">OpenJDK Runtime Environment AdoptOpenJDK (build 11.0.9+11)</span><br><span class="line">OpenJDK 64-Bit Server VM AdoptOpenJDK (build 11.0.9+11, mixed mode)</span><br></pre></td></tr></table></figure>
+
+<p>輕鬆管理不費力, 讚!</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>Sam Zhu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.samzhu.dev/2020/12/13/%E6%96%B9%E4%BE%BF%E7%AE%A1%E7%90%86JDK%E7%89%88%E6%9C%AC%E5%B7%A5%E5%85%B7sdkman/" title="方便管理JDK版本工具sdkman">https://blog.samzhu.dev/2020/12/13/方便管理JDK版本工具sdkman/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/sdkman/" rel="tag"># sdkman</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/07/24/Golang-install/" rel="prev" title="Golang install">
+                  <i class="fa fa-chevron-left"></i> Golang install
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/12/13/SpringBoot-2-4-with-GraalVM/" rel="next" title="SpringBoot 2.4 with GraalVM">
+                  SpringBoot 2.4 with GraalVM <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sam Zhu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

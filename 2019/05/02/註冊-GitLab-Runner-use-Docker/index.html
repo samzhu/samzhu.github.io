@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;blog.samzhu.dev&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Muse&quot;,&quot;version&quot;:&quot;8.5.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;right&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;Searching...&quot;,&quot;empty&quot;:&quot;We didn&#39;t find any results for the search: ${query}&quot;,&quot;hits_time&quot;:&quot;${hits} results found in ${time} ms&quot;,&quot;hits&quot;:&quot;${hits} results found&quot;}}</script><script src="/js/config.js"></script>
+<meta name="description" content="程式寫完, 接著就是要打包輸出了   這個 CI 階段, 我是選擇用 GitLab Runner ( Docker in Docker 方案 )">
+<meta property="og:type" content="article">
+<meta property="og:title" content="註冊 GitLab Runner use Docker">
+<meta property="og:url" content="https://blog.samzhu.dev/2019/05/02/%E8%A8%BB%E5%86%8A-GitLab-Runner-use-Docker/index.html">
+<meta property="og:site_name" content="sam&#39;s program notes">
+<meta property="og:description" content="程式寫完, 接著就是要打包輸出了   這個 CI 階段, 我是選擇用 GitLab Runner ( Docker in Docker 方案 )">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.imgur.com/EZneRW8.png">
+<meta property="og:image" content="https://i.imgur.com/EQ7rmsu.png">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png">
+<meta property="article:published_time" content="2019-05-02T06:33:00.000Z">
+<meta property="article:modified_time" content="2021-07-17T04:27:19.320Z">
+<meta property="article:author" content="Sam Zhu">
+<meta property="article:tag" content="GitLab">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/EZneRW8.png">
+
+
+<link rel="canonical" href="https://blog.samzhu.dev/2019/05/02/%E8%A8%BB%E5%86%8A-GitLab-Runner-use-Docker/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;en&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;blog.samzhu.dev&#x2F;2019&#x2F;05&#x2F;02&#x2F;%E8%A8%BB%E5%86%8A-GitLab-Runner-use-Docker&#x2F;&quot;,&quot;path&quot;:&quot;2019&#x2F;05&#x2F;02&#x2F;註冊-GitLab-Runner-use-Docker&#x2F;&quot;,&quot;title&quot;:&quot;註冊 GitLab Runner use Docker&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>註冊 GitLab Runner use Docker | sam's program notes</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138599642-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{&quot;tracking_id&quot;:&quot;UA-138599642-1&quot;,&quot;only_pageview&quot;:false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">sam's program notes</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sam Zhu"
+      src="https://i.imgur.com/eLloI4N.png">
+  <p class="site-author-name" itemprop="name">Sam Zhu</p>
+  <div class="site-description" itemprop="description">SAM的程式筆記</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.samzhu.dev/2019/05/02/%E8%A8%BB%E5%86%8A-GitLab-Runner-use-Docker/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.imgur.com/eLloI4N.png">
+      <meta itemprop="name" content="Sam Zhu">
+      <meta itemprop="description" content="SAM的程式筆記">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sam's program notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          註冊 GitLab Runner use Docker
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2019-05-02 14:33:00" itemprop="dateCreated datePublished" datetime="2019-05-02T14:33:00+08:00">2019-05-02</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-07-17 12:27:19" itemprop="dateModified" datetime="2021-07-17T12:27:19+08:00">2021-07-17</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/DevOps/" itemprop="url" rel="index"><span itemprop="name">DevOps</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>程式寫完, 接著就是要打包輸出了  </p>
+<p>這個 CI 階段, 我是選擇用 GitLab Runner ( Docker in Docker 方案 )</p>
+<span id="more"></span>
+<p>首先用 root 身分 登入後<br>打開 settings -&gt; CI / CD<br>展開 Runners  </p>
+<p>你會看到類似下面畫面<br><img src="https://i.imgur.com/EZneRW8.png" alt="Imgur"></p>
+<p>這邊你可以得到 Runner 註冊時需要的 url 跟 token 先把他們記錄下來<br>接下來<br>我們進入到要當 Runner 的主機中執行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@cs-gitlab-runner ~]<span class="comment"># docker run --rm -t -i -v /path/to/config:/etc/gitlab-runner \</span></span><br><span class="line">--name gitlab-runner \</span><br><span class="line">gitlab/gitlab-runner register \</span><br><span class="line">&gt;   --non-interactive \</span><br><span class="line">&gt;   --executor <span class="string">&quot;docker&quot;</span> \</span><br><span class="line">&gt;   --docker-image alpine:3 \</span><br><span class="line">&gt;   --url <span class="string">&quot;http://gitlab.xxxxx.com/&quot;</span> \</span><br><span class="line">&gt;   --registration-token <span class="string">&quot;FsuxxxxxxxxdVF4&quot;</span> \</span><br><span class="line">&gt;   --description <span class="string">&quot;docker-runner&quot;</span> \</span><br><span class="line">&gt;   --run-untagged \</span><br><span class="line">&gt;   --locked=<span class="string">&quot;false&quot;</span></span><br><span class="line">Runtime platform                                    arch=amd64 os=linux pid=6 revision=8bb608ff version=11.7.0</span><br><span class="line">Running <span class="keyword">in</span> system-mode.</span><br><span class="line"></span><br><span class="line">Registering runner... succeeded                     runner=FsuUn-ca</span><br><span class="line">Runner registered successfully. Feel free to start it, but <span class="keyword">if</span> it<span class="string">&#x27;s running already the config should be automatically reloaded!</span></span><br></pre></td></tr></table></figure>
+
+<p>之後你就可以看到 Runner 有沒有註冊成功,<br>但這個時候應該是紅燈, 表示已註冊但不能用, 要讓他執行起來就會向下圖一樣變綠燈了<br><img src="https://i.imgur.com/EQ7rmsu.png" alt="Imgur"></p>
+<p>然後我們先看一下 /path/to/config/config.toml 這個檔案<br>這檔案是 register 時候會自動產生的  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root@cs-gitlab-runner ~]# cat /path/to/config/config.toml</span><br><span class="line">concurrent = 1</span><br><span class="line">check_interval = 0</span><br><span class="line"></span><br><span class="line">[session_server]</span><br><span class="line">  session_timeout = 1800</span><br><span class="line"></span><br><span class="line">[[runners]]</span><br><span class="line">  name = &quot;docker-runner&quot;</span><br><span class="line">  url = &quot;http://gitlab.samchu.com/&quot;</span><br><span class="line">  token = &quot;ckfxxxxxxm6&quot;</span><br><span class="line">  executor = &quot;docker&quot;</span><br><span class="line">  [runners.docker]</span><br><span class="line">    tls_verify = false</span><br><span class="line">    image = &quot;alpine:3&quot;</span><br><span class="line">    privileged = false</span><br><span class="line">    disable_entrypoint_overwrite = false</span><br><span class="line">    oom_kill_disable = false</span><br><span class="line">    disable_cache = false</span><br><span class="line">    volumes = [&quot;/cache&quot;]</span><br><span class="line">    shm_size = 0</span><br><span class="line">  [runners.cache]</span><br><span class="line">    [runners.cache.s3]</span><br><span class="line">    [runners.cache.gcs]</span><br></pre></td></tr></table></figure>
+<p>這是原始的  </p>
+<p>接下來為了在 Docker 中可以包 Docker, 需要做點手腳從宿主主機的 Docker 拉進來使用, 所以我們改一下設定檔跟他說 Docker 在哪</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@cs-gitlab-runner ~]# sed -i -e &#x27;/volumes/d&#x27; \</span><br><span class="line">&gt;   -e &#x27;/^    shm_size/a\    volumes = [&quot;/cache&quot;, &quot;/var/run/docker.sock:/run/docker.sock&quot;]&#x27; \</span><br><span class="line">&gt;   -e &#x27;/^    shm_size/a\    network_mode = &quot;host&quot;&#x27; /path/to/config/config.toml</span><br></pre></td></tr></table></figure>
+
+<p>執行完後的檔案變這樣</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[root@cs-gitlab-runner ~]# cat /path/to/config/config.toml</span><br><span class="line">concurrent = 1</span><br><span class="line">check_interval = 0</span><br><span class="line"></span><br><span class="line">[session_server]</span><br><span class="line">  session_timeout = 1800</span><br><span class="line"></span><br><span class="line">[[runners]]</span><br><span class="line">  name = &quot;docker-runner&quot;</span><br><span class="line">  url = &quot;http://gitlab.samchu.com/&quot;</span><br><span class="line">  token = &quot;ckxxxxCm6&quot;</span><br><span class="line">  executor = &quot;docker&quot;</span><br><span class="line">  [runners.docker]</span><br><span class="line">    tls_verify = false</span><br><span class="line">    image = &quot;alpine:3&quot;</span><br><span class="line">    privileged = false</span><br><span class="line">    disable_entrypoint_overwrite = false</span><br><span class="line">    oom_kill_disable = false</span><br><span class="line">    disable_cache = false</span><br><span class="line">    shm_size = 0</span><br><span class="line">    volumes = [&quot;/cache&quot;, &quot;/var/run/docker.sock:/run/docker.sock&quot;]</span><br><span class="line">    network_mode = &quot;host&quot;</span><br><span class="line">  [runners.cache]</span><br><span class="line">    [runners.cache.s3]</span><br><span class="line">    [runners.cache.gcs]</span><br></pre></td></tr></table></figure>
+
+<p>確認有成功修改到後, 就可以執行我們的 Runner  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@cs-gitlab-runner ~]# docker run -d --name gitlab-runner --restart always \</span><br><span class="line">&gt;    -v /path/to/config:/etc/gitlab-runner \</span><br><span class="line">&gt;    -v /var/run/docker.sock:/var/run/docker.sock \</span><br><span class="line">&gt;    gitlab/gitlab-runner:latest</span><br><span class="line">584e39680fa0e35535ccb6688584639bed308ea0e41e9d17e183c288da8e6d6c</span><br></pre></td></tr></table></figure>
+
+<p>順利的話, 你就可以看到你的 Runner 是綠燈狀態囉  </p>
+<p>接下在你要打包的那個專案 Enable shared Runners 就可以使用 Gitlab 共用的 Runner 囉</p>
+<p>下一篇說明 .gitlab-ci.yml 如何寫腳本給 Runner 執行</p>
+<p><a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="創用 CC 授權條款" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">SAM的程式筆記 </span>由<a xmlns:cc="http://creativecommons.org/ns#" target="_blank" href="https://blog.samchu.dev/" property="cc:attributionName" rel="cc:attributionURL noopener">朱尚禮</a>製作，以<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">創用CC 姓名標示-非商業性-相同方式分享 4.0 國際 授權條款</a>釋出。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>Sam Zhu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.samzhu.dev/2019/05/02/%E8%A8%BB%E5%86%8A-GitLab-Runner-use-Docker/" title="註冊 GitLab Runner use Docker">https://blog.samzhu.dev/2019/05/02/註冊-GitLab-Runner-use-Docker/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/GitLab/" rel="tag"># GitLab</a>
+              <a href="/tags/Docker/" rel="tag"># Docker</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/05/02/%E6%9E%B6%E8%A8%AD-Nginx-%E5%95%9F%E7%94%A8-SSL-%E8%B7%9F%E5%9F%9F%E5%90%8D/" rel="prev" title="架設 Nginx 啟用 SSL 跟域名">
+                  <i class="fa fa-chevron-left"></i> 架設 Nginx 啟用 SSL 跟域名
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/05/03/%E8%A8%AD%E5%AE%9A-GitLab-Runner-%E9%80%B2%E8%A1%8C%E6%89%93%E5%8C%85%E4%BD%9C%E6%A5%AD/" rel="next" title="設定 GitLab Runner 進行打包作業">
+                  設定 GitLab Runner 進行打包作業 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sam Zhu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
