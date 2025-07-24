@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.samzhu.dev","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="In the dynamic world of software development, efficiency and consistency are key. Developers are continually seeking tools and practices that streamline their workflow, reducing overhead and allowing">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Achieving Seamless SSH Experience and Java Development Setup in VS Code DevContainers">
+<meta property="og:url" content="https://blog.samzhu.dev/2024/01/11/Achieving-Seamless-SSH-Experience-and-Java-Development-Setup-in-VS-Code-Dev-Containers/index.html">
+<meta property="og:site_name" content="Sam&#39;s programming note">
+<meta property="og:description" content="In the dynamic world of software development, efficiency and consistency are key. Developers are continually seeking tools and practices that streamline their workflow, reducing overhead and allowing">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-01-11T01:46:06.000Z">
+<meta property="article:modified_time" content="2025-07-24T15:41:45.582Z">
+<meta property="article:author" content="Sam Zhu">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="VSCode">
+<meta property="article:tag" content="DevContainers">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@samzhu0318">
+
+
+<link rel="canonical" href="https://blog.samzhu.dev/2024/01/11/Achieving-Seamless-SSH-Experience-and-Java-Development-Setup-in-VS-Code-Dev-Containers/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.samzhu.dev/2024/01/11/Achieving-Seamless-SSH-Experience-and-Java-Development-Setup-in-VS-Code-Dev-Containers/","path":"2024/01/11/Achieving-Seamless-SSH-Experience-and-Java-Development-Setup-in-VS-Code-Dev-Containers/","title":"Achieving Seamless SSH Experience and Java Development Setup in VS Code DevContainers"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Achieving Seamless SSH Experience and Java Development Setup in VS Code DevContainers | Sam's programming note</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CFLHEYEETG"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-CFLHEYEETG","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<meta name="google-adsense-account" content="ca-pub-5880479202699914">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880479202699914"
+     crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sam's programming note</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Setting-Up-the-Essentials"><span class="nav-number">1.</span> <span class="nav-text">Setting Up the Essentials</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Installing-Visual-Studio-Code"><span class="nav-number">1.1.</span> <span class="nav-text">Installing Visual Studio Code</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Adding-Remote-Development-Extensions"><span class="nav-number">1.2.</span> <span class="nav-text">Adding Remote Development Extensions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-Installation-and-Configuration"><span class="nav-number">1.3.</span> <span class="nav-text">Docker Installation and Configuration</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Working-with-Dev-Containers"><span class="nav-number">2.</span> <span class="nav-text">Working with Dev Containers</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Opening-a-Project-with-a-Dev-Container"><span class="nav-number">2.1.</span> <span class="nav-text">Opening a Project with a Dev Container</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Building-and-Starting-the-Container"><span class="nav-number">2.2.</span> <span class="nav-text">Building and Starting the Container</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Development-Experience-in-a-Container"><span class="nav-number">2.3.</span> <span class="nav-text">The Development Experience in a Container</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Managing-Containers"><span class="nav-number">2.4.</span> <span class="nav-text">Managing Containers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Debugging-and-Running-Applications"><span class="nav-number">2.5.</span> <span class="nav-text">Debugging and Running Applications</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Accessing-Files-and-Using-Terminals"><span class="nav-number">2.6.</span> <span class="nav-text">Accessing Files and Using Terminals</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Version-Control"><span class="nav-number">2.7.</span> <span class="nav-text">Version Control</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Configuring-the-Dev-Container-for-Java-Understanding-devcontainer-json"><span class="nav-number">3.</span> <span class="nav-text">Configuring the Dev Container for Java - Understanding devcontainer.json</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Purpose-and-Functionality-of-devcontainer-json"><span class="nav-number">3.1.</span> <span class="nav-text">Purpose and Functionality of devcontainer.json</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Exploring-Your-devcontainer-json-Configuration"><span class="nav-number">3.2.</span> <span class="nav-text">Exploring Your devcontainer.json Configuration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Customizing-Your-devcontainer-json"><span class="nav-number">3.3.</span> <span class="nav-text">Customizing Your devcontainer.json</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Impact-on-Your-Workflow"><span class="nav-number">3.4.</span> <span class="nav-text">Impact on Your Workflow</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Crafting-the-Dockerfile-for-Java-Development"><span class="nav-number">4.</span> <span class="nav-text">Crafting the Dockerfile for Java Development</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Understanding-the-Role-of-the-Dockerfile"><span class="nav-number">4.1.</span> <span class="nav-text">Understanding the Role of the Dockerfile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Key-Components-of-Your-Dockerfile"><span class="nav-number">4.2.</span> <span class="nav-text">Key Components of Your Dockerfile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Customizing-the-Dockerfile"><span class="nav-number">4.3.</span> <span class="nav-text">Customizing the Dockerfile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Impact-on-Development-Workflow"><span class="nav-number">4.4.</span> <span class="nav-text">Impact on Development Workflow</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Post-Creation-Script-postCreateCommand-sh"><span class="nav-number">5.</span> <span class="nav-text">Post Creation Script (postCreateCommand.sh)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Purpose-of-postCreateCommand-sh"><span class="nav-number">5.1.</span> <span class="nav-text">Purpose of postCreateCommand.sh</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Breakdown-of-Your-postCreateCommand-sh-Script"><span class="nav-number">5.2.</span> <span class="nav-text">Breakdown of Your postCreateCommand.sh Script</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Impact-on-Development-Workflow-1"><span class="nav-number">5.3.</span> <span class="nav-text">Impact on Development Workflow</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Seamless-SSH-Experience-on-MacOS"><span class="nav-number">6.</span> <span class="nav-text">Seamless SSH Experience on MacOS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Overview-of-SSH-Integration-in-Dev-Containers"><span class="nav-number">6.1.</span> <span class="nav-text">Overview of SSH Integration in Dev Containers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Setting-Up-SSH-for-a-Smooth-Workflow"><span class="nav-number">6.2.</span> <span class="nav-text">Setting Up SSH for a Smooth Workflow</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Integrating-SSH-with-VS-Code-Dev-Containers"><span class="nav-number">7.</span> <span class="nav-text">Integrating SSH with VS Code Dev Containers</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Emphasizing-OS-Agnostic-Development-Practices"><span class="nav-number">7.1.</span> <span class="nav-text">Emphasizing OS-Agnostic Development Practices</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Expanded-Practical-Use-Cases"><span class="nav-number">8.</span> <span class="nav-text">Expanded Practical Use Cases</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-Prettier-for-Code-Formatting"><span class="nav-number">8.1.</span> <span class="nav-text">Using Prettier for Code Formatting</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Crafting-Effective-Git-Commit-Messages"><span class="nav-number">8.2.</span> <span class="nav-text">Crafting Effective Git Commit Messages</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Example-of-a-Well-Formed-Commit-Message"><span class="nav-number">8.3.</span> <span class="nav-text">Example of a Well-Formed Commit Message:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Enforcing-Standards-with-commitlint"><span class="nav-number">8.4.</span> <span class="nav-text">Enforcing Standards with commitlint</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Adding-launch-json-for-Enhanced-Java-Debugging-in-VS-Code"><span class="nav-number">9.</span> <span class="nav-text">Adding launch.json for Enhanced Java Debugging in VS Code</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Understanding-launch-json-in-VS-Code"><span class="nav-number">9.1.</span> <span class="nav-text">Understanding launch.json in VS Code</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Configuring-launch-json-for-Java"><span class="nav-number">9.2.</span> <span class="nav-text">Configuring launch.json for Java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Example-launch-json-for-Java"><span class="nav-number">9.3.</span> <span class="nav-text">Example launch.json for Java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Benefits-of-Using-launch-json-in-Java-Development"><span class="nav-number">9.4.</span> <span class="nav-text">Benefits of Using launch.json in Java Development</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">10.</span> <span class="nav-text">References</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sam Zhu"
+      src="https://i.imgur.com/eLloI4N.png">
+  <p class="site-author-name" itemprop="name">Sam Zhu</p>
+  <div class="site-description" itemprop="description">Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">74</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/samzhu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;samzhu" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/samzhu0318" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;samzhu0318" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.samzhu.dev/2024/01/11/Achieving-Seamless-SSH-Experience-and-Java-Development-Setup-in-VS-Code-Dev-Containers/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.imgur.com/eLloI4N.png">
+      <meta itemprop="name" content="Sam Zhu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sam's programming note">
+      <meta itemprop="description" content="Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Achieving Seamless SSH Experience and Java Development Setup in VS Code DevContainers | Sam's programming note">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Achieving Seamless SSH Experience and Java Development Setup in VS Code DevContainers
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-01-11 09:46:06" itemprop="dateCreated datePublished" datetime="2024-01-11T09:46:06+08:00">2024-01-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-07-24 23:41:45" itemprop="dateModified" datetime="2025-07-24T23:41:45+08:00">2025-07-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>In the dynamic world of software development, efficiency and consistency are key. Developers are continually seeking tools and practices that streamline their workflow, reducing overhead and allowing a greater focus on the creative aspects of coding. Enter the realm of Visual Studio Code’s Dev Containers – a feature revolutionizing the way developers interact with their coding environments.  </p>
+<p>Dev Containers in VS Code offer a consistent, isolated development environment, ensuring that the “it works on my machine” syndrome is a thing of the past. This innovation brings a fresh approach to the development process, allowing smoother code development, testing, and debugging.  </p>
+<span id="more"></span>
+
+<p>In this article, we delve deep into setting up a robust Java development environment within Dev Containers. We also integrate SSH configuration on MacOS, promising seamless management of SSH keys and smoothing the transition between local and containerized development environments.  </p>
+<p>Whether a seasoned developer or a newcomer, understanding how to leverage these tools can significantly enhance your development practices. Join us as we explore how to streamline your development process, making it more efficient and hassle-free.  </p>
+<p>Stay tuned as we unveil the steps to set up your development environment, configure SSH keys seamlessly on MacOS, and harness the full potential of Dev Containers for Java development.  </p>
+<h2 id="Setting-Up-the-Essentials"><a href="#Setting-Up-the-Essentials" class="headerlink" title="Setting Up the Essentials"></a>Setting Up the Essentials</h2><p>Embarking on a development journey with VS Code’s Dev Containers requires some initial setup. This section guides you through the essentials, ensuring you have all the necessary tools at your disposal.</p>
+<h3 id="Installing-Visual-Studio-Code"><a href="#Installing-Visual-Studio-Code" class="headerlink" title="Installing Visual Studio Code"></a>Installing Visual Studio Code</h3><p><strong>Why VS Code?</strong><br>Visual Studio Code, often abbreviated as VS Code, is more than just a code editor. It’s a versatile, lightweight tool that supports multiple programming languages and platforms. Its sleek interface, combined with powerful features like IntelliSense code completion and integrated Git control, makes it a top choice for developers globally.</p>
+<p><strong>Steps to Get Started:</strong>  </p>
+<ul>
+<li>Visit the <a target="_blank" rel="noopener" href="https://code.visualstudio.com/">Visual Studio Code website</a>.</li>
+<li>Select the version compatible with your operating system (Windows, MacOS, or Linux).</li>
+<li>Download and follow the installation instructions.</li>
+</ul>
+<p>With VS Code installed, you’re already a step closer to a streamlined development environment.</p>
+<h3 id="Adding-Remote-Development-Extensions"><a href="#Adding-Remote-Development-Extensions" class="headerlink" title="Adding Remote Development Extensions"></a>Adding Remote Development Extensions</h3><p><strong>The Role of Remote Development Extensions:</strong><br>VS Code’s Remote Development extensions are a suite of functionalities allowing developers to work in remote environments like SSH servers, Docker containers, and the Windows Subsystem for Linux (WSL). These extensions are crucial for setting up Dev Containers.</p>
+<p><strong>Installation Guide:</strong></p>
+<ul>
+<li>Launch VS Code.</li>
+<li>Access the Extensions view by clicking on the square icon on the left sidebar or pressing <code>Ctrl+Shift+X</code> (<code>Cmd+Shift+X</code> on MacOS).</li>
+<li>Search for “Remote Development” in the extensions marketplace.</li>
+<li>Find the extension pack by Microsoft and install it.</li>
+</ul>
+<p>Now, you’re equipped to handle remote development scenarios directly from your local machine.</p>
+<h3 id="Docker-Installation-and-Configuration"><a href="#Docker-Installation-and-Configuration" class="headerlink" title="Docker Installation and Configuration"></a>Docker Installation and Configuration</h3><p><strong>Understanding Docker’s Role:</strong><br>Docker is the cornerstone of working with Dev Containers. It allows you to create, manage, and deploy containerized applications, ensuring that your development environment is replicated accurately wherever you go.</p>
+<p><strong>Downloading and Configuring Docker:</strong></p>
+<ul>
+<li>Head to the <a target="_blank" rel="noopener" href="https://www.docker.com/products/docker-desktop">Docker website</a> and download Docker Desktop for your operating system.</li>
+<li>Run the installer and follow the instructions.</li>
+<li>After installation, launch Docker Desktop and adjust the settings if necessary to suit your system’s resources.</li>
+</ul>
+<p>With Docker up and running, the stage is set for you to create isolated and reproducible development environments.</p>
+<h2 id="Working-with-Dev-Containers"><a href="#Working-with-Dev-Containers" class="headerlink" title="Working with Dev Containers"></a>Working with Dev Containers</h2><p>Dev Containers in Visual Studio Code offer a fully-fledged development environment, tailored to your project’s needs, yet isolated from your local setup. This isolation ensures consistency and replicability across development teams and environments. Here, we’ll explore how to work effectively with Dev Containers, specifically for Java development.</p>
+<h3 id="Opening-a-Project-with-a-Dev-Container"><a href="#Opening-a-Project-with-a-Dev-Container" class="headerlink" title="Opening a Project with a Dev Container"></a>Opening a Project with a Dev Container</h3><p>To start working with a Dev Container, you first need a project that includes a <code>.devcontainer</code> directory with at least a <code>devcontainer.json</code> file and, typically, a <code>Dockerfile</code>.</p>
+<ol>
+<li><p><strong>Opening Your Project in VS Code</strong>: Navigate to your project directory that contains the <code>.devcontainer</code> folder. Open this folder in VS Code.</p>
+</li>
+<li><p><strong>Reopening in a Container</strong>: VS Code will likely prompt you to reopen the project in a container. If not, you can open the Command Palette (<code>Ctrl+Shift+P</code> on Windows&#x2F;Linux, <code>Cmd+Shift+P</code> on MacOS) and select the “Remote-Containers: Open Folder in Container…” command.</p>
+</li>
+</ol>
+<h3 id="Building-and-Starting-the-Container"><a href="#Building-and-Starting-the-Container" class="headerlink" title="Building and Starting the Container"></a>Building and Starting the Container</h3><p>When you open your project in a container, VS Code builds the container image based on the <code>Dockerfile</code> and <code>devcontainer.json</code> configuration. This process includes:</p>
+<ul>
+<li><strong>Installing Extensions</strong>: Extensions specified in the <code>devcontainer.json</code> file are installed within the container.</li>
+<li><strong>Setting Up the Environment</strong>: Any environment variables or settings defined in the configuration file are applied.</li>
+<li><strong>Running Post-Creation Commands</strong>: If specified, commands in the <code>postCreateCommand</code> field are executed after the container is built.</li>
+</ul>
+<h3 id="The-Development-Experience-in-a-Container"><a href="#The-Development-Experience-in-a-Container" class="headerlink" title="The Development Experience in a Container"></a>The Development Experience in a Container</h3><p>Once the container is up and running, you can start coding, debugging, and running your Java application just as you would on your local machine, but with a few key benefits:</p>
+<ul>
+<li><strong>Consistency</strong>: Your development environment matches the configuration specified in your Dev Container setup, ensuring consistency across all team members and deployment environments.</li>
+<li><strong>Isolation</strong>: Dependencies and tools required for your project are confined to the container, keeping your local environment clean and uncluttered.</li>
+<li><strong>Replicability</strong>: The Dev Container can be replicated easily across different machines or for different team members, reducing the “works on my machine” problem.</li>
+</ul>
+<h3 id="Managing-Containers"><a href="#Managing-Containers" class="headerlink" title="Managing Containers"></a>Managing Containers</h3><p>While working with Dev Containers, you can manage them through the Docker Desktop interface or using Docker CLI commands. This includes starting, stopping, or removing containers and images.</p>
+<h3 id="Debugging-and-Running-Applications"><a href="#Debugging-and-Running-Applications" class="headerlink" title="Debugging and Running Applications"></a>Debugging and Running Applications</h3><p>Debugging and running applications in a Dev Container is similar to doing so in a local environment. VS Code’s powerful debugging tools are available, and thanks to port forwarding, you can access your running applications directly from your local browser or API tools.</p>
+<h3 id="Accessing-Files-and-Using-Terminals"><a href="#Accessing-Files-and-Using-Terminals" class="headerlink" title="Accessing Files and Using Terminals"></a>Accessing Files and Using Terminals</h3><ul>
+<li><strong>File Access</strong>: You can access your project files within the container seamlessly through VS Code’s Explorer.</li>
+<li><strong>Integrated Terminal</strong>: Using the integrated terminal in VS Code (<code>Ctrl+</code> on Windows&#x2F;Linux, &#96;Ctrl+&#96;&#96; on MacOS), you can run commands inside the container as if you were working on your local machine.</li>
+</ul>
+<h3 id="Version-Control"><a href="#Version-Control" class="headerlink" title="Version Control"></a>Version Control</h3><p>Dev Containers fully support version control with Git. You can commit, push, pull, and manage your Git repositories from within the container, ensuring your development workflow remains uninterrupted.</p>
+<p>Working with Dev Containers offers a robust, isolated, and consistent development environment, enhancing productivity and collaboration for Java developers. By leveraging this powerful feature of VS Code, teams can focus more on development and less on environment-related issues.</p>
+<h2 id="Configuring-the-Dev-Container-for-Java-Understanding-devcontainer-json"><a href="#Configuring-the-Dev-Container-for-Java-Understanding-devcontainer-json" class="headerlink" title="Configuring the Dev Container for Java - Understanding devcontainer.json"></a>Configuring the Dev Container for Java - Understanding <code>devcontainer.json</code></h2><p>The <code>devcontainer.json</code> file is a key component in setting up your Java development environment within a VS Code Dev Container. This configuration file acts as a blueprint, guiding VS Code in creating a container that precisely fits your development needs.</p>
+<h3 id="Purpose-and-Functionality-of-devcontainer-json"><a href="#Purpose-and-Functionality-of-devcontainer-json" class="headerlink" title="Purpose and Functionality of devcontainer.json"></a>Purpose and Functionality of <code>devcontainer.json</code></h3><p>The <code>devcontainer.json</code> file allows you to define the characteristics and behaviors of your development environment. It includes specifying the container image, setting environment variables, installing necessary extensions, and running setup scripts. This ensures that your development environment is ready with all the tools and settings required for your Java project.</p>
+<h3 id="Exploring-Your-devcontainer-json-Configuration"><a href="#Exploring-Your-devcontainer-json-Configuration" class="headerlink" title="Exploring Your devcontainer.json Configuration"></a>Exploring Your <code>devcontainer.json</code> Configuration</h3><p>Here’s a breakdown of the main elements in your <code>devcontainer.json</code> file and how they contribute to setting up your Java development environment:</p>
+<p><code>.devcontainer/devcontainer.json</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="comment">// Name of the container environment</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Java Dev Container&quot;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Docker configuration specifying the Dockerfile to use</span></span><br><span class="line">    <span class="attr">&quot;build&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;dockerfile&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Dockerfile&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Features to include in the container, such as Java and other tools</span></span><br><span class="line">    <span class="attr">&quot;features&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="comment">// Java feature with no specific version, opting not to install Maven, but to install Gradle</span></span><br><span class="line">      <span class="attr">&quot;ghcr.io/devcontainers/features/java:1&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;none&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;installMaven&quot;</span><span class="punctuation">:</span> <span class="string">&quot;false&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;installGradle&quot;</span><span class="punctuation">:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="comment">// Google Cloud CLI feature for cloud integration</span></span><br><span class="line">      <span class="attr">&quot;ghcr.io/dhoeric/features/google-cloud-cli:1&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="comment">// Feature to enable using Docker inside the container</span></span><br><span class="line">      <span class="attr">&quot;ghcr.io/devcontainers/features/docker-outside-of-docker:1&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  </span><br><span class="line">    <span class="comment">// Port forwarding configuration to access ports inside the container from the local machine</span></span><br><span class="line">    <span class="attr">&quot;forwardPorts&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="number">8080</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Command to run after the container is created, here it runs a custom script</span></span><br><span class="line">    <span class="attr">&quot;postCreateCommand&quot;</span><span class="punctuation">:</span> <span class="string">&quot;bash ./.devcontainer/postCreateCommand.sh&quot;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Customizations for the development environment, mainly VS Code extensions</span></span><br><span class="line">    <span class="attr">&quot;customizations&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;vscode&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;extensions&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">          <span class="comment">// Extensions specific to Java development</span></span><br><span class="line">          <span class="string">&quot;vscjava.vscode-lombok&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="string">&quot;vscjava.vscode-java-pack&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="string">&quot;vmware.vscode-boot-dev-pack&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="comment">// Extensions for security vulnerability analysis</span></span><br><span class="line">          <span class="string">&quot;redhat.fabric8-analytics&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="comment">// Extensions for code quality</span></span><br><span class="line">          <span class="string">&quot;SonarSource.sonarlint-vscode&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="comment">// Extensions for Cloud development</span></span><br><span class="line">          <span class="string">&quot;GoogleCloudTools.cloudcode&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="comment">// Various tools and utilities</span></span><br><span class="line">          <span class="string">&quot;bierner.markdown-mermaid&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="string">&quot;DavidAnson.vscode-markdownlint&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="string">&quot;hediet.vscode-drawio&quot;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  </span><br><span class="line">    <span class="comment">// Specifies the default user for the container; uncomment to use the root user</span></span><br><span class="line">    <span class="attr">&quot;remoteUser&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vscode&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p><strong>Container Name (<code>&quot;name&quot;</code>)</strong>:</p>
+<ul>
+<li>Identifies your container environment. In your case, it’s labeled as “Java Dev Container”, which helps in distinguishing it in complex setups with multiple containers.</li>
+</ul>
+</li>
+<li><p><strong>Docker Build Configuration (<code>&quot;build&quot;</code>)</strong>:</p>
+<ul>
+<li>Specifies the Dockerfile to use when creating the container. This Dockerfile defines the base image and any additional software or configurations necessary for your Java environment.</li>
+</ul>
+</li>
+<li><p><strong>Features (<code>&quot;features&quot;</code>)</strong>:</p>
+<ul>
+<li>Enhances the container with additional tools or software. For Java development, you can specify versions and tools such as Maven or Gradle. This section allows for customization to fit your specific project requirements.</li>
+</ul>
+</li>
+<li><p><strong>Port Forwarding (<code>&quot;forwardPorts&quot;</code>)</strong>:</p>
+<ul>
+<li>Essential for web development, this setting forwards specified ports from the container to the host machine. It enables you to access server applications running inside the container from your local machine.</li>
+</ul>
+</li>
+<li><p><strong>Post-Creation Command (<code>&quot;postCreateCommand&quot;</code>)</strong>:</p>
+<ul>
+<li>Executes a specified script or command after the container is created. This is where your custom setup tasks, such as configuring code formatting tools or initializing project-specific settings, are automated.</li>
+</ul>
+</li>
+<li><p><strong>Extensions (<code>&quot;customizations&quot;</code>)</strong>:</p>
+<ul>
+<li>Automatically installs a set of VS Code extensions within the container. For Java development, this could include language support, linters, and other utilities that enhance your coding experience.</li>
+</ul>
+</li>
+<li><p><strong>Remote User (<code>&quot;remoteUser&quot;</code>)</strong>:</p>
+<ul>
+<li>Defines the default user within the container. This setting ensures that your development activities run under a specific user context, which can be crucial for permission and access control within the container.</li>
+</ul>
+</li>
+</ol>
+<h3 id="Customizing-Your-devcontainer-json"><a href="#Customizing-Your-devcontainer-json" class="headerlink" title="Customizing Your devcontainer.json"></a>Customizing Your <code>devcontainer.json</code></h3><p>Your <code>devcontainer.json</code> is set up to provide a robust and flexible Java development environment. However, it’s designed to be adaptable to your evolving project needs. You can modify this file to change the base image, add or remove extensions, update tool versions, or adjust other settings, ensuring that your Dev Container remains perfectly aligned with your project requirements.</p>
+<h3 id="Impact-on-Your-Workflow"><a href="#Impact-on-Your-Workflow" class="headerlink" title="Impact on Your Workflow"></a>Impact on Your Workflow</h3><p>By meticulously configuring the <code>devcontainer.json</code> file, you streamline the setup of your development environment. This eliminates the need for manual configuration each time you start a project, allowing you to dive straight into coding with all the necessary tools and settings at your fingertips.</p>
+<h2 id="Crafting-the-Dockerfile-for-Java-Development"><a href="#Crafting-the-Dockerfile-for-Java-Development" class="headerlink" title="Crafting the Dockerfile for Java Development"></a>Crafting the Dockerfile for Java Development</h2><p>The Dockerfile is an integral part of setting up your Java development environment in a Dev Container. It serves as the blueprint for constructing your containerized environment, specifying everything from the base image to the installation of development tools and dependencies.</p>
+<h3 id="Understanding-the-Role-of-the-Dockerfile"><a href="#Understanding-the-Role-of-the-Dockerfile" class="headerlink" title="Understanding the Role of the Dockerfile"></a>Understanding the Role of the Dockerfile</h3><p>A Dockerfile outlines the steps to create a container’s image. For Java development, it defines the necessary environment, including the operating system, Java Development Kit (JDK), build tools like Maven or Gradle, and any other software or libraries your project might need.</p>
+<h3 id="Key-Components-of-Your-Dockerfile"><a href="#Key-Components-of-Your-Dockerfile" class="headerlink" title="Key Components of Your Dockerfile"></a>Key Components of Your Dockerfile</h3><p><code>.devcontainer/Dockerfile</code></p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Base image for Java development - includes Java JDK 17</span></span><br><span class="line"><span class="keyword">FROM</span> mcr.microsoft.com/devcontainers/java:<span class="number">1</span>-<span class="number">17</span>-bookworm</span><br><span class="line"></span><br><span class="line"><span class="comment"># Arguments for conditional installation of Maven and Gradle</span></span><br><span class="line"><span class="comment"># Set &#x27;true&#x27; or &#x27;false&#x27; to control the installation</span></span><br><span class="line"><span class="keyword">ARG</span> INSTALL_MAVEN=<span class="string">&quot;false&quot;</span></span><br><span class="line"><span class="keyword">ARG</span> MAVEN_VERSION=<span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">ARG</span> INSTALL_GRADLE=<span class="string">&quot;true&quot;</span></span><br><span class="line"><span class="keyword">ARG</span> GRADLE_VERSION=<span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Script to install Maven and/or Gradle based on the above arguments</span></span><br><span class="line"><span class="comment"># Utilizes SDKMAN! for managing Java-related SDKs</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$&#123;INSTALL_MAVEN&#125;</span>&quot;</span> = <span class="string">&quot;true&quot;</span> ]; <span class="keyword">then</span> \</span></span><br><span class="line"><span class="language-bash">        su vscode -c <span class="string">&quot;umask 0002 &amp;&amp; . /usr/local/sdkman/bin/sdkman-init.sh &amp;&amp; sdk install maven \&quot;<span class="variable">$&#123;MAVEN_VERSION&#125;</span>\&quot;&quot;</span>; \</span></span><br><span class="line"><span class="language-bash">    <span class="keyword">fi</span> \</span></span><br><span class="line"><span class="language-bash">    &amp;&amp; <span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$&#123;INSTALL_GRADLE&#125;</span>&quot;</span> = <span class="string">&quot;true&quot;</span> ]; <span class="keyword">then</span> \</span></span><br><span class="line"><span class="language-bash">        su vscode -c <span class="string">&quot;umask 0002 &amp;&amp; . /usr/local/sdkman/bin/sdkman-init.sh &amp;&amp; sdk install gradle \&quot;<span class="variable">$&#123;GRADLE_VERSION&#125;</span>\&quot;&quot;</span>; \</span></span><br><span class="line"><span class="language-bash">    <span class="keyword">fi</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Uncomment below to install additional OS packages as needed</span></span><br><span class="line"><span class="comment"># Useful for custom dependencies specific to your project</span></span><br><span class="line"><span class="comment"># RUN apt-get update &amp;&amp; export DEBIAN_FRONTEND=noninteractive \</span></span><br><span class="line"><span class="comment">#     &amp;&amp; apt-get -y install --no-install-recommends &lt;your-package-list-here&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Uncomment to install global Node.js packages, if required</span></span><br><span class="line"><span class="comment"># Can be used for front-end development or build scripts</span></span><br><span class="line"><span class="comment"># RUN su vscode -c &quot;source /usr/local/share/nvm/nvm.sh &amp;&amp; npm install -g &lt;your-package-here&gt;&quot; 2&gt;&amp;1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Installing Node.js and NPM for projects with JavaScript components</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> apt update -y &amp;&amp; apt install npm -y &amp;&amp; apt-get clean</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Installing global tools for code quality and consistency</span></span><br><span class="line"><span class="comment"># Prettier for code formatting, Husky for Git hooks, commitlint for commit message standards</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> npm install -g prettier prettier-plugin-java husky lint-staged @commitlint/config-conventional @commitlint/cli</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p><strong>Base Image Selection</strong>:</p>
+<ul>
+<li>The Dockerfile starts with a base image that includes JDK 17, providing a solid foundation for Java development.</li>
+</ul>
+</li>
+<li><p><strong>Conditional Installation of Build Tools</strong>:</p>
+<ul>
+<li>The use of ARG instructions allows for the conditional installation of Maven and Gradle. This flexibility is valuable in customizing the container based on the specific needs of your Java projects.</li>
+</ul>
+</li>
+<li><p><strong>SDKMAN! for Tool Management</strong>:</p>
+<ul>
+<li>The Dockerfile utilizes SDKMAN!, a version manager for Java-related SDKs, to handle the installation of Maven or Gradle. This ensures that the desired versions of these tools are installed in the container.</li>
+</ul>
+</li>
+<li><p><strong>Installing Additional Tools and Dependencies</strong>:</p>
+<ul>
+<li>The Dockerfile includes steps to update package lists, install Node.js and NPM (useful for projects that include front-end components or need these for build scripts), and install global tools like Prettier and Husky.</li>
+</ul>
+</li>
+<li><p><strong>Code Quality and Consistency Tools</strong>:</p>
+<ul>
+<li>By installing Prettier and Husky globally, along with commitlint for commit message standards, your Dockerfile sets up an environment that promotes code quality and consistency.</li>
+</ul>
+</li>
+</ol>
+<h3 id="Customizing-the-Dockerfile"><a href="#Customizing-the-Dockerfile" class="headerlink" title="Customizing the Dockerfile"></a>Customizing the Dockerfile</h3><p>While your Dockerfile is configured for a robust Java development setup, it is designed to be flexible and adaptable. Depending on your project’s requirements, you can modify this file to change the base image, add or remove tools, or customize configurations. This adaptability ensures that your Dev Container remains a perfect fit for your development needs.</p>
+<h3 id="Impact-on-Development-Workflow"><a href="#Impact-on-Development-Workflow" class="headerlink" title="Impact on Development Workflow"></a>Impact on Development Workflow</h3><p>With a well-crafted Dockerfile, you can be confident that your development environment is pre-configured with all the necessary tools and settings. This minimizes setup time and allows you to focus more on coding and problem-solving, knowing that your environment is consistent, isolated, and tailored to your Java project’s requirements.</p>
+<h2 id="Post-Creation-Script-postCreateCommand-sh"><a href="#Post-Creation-Script-postCreateCommand-sh" class="headerlink" title="Post Creation Script (postCreateCommand.sh)"></a>Post Creation Script (<code>postCreateCommand.sh</code>)</h2><p>The <code>postCreateCommand.sh</code> script is a crucial element in finalizing the setup of your Dev Container, particularly for Java development. Executed after the container’s creation, this script automates the configuration of additional tools and settings, ensuring a fully prepared development environment.</p>
+<h3 id="Purpose-of-postCreateCommand-sh"><a href="#Purpose-of-postCreateCommand-sh" class="headerlink" title="Purpose of postCreateCommand.sh"></a>Purpose of <code>postCreateCommand.sh</code></h3><p>This script’s primary role is to execute tasks that are not covered in the Dockerfile or <code>devcontainer.json</code>, such as configuring project-specific settings, setting up code quality tools, and initializing necessary services or databases. It’s a powerful way to automate the final touches to your development environment.</p>
+<h3 id="Breakdown-of-Your-postCreateCommand-sh-Script"><a href="#Breakdown-of-Your-postCreateCommand-sh-Script" class="headerlink" title="Breakdown of Your postCreateCommand.sh Script"></a>Breakdown of Your <code>postCreateCommand.sh</code> Script</h3><p><code>.devcontainer/postCreateCommand.sh</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#! /usr/bin/env bash</span></span><br><span class="line"><span class="built_in">set</span> -eux</span><br><span class="line"><span class="built_in">set</span> -o pipefail</span><br><span class="line"></span><br><span class="line"><span class="comment"># Output the current username</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;User: <span class="variable">$USER</span>&quot;</span></span><br><span class="line"><span class="comment"># Get and output the current working directory path</span></span><br><span class="line">current_dir=$(<span class="built_in">pwd</span>)</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Current directory: <span class="variable">$current_dir</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Create a Prettier configuration file</span></span><br><span class="line"><span class="built_in">cat</span> &gt; .prettierrc.yaml &lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">plugins:</span></span><br><span class="line"><span class="string">  - &quot;/usr/local/lib/node_modules/prettier-plugin-java/dist/index.js&quot;</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Create a Prettier ignore file</span></span><br><span class="line"><span class="built_in">cat</span> &gt; .prettierignore &lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string"># Ignore artifacts:</span></span><br><span class="line"><span class="string">.azure-devops</span></span><br><span class="line"><span class="string">.devcontainer</span></span><br><span class="line"><span class="string">.gradle</span></span><br><span class="line"><span class="string">.history</span></span><br><span class="line"><span class="string">.vscode</span></span><br><span class="line"><span class="string">.git </span></span><br><span class="line"><span class="string">bin</span></span><br><span class="line"><span class="string">build</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Create a lint-staged configuration file</span></span><br><span class="line"><span class="built_in">cat</span> &gt; .lintstagedrc.json &lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">  &quot;*.+(java)&quot;: [&quot;prettier --write&quot;],</span></span><br><span class="line"><span class="string">  &quot;*.+(json)&quot;: [&quot;prettier --write&quot;],</span></span><br><span class="line"><span class="string">  &quot;*.+(md)&quot;: [&quot;prettier --write&quot;],</span></span><br><span class="line"><span class="string">  &quot;*.+(yaml|yml)&quot;: [&quot;prettier --write&quot;]</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Check if the current directory is a Git repository, initialize if not</span></span><br><span class="line"><span class="keyword">if</span> [ ! -d <span class="string">&quot;.git&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    git init</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Configure Git to avoid ownership check issues</span></span><br><span class="line">git config --global --add safe.directory <span class="string">&quot;<span class="variable">$current_dir</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Create .husky directory and initialize Husky</span></span><br><span class="line"><span class="built_in">mkdir</span> -p .husky</span><br><span class="line"><span class="comment"># Install Git hooks</span></span><br><span class="line">husky install</span><br><span class="line"></span><br><span class="line"><span class="comment"># If .husky/pre-commit hook does not exist, add npx lint-staged command</span></span><br><span class="line"><span class="keyword">if</span> ! grep -q <span class="string">&quot;npx lint-staged&quot;</span> .husky/pre-commit; <span class="keyword">then</span></span><br><span class="line">    npx husky add .husky/pre-commit <span class="string">&quot;npx lint-staged&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Create a commitlint configuration file</span></span><br><span class="line"><span class="built_in">cat</span> &gt; commitlint.config.js &lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">module.exports = &#123;</span></span><br><span class="line"><span class="string">  extends: [&#x27;/usr/local/lib/node_modules/@commitlint/config-conventional&#x27;]</span></span><br><span class="line"><span class="string">&#125;;</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># If .husky/commit-msg hook does not exist, add commitlint command</span></span><br><span class="line"><span class="keyword">if</span> ! grep -q <span class="string">&quot;commitlint --edit&quot;</span> .husky/commit-msg; <span class="keyword">then</span></span><br><span class="line">    npx husky add .husky/commit-msg <span class="string">&#x27;npx --no-install commitlint --edit&#x27;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p><strong>Initial Setup and Diagnostics</strong>:</p>
+<ul>
+<li>The script starts by setting bash flags for error handling and outputting the current user and directory, which is helpful for debugging and verification.</li>
+</ul>
+</li>
+<li><p><strong>Configuring Prettier</strong>:</p>
+<ul>
+<li>It creates a <code>.prettierrc.yaml</code> to specify Prettier plugins, particularly for Java, and a <code>.prettierignore</code> to exclude certain files and directories from formatting.</li>
+</ul>
+</li>
+<li><p><strong>Setting Up lint-staged</strong>:</p>
+<ul>
+<li>A <code>.lintstagedrc.json</code> is created, configuring lint-staged to run Prettier on staged files of specific types, thus ensuring code consistency before commits.</li>
+</ul>
+</li>
+<li><p><strong>Initializing and Configuring Git</strong>:</p>
+<ul>
+<li>The script checks if the current directory is a Git repository and initializes one if needed. It also configures Git to recognize the current directory as safe, avoiding potential ownership issues.</li>
+</ul>
+</li>
+<li><p><strong>Husky and Git Hooks Configuration</strong>:</p>
+<ul>
+<li>Husky is initialized for managing Git hooks, and a pre-commit hook is set up to run lint-staged, ensuring that code is formatted before each commit.</li>
+</ul>
+</li>
+<li><p><strong>Setting Up commitlint</strong>:</p>
+<ul>
+<li>A <code>commitlint.config.js</code> is created to define rules for commit messages, ensuring they follow the conventional commit format.</li>
+</ul>
+</li>
+<li><p><strong>Adding Husky Commit Message Hook</strong>:</p>
+<ul>
+<li>A commit message hook is added to enforce commitlint rules, validating commit messages against the configured standards.</li>
+</ul>
+</li>
+</ol>
+<h3 id="Impact-on-Development-Workflow-1"><a href="#Impact-on-Development-Workflow-1" class="headerlink" title="Impact on Development Workflow"></a>Impact on Development Workflow</h3><p>The <code>postCreateCommand.sh</code> script transforms your Dev Container into an environment that not only supports Java development but also enforces best practices for code quality and consistency. It automates the setup of crucial tools like Prettier and Husky, saving time and ensuring that your project adheres to professional standards right from the start.</p>
+<h2 id="Seamless-SSH-Experience-on-MacOS"><a href="#Seamless-SSH-Experience-on-MacOS" class="headerlink" title="Seamless SSH Experience on MacOS"></a>Seamless SSH Experience on MacOS</h2><p>Incorporating a seamless SSH setup into your VS Code Dev Containers on MacOS can significantly enhance your development workflow. This integration is particularly beneficial for tasks like pushing to and pulling from Git repositories, including GitHub, within your containerized development environment.</p>
+<h3 id="Overview-of-SSH-Integration-in-Dev-Containers"><a href="#Overview-of-SSH-Integration-in-Dev-Containers" class="headerlink" title="Overview of SSH Integration in Dev Containers"></a>Overview of SSH Integration in Dev Containers</h3><ol>
+<li><p><strong>SSH Key Management</strong>:</p>
+<ul>
+<li>Creating separate SSH key pairs for different scenarios, such as a dedicated key for GitHub, stored in the <code>~/.ssh</code> directory. Each key should be secured with a passphrase for enhanced security.</li>
+</ul>
+</li>
+<li><p><strong>MacOS Keychain and SSH Agent Integration</strong>:</p>
+<ul>
+<li>The integration of MacOS Keychain with SSH Agent simplifies the process of managing SSH keys. By doing this, you can bypass the manual passphrase entry when using private keys inside the container.</li>
+</ul>
+</li>
+<li><p><strong>Automating Key Loading</strong>:</p>
+<ul>
+<li>To ensure SSH keys are automatically available after system reboots, a specific command is added to shell initialization files like <code>.zshrc</code> or <code>.bashrc</code>.</li>
+</ul>
+</li>
+</ol>
+<h3 id="Setting-Up-SSH-for-a-Smooth-Workflow"><a href="#Setting-Up-SSH-for-a-Smooth-Workflow" class="headerlink" title="Setting Up SSH for a Smooth Workflow"></a>Setting Up SSH for a Smooth Workflow</h3><ol>
+<li><p><strong>Adding Keys to MacOS Keychain</strong>:</p>
+<ul>
+<li>Using the command <code>ssh-add --apple-use-keychain ~/.ssh/id-github-ed25519</code>, private keys are added to the SSH Agent and their passphrases are stored in the MacOS Keychain. This setup unlocks keys automatically upon user login.</li>
+</ul>
+</li>
+<li><p><strong>Ensuring Persistent Configuration Across Reboots</strong>:</p>
+<ul>
+<li>The command <code>ssh-add --apple-load-keychain &amp;&gt; /dev/null</code> is added to your shell initialization file to maintain the SSH configuration across reboots.</li>
+</ul>
+</li>
+</ol>
+<h2 id="Integrating-SSH-with-VS-Code-Dev-Containers"><a href="#Integrating-SSH-with-VS-Code-Dev-Containers" class="headerlink" title="Integrating SSH with VS Code Dev Containers"></a>Integrating SSH with VS Code Dev Containers</h2><p>With this SSH setup, there’s no need for additional configuration in VS Code or the <code>devcontainer.json</code> file. Your Dev Container can interact seamlessly with any remote destinations requiring SSH authentication, enhancing the ease and security of your development activities.</p>
+<h3 id="Emphasizing-OS-Agnostic-Development-Practices"><a href="#Emphasizing-OS-Agnostic-Development-Practices" class="headerlink" title="Emphasizing OS-Agnostic Development Practices"></a>Emphasizing OS-Agnostic Development Practices</h3><p>This approach advocates for keeping Dev Containers OS-agnostic. Rather than configuring VS Code to look for SSH keys, the preferred method is configuring the operating system to make the SSH keys available to the Agent. This philosophy aligns with broader compatibility and flexibility across different operating systems.</p>
+<p>This SSH setup in VS Code Dev Containers on MacOS not only facilitates easier access to remote services but also adheres to security best practices. It exemplifies how integrating system-level features like MacOS Keychain with development tools can streamline your workflow.</p>
+<h2 id="Expanded-Practical-Use-Cases"><a href="#Expanded-Practical-Use-Cases" class="headerlink" title="Expanded Practical Use Cases"></a>Expanded Practical Use Cases</h2><h3 id="Using-Prettier-for-Code-Formatting"><a href="#Using-Prettier-for-Code-Formatting" class="headerlink" title="Using Prettier for Code Formatting"></a>Using Prettier for Code Formatting</h3><p>Prettier is a popular code formatter that helps maintain consistent code styling across your project. Here’s how to use Prettier effectively in your Java development environment within a VS Code Dev Container:</p>
+<ol>
+<li><p><strong>Configuring Prettier</strong>:</p>
+<ul>
+<li>As set up in your <code>postCreateCommand.sh</code>, a <code>.prettierrc.yaml</code> file configures Prettier’s behavior, including specifying plugins like <code>prettier-plugin-java</code>.</li>
+</ul>
+</li>
+<li><p><strong>Ignoring Files</strong>:</p>
+<ul>
+<li>The <code>.prettierignore</code> file excludes certain directories and files from being formatted, such as build directories or external libraries.</li>
+</ul>
+</li>
+<li><p><strong>Running Prettier</strong>:</p>
+<ul>
+<li>Manually format your code by running <code>prettier --write .</code> in your project root. This command will format all supported files according to your Prettier configuration.</li>
+<li>For automated formatting, lint-staged is configured to run Prettier on staged files before a commit is made, ensuring consistent code styling.</li>
+</ul>
+</li>
+</ol>
+<h3 id="Crafting-Effective-Git-Commit-Messages"><a href="#Crafting-Effective-Git-Commit-Messages" class="headerlink" title="Crafting Effective Git Commit Messages"></a>Crafting Effective Git Commit Messages</h3><p>Commit messages are crucial for understanding the history of your project and the purpose of each change. Here’s how to write effective commit messages and how commitlint enforces these standards:</p>
+<ol>
+<li><p><strong>Commit Message Structure</strong>:</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;type&gt;(&lt;scope&gt;): &lt;subject&gt;</span><br><span class="line">&lt;BLANK LINE&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;BLANK LINE&gt;</span><br><span class="line">&lt;footer&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>A conventional commit message includes a type, scope, and subject: <code>type(scope): subject</code>. For example, <code>feat(database): add new query functions</code>.</li>
+<li>Optional body and footer provide additional information and issue references, respectively.</li>
+</ul>
+</li>
+<li><p><strong>Type</strong>:</p>
+<ul>
+<li><p>Indicates the kind of change (e.g., <code>feat</code> for a new feature, <code>fix</code> for a bug fix).</p>
+<p>Using the right type in your commit messages is crucial for conveying the nature of the changes made. Here’s an overview of common types and their intended uses:</p>
+</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><p><strong><code>build</code></strong>:</p>
+<ul>
+<li>Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm).</li>
+</ul>
+</li>
+<li><p><strong><code>chore</code></strong>:</p>
+<ul>
+<li>Routine tasks or maintenance that don’t modify either the source code or test files.</li>
+</ul>
+</li>
+<li><p><strong><code>ci</code></strong>:</p>
+<ul>
+<li>Changes to your CI configuration files and scripts (examples: Travis, Circle, BrowserStack, SauceLabs).</li>
+</ul>
+</li>
+<li><p><strong><code>docs</code></strong>:</p>
+<ul>
+<li>Documentation-only changes, such as updates to the README, API docs, etc.</li>
+</ul>
+</li>
+<li><p><strong><code>feat</code></strong>:</p>
+<ul>
+<li>Introducing new features or enhancements to existing ones.</li>
+</ul>
+</li>
+<li><p><strong><code>fix</code></strong>:</p>
+<ul>
+<li>Bug fixes, correcting unexpected behavior in the code.</li>
+</ul>
+</li>
+<li><p><strong><code>perf</code></strong>:</p>
+<ul>
+<li>Performance improvements, optimizations that improve efficiency.</li>
+</ul>
+</li>
+<li><p><strong><code>refactor</code></strong>:</p>
+<ul>
+<li>Code changes that neither fix a bug nor add a feature but improve the codebase (like improving code readability).</li>
+</ul>
+</li>
+<li><p><strong><code>revert</code></strong>:</p>
+<ul>
+<li>Reverting a previous commit. The message should indicate which commit is being reverted.</li>
+</ul>
+</li>
+<li><p><strong><code>style</code></strong>:</p>
+<ul>
+<li>Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc).</li>
+</ul>
+</li>
+<li><p><strong><code>test</code></strong>:</p>
+<ul>
+<li>Adding or correcting tests. Includes all changes that affect testing only.</li>
+</ul>
+</li>
+</ul>
+<p>  Example Usage:</p>
+<ul>
+<li><strong>Feature Addition</strong>: <code>feat(auth): add oauth login support</code></li>
+<li><strong>Bug Fix</strong>: <code>fix(api): resolve endpoint routing issue</code></li>
+<li><strong>Documentation Update</strong>: <code>docs: update README with usage instructions</code></li>
+<li><strong>Performance Improvement</strong>: <code>perf(database): optimize query indexing</code></li>
+<li><strong>Code Refactoring</strong>: <code>refactor: restructure user service for clarity</code></li>
+<li><strong>Style Correction</strong>: <code>style: align code formatting with Prettier standards</code></li>
+<li><strong>Adding Tests</strong>: <code>test: add unit tests for user controller</code></li>
+</ul>
+<ol>
+<li><p><strong>Scope</strong> (optional):</p>
+<ul>
+<li>Specifies the part of the codebase affected (e.g., <code>database</code>, <code>UI</code>).</li>
+</ul>
+</li>
+<li><p><strong>Subject</strong>:</p>
+<ul>
+<li>A brief description of the change in imperative mood (e.g., <code>add</code>, not <code>adds</code> or <code>added</code>).</li>
+</ul>
+</li>
+<li><p><strong>Body</strong> (optional):</p>
+<ul>
+<li>Provides a more detailed explanation of the change.</li>
+</ul>
+</li>
+<li><p><strong>Footer</strong> (optional):</p>
+<ul>
+<li>References issues affected by the change (e.g., <code>Closes #123</code>).</li>
+</ul>
+</li>
+</ol>
+<h3 id="Example-of-a-Well-Formed-Commit-Message"><a href="#Example-of-a-Well-Formed-Commit-Message" class="headerlink" title="Example of a Well-Formed Commit Message:"></a>Example of a Well-Formed Commit Message:</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">feat(authentication): implement token-based authentication</span><br><span class="line"></span><br><span class="line">- Add JWT support for secure user authentication.</span><br><span class="line">- Update login and registration logic to use tokens.</span><br><span class="line"></span><br><span class="line">Closes #456, Refs #789</span><br></pre></td></tr></table></figure>
+<p>In this example:</p>
+<ul>
+<li><strong>Type</strong>: <code>feat</code> (new feature)</li>
+<li><strong>Scope</strong>: <code>authentication</code></li>
+<li><strong>Subject</strong>: <code>implement token-based authentication</code></li>
+<li><strong>Body</strong>: Detailed explanation of what was added and how.</li>
+<li><strong>Footer</strong>: Indicates related issues.</li>
+</ul>
+<h3 id="Enforcing-Standards-with-commitlint"><a href="#Enforcing-Standards-with-commitlint" class="headerlink" title="Enforcing Standards with commitlint"></a>Enforcing Standards with commitlint</h3><p>Commitlint checks if your commit messages follow the conventional format. It’s configured in your Dev Container to run automatically with Husky’s commit-msg hook. If a commit message doesn’t meet the standard, commitlint will prevent the commit, prompting you to follow the project’s commit conventions.</p>
+<p>By integrating Prettier and commitlint in your Dev Container setup, you ensure that your project maintains high standards in code quality and commit message clarity, enhancing readability and maintainability of your codebase.</p>
+<h2 id="Adding-launch-json-for-Enhanced-Java-Debugging-in-VS-Code"><a href="#Adding-launch-json-for-Enhanced-Java-Debugging-in-VS-Code" class="headerlink" title="Adding launch.json for Enhanced Java Debugging in VS Code"></a>Adding <code>launch.json</code> for Enhanced Java Debugging in VS Code</h2><p>A crucial aspect of developing in VS Code is setting up efficient debugging configurations. This is where the <code>.vscode/launch.json</code> file comes into play, especially for Java applications. It allows you to define various debugging scenarios, making your development process more efficient and tailored to your specific project needs.</p>
+<h3 id="Understanding-launch-json-in-VS-Code"><a href="#Understanding-launch-json-in-VS-Code" class="headerlink" title="Understanding launch.json in VS Code"></a>Understanding <code>launch.json</code> in VS Code</h3><p>The <code>launch.json</code> file is a configuration file that specifies how VS Code should launch and debug your application. It defines various debugging profiles, each tailored to different aspects or parts of your application.</p>
+<h3 id="Configuring-launch-json-for-Java"><a href="#Configuring-launch-json-for-Java" class="headerlink" title="Configuring launch.json for Java"></a>Configuring <code>launch.json</code> for Java</h3><p>Here’s how you can set up your <code>launch.json</code> for a Java project:</p>
+<ol>
+<li><strong>Navigate to Your Project’s <code>.vscode</code> Directory</strong>: This is where your configuration files for VS Code reside.</li>
+<li><strong>Create or Modify the <code>launch.json</code> File</strong>: If it doesn’t exist, create a new file named <code>launch.json</code>.</li>
+<li><strong>Configure Debugging Profiles</strong>:<ul>
+<li>Each entry in the <code>configurations</code> array represents a different debugging scenario.</li>
+<li>Commonly used attributes for Java debugging include:<ul>
+<li><code>type</code>: Specifies the language of the debugger.</li>
+<li><code>name</code>: A user-friendly name for the debugging profile.</li>
+<li><code>request</code>: Type of request, typically <code>launch</code> for starting the application.</li>
+<li><code>mainClass</code>: The main class to be executed.</li>
+<li><code>projectName</code>: The name of the project, useful in multi-project workspaces.</li>
+<li><code>env</code>: Environment variables necessary for your application.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="Example-launch-json-for-Java"><a href="#Example-launch-json-for-Java" class="headerlink" title="Example launch.json for Java"></a>Example <code>launch.json</code> for Java</h3><p>Here’s an example configuration suitable for a Java project:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0.2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;configurations&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;java&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Current File&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;request&quot;</span><span class="punctuation">:</span> <span class="string">&quot;launch&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;mainClass&quot;</span><span class="punctuation">:</span> <span class="string">&quot;$&#123;file&#125;&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;java&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;AiApplication&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;request&quot;</span><span class="punctuation">:</span> <span class="string">&quot;launch&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;mainClass&quot;</span><span class="punctuation">:</span> <span class="string">&quot;com.lama.ai.AiApplication&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;projectName&quot;</span><span class="punctuation">:</span> <span class="string">&quot;hephaestus&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;env&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;spring.profiles.active&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dev-env,dev&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>In this configuration:</p>
+<ul>
+<li>The first profile <code>&quot;Current File&quot;</code> is set to debug the currently opened Java file.</li>
+<li>The second profile <code>&quot;AiApplication&quot;</code> is configured to launch a specific application (<code>AiApplication</code>), with environment variables set for Spring profiles.</li>
+</ul>
+<h3 id="Benefits-of-Using-launch-json-in-Java-Development"><a href="#Benefits-of-Using-launch-json-in-Java-Development" class="headerlink" title="Benefits of Using launch.json in Java Development"></a>Benefits of Using <code>launch.json</code> in Java Development</h3><ul>
+<li><strong>Flexibility</strong>: Easily switch between different parts of your application for debugging.</li>
+<li><strong>Customization</strong>: Tailor debugging settings to the needs of different components or environments in your application.</li>
+<li><strong>Efficiency</strong>: Speeds up the debugging process by pre-defining the necessary configurations.</li>
+</ul>
+<p>Adding a <code>launch.json</code> file to your VS Code Java project significantly enhances your debugging capabilities, making your development process more streamlined and efficient.</p>
+<p>For more information on debugging configurations in VS Code, refer to the <a target="_blank" rel="noopener" href="https://code.visualstudio.com/docs/editor/debugging#_launch-configurations">official VS Code documentation on debugging</a>.</p>
+<p>Integrating a <code>launch.json</code> file into your Java development setup in VS Code Dev Containers is a step forward in optimizing your development workflow. It allows you to tailor your debugging process to the specific needs of your project, thereby enhancing productivity and efficiency.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>The following resources provide additional insights and guidance on the topics covered in this article. They offer a deeper understanding of best practices, tools, and methodologies that can enhance your development workflow:</p>
+<ol>
+<li><p><strong>Conventional Commits</strong>:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.conventionalcommits.org/zh-hant/v1.0.0/">約定式提交 (Conventional Commits)</a> - A specification for adding human and machine-readable meaning to commit messages.</li>
+</ul>
+</li>
+<li><p><strong>Git Commit Message Writing</strong>:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PuYEiaI4T3VFJMhi-_qQ8w">我是怎么写 Git Commit message 的？(How I Write Git Commit Messages)</a> - Insights into effective practices for writing Git commit messages.</li>
+</ul>
+</li>
+<li><p><strong>Angular’s Commit Message Guidelines</strong>:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/angular/angular/blob/master/CONTRIBUTING.md#commit">Angular Commit Message Format</a> - Guidelines provided by the Angular project for structuring commit messages.</li>
+</ul>
+</li>
+<li><p><strong>Commit Message and Changelog Writing Guide</strong>:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html">阮一峰的网络日志 - Commit message 和 Change log 编写指南 (Ruan Yifeng’s Weblog - Guide to Writing Commit Messages and Change logs)</a> - A comprehensive guide to writing commit messages and changelogs.</li>
+</ul>
+</li>
+<li><p><strong>Git Commit Templates in IntelliJ</strong>:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/plugin/9861-git-commit-template">IntelliJ - Git Commit Template</a> - A plugin for IntelliJ IDEA to support customizable commit message templates.</li>
+</ul>
+</li>
+<li><p><strong>SSH Setup for Dev Containers on MacOS</strong>:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://romanboehm.com/til/vs-code-devcontainer-ssh/">Frictionless SSH for VS Code Dev Containers on MacOS</a> - A guide to setting up a seamless SSH experience for VS Code Dev Containers on MacOS.</li>
+</ul>
+</li>
+<li><p><strong>Husky: Git Hooks Tool</strong>:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://typicode.github.io/husky/getting-started.html">husky</a> - Official documentation for Husky, a tool for managing Git hooks in your project.</li>
+</ul>
+</li>
+<li><p><strong>Development Containers</strong>:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://containers.dev/implementors/features/">Development Containers</a> - Comprehensive information about implementing and utilizing development containers.</li>
+</ul>
+</li>
+</ol>
+<p>These resources serve as valuable references for deepening your understanding and enhancing your skills in key areas of modern software development.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>Sam Zhu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.samzhu.dev/2024/01/11/Achieving-Seamless-SSH-Experience-and-Java-Development-Setup-in-VS-Code-Dev-Containers/" title="Achieving Seamless SSH Experience and Java Development Setup in VS Code DevContainers">https://blog.samzhu.dev/2024/01/11/Achieving-Seamless-SSH-Experience-and-Java-Development-Setup-in-VS-Code-Dev-Containers/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/VSCode/" rel="tag"># VSCode</a>
+              <a href="/tags/DevContainers/" rel="tag"># DevContainers</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/12/25/Integrating-Google-Gemini-with-langchain4j/" rel="prev" title="Integrating Google Gemini with langchain4j">
+                  <i class="fa fa-angle-left"></i> Integrating Google Gemini with langchain4j
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/03/21/Unleashing-the-Power-of-Spring-Native-and-AOT/" rel="next" title="Unleashing the Power of Spring Native and AOT">
+                  Unleashing the Power of Spring Native and AOT <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sam Zhu</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/samzhu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.3.0/mermaid.min.js","integrity":"sha256-9y71g5Lz/KLsHjB8uXwnkuWDtAMDSzD/HdIbqhJfTAI="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

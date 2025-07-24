@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.samzhu.dev","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="This guide provides a step-by-step approach to integrating OpenTelemetry with Spring Boot and deploying it to Google Cloud Platform (GCP). The setup includes configuring the necessary dependencies, se">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Step-by-Step Guide to Integrating Spring Boot with OpenTelemetry and GCP">
+<meta property="og:url" content="https://blog.samzhu.dev/2024/08/01/Step-by-Step-Guide-to-Integrating-Spring-Boot-with-OpenTelemetry-and-GCP/index.html">
+<meta property="og:site_name" content="Sam&#39;s programming note">
+<meta property="og:description" content="This guide provides a step-by-step approach to integrating OpenTelemetry with Spring Boot and deploying it to Google Cloud Platform (GCP). The setup includes configuring the necessary dependencies, se">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.imgur.com/nazRiGK.png">
+<meta property="og:image" content="https://i.imgur.com/Si7Rb0l.jpeg">
+<meta property="og:image" content="https://i.imgur.com/VgSCNED.jpeg">
+<meta property="og:image" content="https://i.imgur.com/v98oJ7P.jpeg">
+<meta property="og:image" content="https://i.imgur.com/tvgpIiv.jpeg">
+<meta property="article:published_time" content="2024-08-01T04:57:07.000Z">
+<meta property="article:modified_time" content="2025-07-24T15:41:45.584Z">
+<meta property="article:author" content="Sam Zhu">
+<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="GCP">
+<meta property="article:tag" content="OpenTelemetry">
+<meta property="article:tag" content="Observability">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/nazRiGK.png">
+<meta name="twitter:creator" content="@samzhu0318">
+
+
+<link rel="canonical" href="https://blog.samzhu.dev/2024/08/01/Step-by-Step-Guide-to-Integrating-Spring-Boot-with-OpenTelemetry-and-GCP/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.samzhu.dev/2024/08/01/Step-by-Step-Guide-to-Integrating-Spring-Boot-with-OpenTelemetry-and-GCP/","path":"2024/08/01/Step-by-Step-Guide-to-Integrating-Spring-Boot-with-OpenTelemetry-and-GCP/","title":"Step-by-Step Guide to Integrating Spring Boot with OpenTelemetry and GCP"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Step-by-Step Guide to Integrating Spring Boot with OpenTelemetry and GCP | Sam's programming note</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CFLHEYEETG"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-CFLHEYEETG","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<meta name="google-adsense-account" content="ca-pub-5880479202699914">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880479202699914"
+     crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sam's programming note</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Prerequisites"><span class="nav-number">1.</span> <span class="nav-text">Prerequisites</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Setting-Up-Spring-Boot-with-OpenTelemetry"><span class="nav-number">2.</span> <span class="nav-text">Setting Up Spring Boot with OpenTelemetry</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Configure-build-gradle"><span class="nav-number">2.1.</span> <span class="nav-text">Configure build.gradle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Define-Dependencies"><span class="nav-number">2.2.</span> <span class="nav-text">Define Dependencies</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dependency-Management"><span class="nav-number">2.3.</span> <span class="nav-text">Dependency Management</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Configuring-Application-Settings"><span class="nav-number">3.</span> <span class="nav-text">Configuring Application Settings</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Configuration-Settings"><span class="nav-number">3.1.</span> <span class="nav-text">Configuration Settings</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Set-Up-the-Main-Application-Class"><span class="nav-number">3.2.</span> <span class="nav-text">Set Up the Main Application Class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Configure-Asynchronous-Context-Propagation"><span class="nav-number">3.3.</span> <span class="nav-text">Configure Asynchronous Context Propagation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-Sample-Controller-and-Service"><span class="nav-number">3.4.</span> <span class="nav-text">Create a Sample Controller and Service</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Setting-Up-Docker-for-Local-Development"><span class="nav-number">4.</span> <span class="nav-text">Setting Up Docker for Local Development</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-compose-yaml-File"><span class="nav-number">4.1.</span> <span class="nav-text">Create a compose.yaml File</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-otel-collector-yml-for-OpenTelemetry-Collector-Configuration"><span class="nav-number">4.2.</span> <span class="nav-text">Create otel-collector.yml for OpenTelemetry Collector Configuration</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Starting-Services-in-Local-Development"><span class="nav-number">5.</span> <span class="nav-text">Starting Services in Local Development</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-an-Order"><span class="nav-number">5.1.</span> <span class="nav-text">Create an Order</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Retrieve-an-Order"><span class="nav-number">5.2.</span> <span class="nav-text">Retrieve an Order</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Jaeger-UI-Overview"><span class="nav-number">5.3.</span> <span class="nav-text">Jaeger UI Overview</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Jaeger-UI-Trace-Details"><span class="nav-number">5.4.</span> <span class="nav-text">Jaeger UI Trace Details</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Preparing-OpenTelemetry-Collector-for-GCP"><span class="nav-number">6.</span> <span class="nav-text">Preparing OpenTelemetry Collector for GCP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Setting-Up-GCP-Permissions"><span class="nav-number">6.1.</span> <span class="nav-text">Setting Up GCP Permissions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CLI-Cleanup"><span class="nav-number">6.1.1.</span> <span class="nav-text">CLI Cleanup</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Login"><span class="nav-number">6.1.2.</span> <span class="nav-text">Login</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Create-Service-Account-for-Cloud-Run-Runtime"><span class="nav-number">6.1.3.</span> <span class="nav-text">Create Service Account for Cloud Run Runtime</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Bind-Roles-to-the-Service-Account"><span class="nav-number">6.1.4.</span> <span class="nav-text">Bind Roles to the Service Account</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Create-Artifact-Registry-Repository"><span class="nav-number">6.1.5.</span> <span class="nav-text">Create Artifact Registry Repository</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-Dockerfile-for-OpenTelemetry-Collector"><span class="nav-number">6.2.</span> <span class="nav-text">Create Dockerfile for OpenTelemetry Collector</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-otel-config-yaml-for-GCP-Configuration"><span class="nav-number">6.3.</span> <span class="nav-text">Create otel-config.yaml for GCP Configuration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Build-and-Push-Docker-Images"><span class="nav-number">6.4.</span> <span class="nav-text">Build and Push Docker Images</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deploying-to-Google-Cloud-Platform"><span class="nav-number">7.</span> <span class="nav-text">Deploying to Google Cloud Platform</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-Cloud-Run-Service-Configuration-File"><span class="nav-number">7.1.</span> <span class="nav-text">Create a Cloud Run Service Configuration File</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploying-the-Cloud-Run-Service"><span class="nav-number">7.2.</span> <span class="nav-text">Deploying the Cloud Run Service</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">8.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">9.</span> <span class="nav-text">References</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sam Zhu"
+      src="https://i.imgur.com/eLloI4N.png">
+  <p class="site-author-name" itemprop="name">Sam Zhu</p>
+  <div class="site-description" itemprop="description">Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">74</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/samzhu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;samzhu" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/samzhu0318" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;samzhu0318" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.samzhu.dev/2024/08/01/Step-by-Step-Guide-to-Integrating-Spring-Boot-with-OpenTelemetry-and-GCP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.imgur.com/eLloI4N.png">
+      <meta itemprop="name" content="Sam Zhu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sam's programming note">
+      <meta itemprop="description" content="Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Step-by-Step Guide to Integrating Spring Boot with OpenTelemetry and GCP | Sam's programming note">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Step-by-Step Guide to Integrating Spring Boot with OpenTelemetry and GCP
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-08-01 12:57:07" itemprop="dateCreated datePublished" datetime="2024-08-01T12:57:07+08:00">2024-08-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-07-24 23:41:45" itemprop="dateModified" datetime="2025-07-24T23:41:45+08:00">2025-07-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SoftwareDevelopment/" itemprop="url" rel="index"><span itemprop="name">SoftwareDevelopment</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>This guide provides a step-by-step approach to integrating OpenTelemetry with Spring Boot and deploying it to Google Cloud Platform (GCP). The setup includes configuring the necessary dependencies, setting up OpenTelemetry Collector, creating a Docker environment, and deploying the application to GCP Cloud Run.</p>
+<blockquote>
+<p><strong>Important Notice</strong>: This article is for reference only. Please refer to the latest guide: <a href="https://blog.samzhu.dev/2024/08/07/Step-by-Step-Guide-to-Integrating-Spring-Boot-and-OpenTelemetry-with-Micrometer-on-GCP-for-Distributed-Tracing/">Step-by-Step Guide to Integrating Spring Boot and OpenTelemetry with Micrometer on GCP for Distributed Tracing</a> for up-to-date information and recommended practices.</p>
+</blockquote>
+<p>It’s important to note that Micrometer is now the recommended framework by Spring for metrics and tracing in Spring Boot applications. The latest Spring Boot versions have integrated Micrometer as the default metrics and tracing facade, which can be easily configured to work with OpenTelemetry. For the most current approach to implementing observability in Spring Boot applications using Micrometer and OpenTelemetry, please refer to the guide linked above.</p>
+<span id="more"></span>
+
+<p><img src="https://i.imgur.com/nazRiGK.png" alt="cover"></p>
+<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><p>Before you start, ensure you have the following installed:</p>
+<ul>
+<li>Java 21</li>
+<li>Docker</li>
+<li>Gradle</li>
+<li>GCP account with Cloud Run and Artifact Registry enabled</li>
+</ul>
+<h2 id="Setting-Up-Spring-Boot-with-OpenTelemetry"><a href="#Setting-Up-Spring-Boot-with-OpenTelemetry" class="headerlink" title="Setting Up Spring Boot with OpenTelemetry"></a>Setting Up Spring Boot with OpenTelemetry</h2><h3 id="Configure-build-gradle"><a href="#Configure-build-gradle" class="headerlink" title="Configure build.gradle"></a>Configure <code>build.gradle</code></h3><p>To start integrating OpenTelemetry with your Spring Boot application, you need to add the necessary dependencies to your <code>build.gradle</code> file. This section will guide you through the configuration process.</p>
+<h3 id="Define-Dependencies"><a href="#Define-Dependencies" class="headerlink" title="Define Dependencies"></a>Define Dependencies</h3><p>Add the required dependencies to your <code>build.gradle</code> file:</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">    implementation <span class="string">&#x27;org.springframework.boot:spring-boot-starter-actuator&#x27;</span></span><br><span class="line">    implementation <span class="string">&#x27;org.springframework.boot:spring-boot-starter-web&#x27;</span></span><br><span class="line">    developmentOnly <span class="string">&#x27;org.springframework.boot:spring-boot-devtools&#x27;</span></span><br><span class="line">    developmentOnly <span class="string">&#x27;org.springframework.boot:spring-boot-docker-compose&#x27;</span></span><br><span class="line">    runtimeOnly <span class="string">&#x27;io.micrometer:micrometer-registry-prometheus&#x27;</span></span><br><span class="line">    testImplementation <span class="string">&#x27;org.springframework.boot:spring-boot-starter-test&#x27;</span></span><br><span class="line">    testImplementation <span class="string">&#x27;org.springframework.boot:spring-boot-testcontainers&#x27;</span></span><br><span class="line">    testImplementation <span class="string">&#x27;org.testcontainers:junit-jupiter&#x27;</span></span><br><span class="line">    testRuntimeOnly <span class="string">&#x27;org.junit.platform:junit-platform-launcher&#x27;</span></span><br><span class="line">    <span class="comment">// Manually added dependencies</span></span><br><span class="line">    implementation <span class="string">&#x27;org.springframework.boot:spring-boot-starter-aop&#x27;</span></span><br><span class="line">    implementation <span class="string">&#x27;io.micrometer:micrometer-tracing-bridge-otel&#x27;</span></span><br><span class="line">    implementation <span class="string">&#x27;io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter&#x27;</span></span><br><span class="line">    implementation <span class="string">&#x27;io.micrometer:context-propagation:latest.integration&#x27;</span> <span class="comment">// For context propagation in asynchronous tasks</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Here’s a brief explanation of the manually added dependencies:</p>
+<ul>
+<li><strong>spring-boot-starter-aop</strong>: Supports Aspect-Oriented Programming (AOP), which is necessary for using Micrometer’s <code>@NewSpan</code> annotation. This annotation helps in tracing method calls. By including AOP, you enable the ability to create spans around specific methods, allowing for detailed monitoring and tracing of your application’s behavior.</li>
+<li><strong>micrometer-tracing-bridge-otel</strong>: Bridges Micrometer tracing to OpenTelemetry. This dependency allows for tracing using the OpenTelemetry instrumentation. This bridge facilitates the propagation of trace context and spans created by Micrometer into OpenTelemetry’s tracing system. It ensures compatibility between the two systems and enables seamless monitoring and observability.</li>
+<li><strong>opentelemetry-spring-boot-starter</strong>: Provides auto-configuration for OpenTelemetry in Spring Boot applications. This starter simplifies the process of instrumenting your Spring Boot application with OpenTelemetry. The starter includes built-in instrumentation for many Spring Boot features, which helps you get started quickly with minimal configuration. <a target="_blank" rel="noopener" href="https://opentelemetry.io/docs/zero-code/java/spring-boot-starter/getting-started/">Refer to the OpenTelemetry documentation</a> for more details.</li>
+<li><strong>context-propagation:latest.integration</strong>: Handles context propagation in asynchronous tasks. This is essential for maintaining trace context across asynchronous calls and tasks. This library ensures that trace and context information is correctly propagated across threads and asynchronous operations, which is crucial for accurate tracing and monitoring in distributed systems. <a target="_blank" rel="noopener" href="https://docs.micrometer.io/context-propagation/reference/installing.html">Refer to the Micrometer Context Propagation documentation</a> for more information.</li>
+</ul>
+<h3 id="Dependency-Management"><a href="#Dependency-Management" class="headerlink" title="Dependency Management"></a>Dependency Management</h3><p>Import the OpenTelemetry instrumentation BOM for dependency management:</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dependencyManagement &#123;</span><br><span class="line">  imports &#123;</span><br><span class="line">    mavenBom(<span class="string">&quot;io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom:2.6.0&quot;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Using the BOM (Bill of Materials) ensures that all OpenTelemetry dependencies are compatible with each other. The BOM helps in managing the versions of the dependencies and their transitive dependencies to ensure they are compatible. This approach simplifies dependency management and reduces conflicts.</p>
+<p>By following these steps, you have successfully configured your <code>build.gradle</code> file to integrate OpenTelemetry with your Spring Boot application. Next, we’ll look into setting up the main application class and configuring asynchronous context propagation.</p>
+<h2 id="Configuring-Application-Settings"><a href="#Configuring-Application-Settings" class="headerlink" title="Configuring Application Settings"></a>Configuring Application Settings</h2><p>To ensure proper integration of OpenTelemetry and effective tracing and monitoring, you need to configure your Spring Boot application settings. Add the following settings to your <code>application.yml</code> or <code>application.properties</code> file.</p>
+<h3 id="Configuration-Settings"><a href="#Configuration-Settings" class="headerlink" title="Configuration Settings"></a>Configuration Settings</h3><p>application.yml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">otel-demo</span></span><br><span class="line">  <span class="attr">docker:</span></span><br><span class="line">    <span class="attr">compose:</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="attr">management:</span></span><br><span class="line">  <span class="attr">endpoint:</span></span><br><span class="line">    <span class="attr">health:</span></span><br><span class="line">      <span class="attr">probes:</span></span><br><span class="line">        <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">tracing:</span></span><br><span class="line">    <span class="attr">sampling:</span></span><br><span class="line">      <span class="attr">probability:</span> <span class="number">1.0</span></span><br><span class="line">  <span class="attr">observations:</span></span><br><span class="line">    <span class="attr">annotations:</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">true</span> <span class="comment"># https://docs.spring.io/spring-boot/reference/actuator/observability.html#actuator.observability.annotations</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>management.tracing.sampling.probability</strong>: Sets the sampling probability for tracing. A value of <code>1.0</code> means all requests will be traced. This setting is useful for ensuring comprehensive trace data during development and testing.</li>
+<li><strong>management.observations.annotations.enabled</strong>: Enables the use of annotations for observability. This setting allows you to use annotations like <code>@NewSpan</code> to define spans for tracing specific methods. For more details, refer to the <a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/reference/actuator/observability.html#actuator.observability.annotations">Spring Boot Actuator Observability documentation</a>.</li>
+</ul>
+<h3 id="Set-Up-the-Main-Application-Class"><a href="#Set-Up-the-Main-Application-Class" class="headerlink" title="Set Up the Main Application Class"></a>Set Up the Main Application Class</h3><p>Create the main application class <code>OtelApplication.java</code>:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.scheduling.annotation.EnableAsync;</span><br><span class="line"></span><br><span class="line"><span class="meta">@EnableAsync</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OtelApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(OtelApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>@EnableAsync</strong>: This annotation enables Spring’s asynchronous method execution capability. When applied, it allows methods annotated with <code>@Async</code> to run in a separate thread, thus enabling concurrent execution. This is particularly useful for tasks that can be performed in parallel, improving the application’s responsiveness and performance.</li>
+</ul>
+<p>By including <code>@EnableAsync</code>, you enable asynchronous processing within your application, which is critical for handling background tasks without blocking the main execution thread. This is especially useful in the context of tracing and monitoring, where you may want to offload certain tasks to be processed asynchronously to avoid impacting the main application flow.</p>
+<h3 id="Configure-Asynchronous-Context-Propagation"><a href="#Configure-Asynchronous-Context-Propagation" class="headerlink" title="Configure Asynchronous Context Propagation"></a>Configure Asynchronous Context Propagation</h3><p>Create the <code>AsyncTraceContextConfiguration.java</code> to handle context propagation for asynchronous tasks:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.otel;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Executor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.springframework.scheduling.annotation.AsyncConfigurer;</span><br><span class="line"><span class="keyword">import</span> org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> io.micrometer.context.ContextExecutorService;</span><br><span class="line"><span class="keyword">import</span> io.micrometer.context.ContextRegistry;</span><br><span class="line"><span class="keyword">import</span> io.micrometer.context.ContextSnapshotFactory;</span><br><span class="line"><span class="keyword">import</span> lombok.RequiredArgsConstructor;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration(proxyBeanMethods = false)</span></span><br><span class="line"><span class="meta">@RequiredArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AsyncTraceContextConfiguration</span> <span class="keyword">implements</span> <span class="title class_">AsyncConfigurer</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ThreadPoolTaskExecutor taskExecutor;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Executor <span class="title function_">getAsyncExecutor</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">ContextSnapshotFactory</span> <span class="variable">contextSnapshotFactory</span> <span class="operator">=</span> ContextSnapshotFactory.builder()</span><br><span class="line">            .contextRegistry(ContextRegistry.getInstance())</span><br><span class="line">            .build();</span><br><span class="line">        <span class="keyword">return</span> ContextExecutorService.wrap(</span><br><span class="line">            taskExecutor.getThreadPoolExecutor(),</span><br><span class="line">            contextSnapshotFactory::captureAll</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>This class configures context propagation for asynchronous tasks in a Spring Boot application. It ensures that trace information and other context data are carried over when tasks are executed asynchronously. Here’s a brief breakdown:</p>
+<ul>
+<li><strong>Task Executor Injection</strong>: Injects a <code>ThreadPoolTaskExecutor</code> to manage thread pools for asynchronous tasks.</li>
+<li><strong>ContextSnapshotFactory</strong>: Creates snapshots of the current context, including trace data.</li>
+<li><strong>ContextExecutorService.wrap</strong>: Wraps the <code>ThreadPoolTaskExecutor</code> to capture and propagate context information across asynchronous boundaries.</li>
+</ul>
+<p>Purpose and Benefits  </p>
+<ul>
+<li><strong>Asynchronous Execution</strong>: Enables handling of asynchronous method execution by providing a custom <code>Executor</code>.</li>
+<li><strong>Context Propagation</strong>: Ensures that context information, such as trace data, is propagated across asynchronous tasks, maintaining the integrity of trace data for distributed tracing and monitoring.</li>
+</ul>
+<p>By following this configuration, you enable asynchronous context propagation in your Spring Boot application, ensuring that trace and context information is correctly managed and propagated. This is essential for accurate and comprehensive distributed tracing and monitoring.</p>
+<h3 id="Create-a-Sample-Controller-and-Service"><a href="#Create-a-Sample-Controller-and-Service" class="headerlink" title="Create a Sample Controller and Service"></a>Create a Sample Controller and Service</h3><p>This section provides sample code for a controller and a service to demonstrate how to use tracing annotations and asynchronous execution in a Spring Boot application with OpenTelemetry.</p>
+<p>Purpose and Design of the Sample Code  </p>
+<p>The sample code includes <code>OrderController</code> and <code>OrderService</code> classes. These classes are designed to illustrate how to:</p>
+<ol>
+<li>Use the <code>@NewSpan</code> annotation to create new tracing spans.</li>
+<li>Handle asynchronous execution using the <code>@Async</code> annotation.</li>
+<li>Simulate processing work to show how tracing captures the execution flow.</li>
+</ol>
+<p><code>OrderController.java</code>  </p>
+<p>This class defines a REST controller for handling order-related requests.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.otel;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.PostMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestParam;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> io.micrometer.tracing.annotation.NewSpan;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/api/orders&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OrderController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">log</span> <span class="operator">=</span> LoggerFactory.getLogger(OrderController.class);</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> OrderService orderService;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">OrderController</span><span class="params">(OrderService orderService)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.orderService = orderService;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping</span></span><br><span class="line">    <span class="meta">@NewSpan(&quot;create-order&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">createOrder</span><span class="params">(<span class="meta">@RequestParam</span> String customerId)</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;Received order creation request for customer: &#123;&#125;&quot;</span>, customerId);</span><br><span class="line">        <span class="type">String</span> <span class="variable">orderId</span> <span class="operator">=</span> orderService.createOrder(customerId);</span><br><span class="line">        orderService.processOrderAsync(orderId);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Order created and processing started for ID: &quot;</span> + orderId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/&#123;orderId&#125;&quot;)</span></span><br><span class="line">    <span class="meta">@NewSpan(&quot;get-order-status&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getOrderStatus</span><span class="params">(<span class="meta">@PathVariable</span> String orderId)</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;Checking status for order ID: &#123;&#125;&quot;</span>, orderId);</span><br><span class="line">        <span class="keyword">return</span> orderService.getOrderStatus(orderId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>@NewSpan</strong>: Annotates methods to create new tracing spans, capturing the execution of these methods as separate trace segments.</li>
+</ul>
+<p><code>OrderService.java</code>  </p>
+<p>This class defines the service responsible for order operations.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.otel;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"><span class="keyword">import</span> org.springframework.scheduling.annotation.Async;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> io.micrometer.tracing.annotation.NewSpan;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OrderService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">log</span> <span class="operator">=</span> LoggerFactory.getLogger(OrderService</span><br><span class="line"></span><br><span class="line">.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@NewSpan(&quot;create-order-service&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">createOrder</span><span class="params">(String customerId)</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;Creating order for customer: &#123;&#125;&quot;</span>, customerId);</span><br><span class="line">        simulateWork(<span class="number">500</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;ORD-&quot;</span> + System.currentTimeMillis();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@NewSpan(&quot;get-order-status-service&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getOrderStatus</span><span class="params">(String orderId)</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;Checking status for order: &#123;&#125;&quot;</span>, orderId);</span><br><span class="line">        simulateWork(<span class="number">200</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Status for order &quot;</span> + orderId + <span class="string">&quot;: Processing&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Async</span></span><br><span class="line">    <span class="meta">@NewSpan(&quot;process-order-async&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">processOrderAsync</span><span class="params">(String orderId)</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;Start processing order asynchronously: &#123;&#125;&quot;</span>, orderId);</span><br><span class="line">        simulateWork(<span class="number">2000</span>);</span><br><span class="line">        log.info(<span class="string">&quot;Finished processing order: &#123;&#125;&quot;</span>, orderId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">simulateWork</span><span class="params">(<span class="type">long</span> milliseconds)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(milliseconds);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            Thread.currentThread().interrupt();</span><br><span class="line">            log.error(<span class="string">&quot;Work simulation interrupted&quot;</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>@NewSpan</strong>: Creates new spans for the <code>createOrder</code>, <code>getOrderStatus</code>, and <code>processOrderAsync</code> methods.</li>
+<li><strong>@Async</strong>: Marks the <code>processOrderAsync</code> method to be executed asynchronously, allowing the method to run in a separate thread.</li>
+</ul>
+<p>Design Purpose  </p>
+<ul>
+<li><strong>Traceability</strong>: The <code>@NewSpan</code> annotations ensure that each method’s execution is captured in a separate tracing span. This helps in tracking the flow of requests through different parts of the application.</li>
+<li><strong>Asynchronous Processing</strong>: The <code>@Async</code> annotation demonstrates how to offload work to a separate thread, which is essential for non-blocking operations. This is particularly useful for long-running tasks that should not block the main thread.</li>
+<li><strong>Logging</strong>: The use of logging at key points in the methods helps in debugging and understanding the flow of execution during the tracing process.</li>
+</ul>
+<p>By following this design, you can effectively trace and monitor asynchronous operations in your Spring Boot application, ensuring better observability and performance analysis.</p>
+<h2 id="Setting-Up-Docker-for-Local-Development"><a href="#Setting-Up-Docker-for-Local-Development" class="headerlink" title="Setting Up Docker for Local Development"></a>Setting Up Docker for Local Development</h2><h3 id="Create-a-compose-yaml-File"><a href="#Create-a-compose-yaml-File" class="headerlink" title="Create a compose.yaml File"></a>Create a <code>compose.yaml</code> File</h3><p>Set up OpenTelemetry Collector and Jaeger using Docker Compose:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">otel-collector:</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">otel-collector</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">otel/opentelemetry-collector-contrib:latest</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">command:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">--config=/etc/otelcol-contrib/otel-collector.yml</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./dev-resources/collector/otel-collector.yml:/etc/otelcol-contrib/otel-collector.yml</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;1888:1888&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8888:8888&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8889:8889&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;13133:13133&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;4317:4317&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;4318:4318&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;55679:55679&quot;</span></span><br><span class="line">    <span class="attr">healthcheck:</span></span><br><span class="line">      <span class="attr">test:</span> [<span class="string">&quot;CMD&quot;</span>, <span class="string">&quot;curl&quot;</span>, <span class="string">&quot;-f&quot;</span>, <span class="string">&quot;http://localhost:13133&quot;</span>]</span><br><span class="line">      <span class="attr">interval:</span> <span class="string">10s</span></span><br><span class="line">      <span class="attr">timeout:</span> <span class="string">5s</span></span><br><span class="line">      <span class="attr">retries:</span> <span class="number">5</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">jaeger</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">otel-network</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">jaeger:</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">jaeger</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">jaegertracing/all-in-one:latest</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">COLLECTOR_OTLP_ENABLED=true</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;5775:5775/udp&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;6831:6831/udp&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;6832:6832/udp&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;5778:5778&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;16686:16686&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;14268:14268&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;14250:14250&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;9411:9411&quot;</span></span><br><span class="line">    <span class="attr">healthcheck:</span></span><br><span class="line">      <span class="attr">test:</span> [<span class="string">&quot;CMD&quot;</span>, <span class="string">&quot;wget&quot;</span>, <span class="string">&quot;--spider&quot;</span>, <span class="string">&quot;-q&quot;</span>, <span class="string">&quot;http://localhost:16686&quot;</span>]</span><br><span class="line">      <span class="attr">interval:</span> <span class="string">10s</span></span><br><span class="line">      <span class="attr">timeout:</span> <span class="string">5s</span></span><br><span class="line">      <span class="attr">retries:</span> <span class="number">5</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">otel-network</span></span><br><span class="line"></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">otel-network:</span></span><br><span class="line">    <span class="attr">driver:</span> <span class="string">bridge</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Create-otel-collector-yml-for-OpenTelemetry-Collector-Configuration"><a href="#Create-otel-collector-yml-for-OpenTelemetry-Collector-Configuration" class="headerlink" title="Create otel-collector.yml for OpenTelemetry Collector Configuration"></a>Create <code>otel-collector.yml</code> for OpenTelemetry Collector Configuration</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">receivers:</span></span><br><span class="line">  <span class="attr">otlp:</span></span><br><span class="line">    <span class="attr">protocols:</span></span><br><span class="line">      <span class="attr">grpc:</span></span><br><span class="line">        <span class="attr">endpoint:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">:4317</span></span><br><span class="line">      <span class="attr">http:</span></span><br><span class="line">        <span class="attr">endpoint:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">:4318</span></span><br><span class="line"></span><br><span class="line"><span class="attr">processors:</span></span><br><span class="line">  <span class="attr">batch:</span></span><br><span class="line"></span><br><span class="line"><span class="attr">exporters:</span></span><br><span class="line">  <span class="attr">otlp:</span></span><br><span class="line">    <span class="attr">endpoint:</span> <span class="string">&quot;jaeger:4317&quot;</span></span><br><span class="line">    <span class="attr">tls:</span></span><br><span class="line">      <span class="attr">insecure:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="attr">extensions:</span></span><br><span class="line">  <span class="attr">health_check:</span></span><br><span class="line">    <span class="attr">endpoint:</span> <span class="string">&quot;0.0.0.0:13133&quot;</span></span><br><span class="line">  <span class="attr">pprof:</span></span><br><span class="line">    <span class="attr">endpoint:</span> <span class="string">&quot;0.0.0.0:1888&quot;</span></span><br><span class="line">  <span class="attr">zpages:</span></span><br><span class="line">    <span class="attr">endpoint:</span> <span class="string">&quot;0.0.0.0:55679&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">service:</span></span><br><span class="line">  <span class="attr">extensions:</span> [<span class="string">health_check</span>, <span class="string">pprof</span>, <span class="string">zpages</span>]</span><br><span class="line">  <span class="attr">pipelines:</span></span><br><span class="line">    <span class="attr">traces:</span></span><br><span class="line">      <span class="attr">receivers:</span> [<span class="string">otlp</span>]</span><br><span class="line">      <span class="attr">processors:</span> [<span class="string">batch</span>]</span><br><span class="line">      <span class="attr">exporters:</span> [<span class="string">otlp</span>]</span><br></pre></td></tr></table></figure>
+
+<h2 id="Starting-Services-in-Local-Development"><a href="#Starting-Services-in-Local-Development" class="headerlink" title="Starting Services in Local Development"></a>Starting Services in Local Development</h2><p>Use <code>docker compose up -d</code> to start the services defined in <code>compose.yaml</code>. Once the services are up, you can open <a target="_blank" rel="noopener" href="http://localhost:16686/">http://localhost:16686</a> to view the Jaeger UI.</p>
+<p>Next, start your Spring Boot application and perform the following test operations.</p>
+<h3 id="Create-an-Order"><a href="#Create-an-Order" class="headerlink" title="Create an Order"></a>Create an Order</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST <span class="string">&quot;http://localhost:8080/api/orders?customerId=CUST1234&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>Output:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Order created and processing started <span class="keyword">for</span> ID: ORD-1722481291139</span><br></pre></td></tr></table></figure>
+
+<h3 id="Retrieve-an-Order"><a href="#Retrieve-an-Order" class="headerlink" title="Retrieve an Order"></a>Retrieve an Order</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="string">&quot;http://localhost:8080/api/orders/ORD-1722481291139&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>Output:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Status <span class="keyword">for</span> order ORD-1722481291139: Processing</span><br></pre></td></tr></table></figure>
+
+<p>After completing these operations, return to the Jaeger UI to view the trace information. You should see two new traces: one for <code>otel-demo: http post /api/orders</code> and another for <code>otel-demo: http get /api/orders/&#123;orderId&#125;</code>.</p>
+<h3 id="Jaeger-UI-Overview"><a href="#Jaeger-UI-Overview" class="headerlink" title="Jaeger UI Overview"></a>Jaeger UI Overview</h3><p><img src="https://i.imgur.com/Si7Rb0l.jpeg" alt="Jaeger UI - Overview"></p>
+<p>This image displays the Jaeger UI search interface. You can see two traces under the <code>otel-demo</code> service: one for the POST request to create an order and one for the GET request to retrieve the order. These traces were generated by the CURL commands.</p>
+<h3 id="Jaeger-UI-Trace-Details"><a href="#Jaeger-UI-Trace-Details" class="headerlink" title="Jaeger UI Trace Details"></a>Jaeger UI Trace Details</h3><p><img src="https://i.imgur.com/VgSCNED.jpeg" alt="Jaeger UI - Trace Details"></p>
+<p>This image shows the detailed trace information for the <code>http post /api/orders</code> request. This trace includes multiple spans, such as <code>create-order</code> and <code>process-order-async</code>, indicating that asynchronous processing was correctly traced. Each span shows the duration and order of execution, providing a clear picture of the request’s flow.</p>
+<ul>
+<li><strong>Trace Overview</strong>: In Jaeger UI, you can see an overview of the traces for the <code>otel-demo</code> service. Each trace represents a complete request-response cycle.</li>
+<li><strong>Span Details</strong>: By clicking on a trace, you can view detailed information about each step (span) within the trace, including execution time and sequence. These spans help you understand the application’s execution flow and verify that asynchronous operations are working as expected.</li>
+<li><strong>Asynchronous Processing</strong>: The <code>create-order</code> API uses asynchronous processing for order handling. This is evident from the <code>process-order-async</code> span in the trace details. By examining these spans, we can ensure that the asynchronous operations are being traced correctly, providing insight into the application’s behavior during these processes.</li>
+</ul>
+<h2 id="Preparing-OpenTelemetry-Collector-for-GCP"><a href="#Preparing-OpenTelemetry-Collector-for-GCP" class="headerlink" title="Preparing OpenTelemetry Collector for GCP"></a>Preparing OpenTelemetry Collector for GCP</h2><p>This section details the steps to prepare and configure the OpenTelemetry Collector for deployment on Google Cloud Platform (GCP).</p>
+<h3 id="Setting-Up-GCP-Permissions"><a href="#Setting-Up-GCP-Permissions" class="headerlink" title="Setting Up GCP Permissions"></a>Setting Up GCP Permissions</h3><p>Before deploying your application to Google Cloud Platform (GCP), you need to set up the necessary permissions. The following steps will guide you through configuring GCP permissions.</p>
+<h4 id="CLI-Cleanup"><a href="#CLI-Cleanup" class="headerlink" title="CLI Cleanup"></a>CLI Cleanup</h4><p>Revoke all existing authorizations:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcloud auth revoke --all</span><br><span class="line">gcloud auth application-default revoke</span><br></pre></td></tr></table></figure>
+
+<p>Update the gcloud CLI:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcloud components update -q</span><br></pre></td></tr></table></figure>
+
+<h4 id="Login"><a href="#Login" class="headerlink" title="Login"></a>Login</h4><p>Log in using the following command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcloud auth login</span><br></pre></td></tr></table></figure>
+
+<p>Set your project:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PROJECT_ID=your-project-id</span><br><span class="line">gcloud config <span class="built_in">set</span> project <span class="variable">$PROJECT_ID</span></span><br></pre></td></tr></table></figure>
+
+<p>Verify that the authorization and project settings are correct:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcloud auth list</span><br><span class="line">gcloud config list project</span><br></pre></td></tr></table></figure>
+
+<h4 id="Create-Service-Account-for-Cloud-Run-Runtime"><a href="#Create-Service-Account-for-Cloud-Run-Runtime" class="headerlink" title="Create Service Account for Cloud Run Runtime"></a>Create Service Account for Cloud Run Runtime</h4><p>Create the service account:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> SERVICE_ACCOUNT_ID_RUNTIME=your-service-account-id</span><br><span class="line"></span><br><span class="line">gcloud iam service-accounts create <span class="variable">$SERVICE_ACCOUNT_ID_RUNTIME</span> \</span><br><span class="line">    --description=<span class="string">&quot;Description of the service account&quot;</span> \</span><br><span class="line">    --display-name=<span class="string">&quot;Cloud Run Service Account&quot;</span> \</span><br><span class="line">    --project=<span class="variable">$PROJECT_ID</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Bind-Roles-to-the-Service-Account"><a href="#Bind-Roles-to-the-Service-Account" class="headerlink" title="Bind Roles to the Service Account"></a>Bind Roles to the Service Account</h4><p>Bind the necessary roles to the service account:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">gcloud projects add-iam-policy-binding <span class="variable">$PROJECT_ID</span> \</span><br><span class="line">    --member=<span class="string">&quot;serviceAccount:<span class="variable">$SERVICE_ACCOUNT_ID_RUNTIME</span>@<span class="variable">$PROJECT_ID</span>.iam.gserviceaccount.com&quot;</span> \</span><br><span class="line">    --role=<span class="string">&quot;roles/monitoring.metricWriter&quot;</span> \</span><br><span class="line">    --condition=<span class="string">&quot;None&quot;</span></span><br><span class="line"></span><br><span class="line">gcloud projects add-iam-policy-binding <span class="variable">$PROJECT_ID</span> \</span><br><span class="line">    --member=<span class="string">&quot;serviceAccount:<span class="variable">$SERVICE_ACCOUNT_ID_RUNTIME</span>@<span class="variable">$PROJECT_ID</span>.iam.gserviceaccount.com&quot;</span> \</span><br><span class="line">    --role=<span class="string">&quot;roles/cloudtrace.agent&quot;</span> \</span><br><span class="line">    --condition=<span class="string">&quot;None&quot;</span></span><br><span class="line"></span><br><span class="line">gcloud projects add-iam-policy-binding <span class="variable">$PROJECT_ID</span> \</span><br><span class="line">    --member=<span class="string">&quot;serviceAccount:<span class="variable">$SERVICE_ACCOUNT_ID_RUNTIME</span>@<span class="variable">$PROJECT_ID</span>.iam.gserviceaccount.com&quot;</span> \</span><br><span class="line">    --role=<span class="string">&quot;roles/logging.logWriter&quot;</span> \</span><br><span class="line">    --condition=<span class="string">&quot;None&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Create-Artifact-Registry-Repository"><a href="#Create-Artifact-Registry-Repository" class="headerlink" title="Create Artifact Registry Repository"></a>Create Artifact Registry Repository</h4><p>Create a Docker repository:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> REGION=asia-east1</span><br><span class="line"><span class="built_in">export</span> REPOSITORY_NAME=your-repository-name</span><br><span class="line"></span><br><span class="line">gcloud artifacts repositories create <span class="variable">$REPOSITORY_NAME</span> --repository-format=docker \</span><br><span class="line">--location=<span class="variable">$REGION</span> --description=<span class="string">&quot;Description of the repository&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>These steps will help you set up the necessary GCP permissions, ensuring that your application has the required access and permissions when deployed to Google Cloud Platform.</p>
+<h3 id="Create-Dockerfile-for-OpenTelemetry-Collector"><a href="#Create-Dockerfile-for-OpenTelemetry-Collector" class="headerlink" title="Create Dockerfile for OpenTelemetry Collector"></a>Create Dockerfile for OpenTelemetry Collector</h3><p>Create a <code>Dockerfile</code> for the OpenTelemetry Collector:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> otel/opentelemetry-collector-contrib:latest</span><br><span class="line"></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /etc/otelcol-contrib</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> otel-config.yaml /etc/otelcol-contrib/config.yaml</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Create-otel-config-yaml-for-GCP-Configuration"><a href="#Create-otel-config-yaml-for-GCP-Configuration" class="headerlink" title="Create otel-config.yaml for GCP Configuration"></a>Create <code>otel-config.yaml</code> for GCP Configuration</h3><p>Create the configuration file <code>otel-config.yaml</code> with the following content:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">receivers:</span></span><br><span class="line">  <span class="attr">otlp:</span></span><br><span class="line">    <span class="attr">protocols:</span></span><br><span class="line">      <span class="attr">grpc:</span></span><br><span class="line">        <span class="attr">endpoint:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">:4317</span></span><br><span class="line">      <span class="attr">http:</span></span><br><span class="line">        <span class="attr">endpoint:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">:4318</span></span><br><span class="line"></span><br><span class="line"><span class="attr">exporters:</span></span><br><span class="line">  <span class="attr">googlecloud:</span></span><br><span class="line">    <span class="attr">log:</span></span><br><span class="line">      <span class="attr">default_log_name:</span> <span class="string">opentelemetry.io/collector-exported-log</span></span><br><span class="line"></span><br><span class="line"><span class="attr">extensions:</span></span><br><span class="line">  <span class="attr">health_check:</span></span><br><span class="line">  <span class="attr">pprof:</span></span><br><span class="line">  <span class="attr">zpages:</span></span><br><span class="line"></span><br><span class="line"><span class="attr">processors:</span></span><br><span class="line">  <span class="attr">memory_limiter:</span></span><br><span class="line">    <span class="attr">check_interval:</span> <span class="string">1s</span></span><br><span class="line">    <span class="attr">limit_percentage:</span> <span class="number">65</span></span><br><span class="line">    <span class="attr">spike_limit_percentage:</span> <span class="number">20</span></span><br><span class="line">  <span class="attr">batch:</span></span><br><span class="line">  <span class="attr">filter/drop_actuator:</span></span><br><span class="line">    <span class="attr">traces:</span></span><br><span class="line">      <span class="attr">span:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">attributes[&quot;http.route&quot;]</span> <span class="string">==</span> <span class="string">&quot;/actuator/prometheus&quot;</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">attributes[&quot;http.route&quot;]</span> <span class="string">==</span> <span class="string">&quot;/actuator/health&quot;</span></span><br><span class="line">  <span class="attr">resourcedetection:</span></span><br><span class="line">    <span class="attr">detectors:</span> [<span class="string">gcp</span>]</span><br><span class="line">    <span class="attr">timeout:</span> <span class="string">10s</span></span><br><span class="line"></span><br><span class="line"><span class="attr">service:</span></span><br><span class="line">  <span class="attr">extensions:</span> [<span class="string">health_check</span>, <span class="string">pprof</span>, <span class="string">zpages</span>]</span><br><span class="line">  <span class="attr">pipelines:</span></span><br><span class="line">    <span class="attr">traces:</span></span><br><span class="line">      <span class="attr">receivers:</span> [<span class="string">otlp</span>]</span><br><span class="line">      <span class="attr">processors:</span> [<span class="string">memory_limiter</span>, <span class="string">batch</span>]</span><br><span class="line">      <span class="attr">exporters:</span> [<span class="string">googlecloud</span>]</span><br><span class="line">    <span class="attr">metrics:</span></span><br><span class="line">      <span class="attr">receivers:</span> [<span class="string">otlp</span>]</span><br><span class="line">      <span class="attr">processors:</span> [<span class="string">memory_limiter</span>, <span class="string">batch</span>]</span><br><span class="line">      <span class="attr">exporters:</span> [<span class="string">googlecloud</span>]</span><br><span class="line">    <span class="attr">logs:</span></span><br><span class="line">      <span class="attr">receivers:</span> [<span class="string">otlp</span>]</span><br><span class="line">      <span class="attr">processors:</span> [<span class="string">memory_limiter</span>, <span class="string">batch</span>]</span><br><span class="line">      <span class="attr">exporters:</span> [<span class="string">googlecloud</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="Build-and-Push-Docker-Images"><a href="#Build-and-Push-Docker-Images" class="headerlink" title="Build and Push Docker Images"></a>Build and Push Docker Images</h3><p>Build and push the Docker images to Google Artifact Registry:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PROJECT_ID=your-gcp-project-id</span><br><span class="line"><span class="built_in">export</span> REGION=your-region</span><br><span class="line"><span class="built_in">export</span> REPOSITORY_NAME=your-repo-name</span><br><span class="line"><span class="built_in">export</span> REGISTRY_URI=<span class="variable">$REGION</span>-docker.pkg.dev/<span class="variable">$PROJECT_ID</span>/<span class="variable">$REPOSITORY_NAME</span></span><br><span class="line"><span class="built_in">export</span> BUILD_IMAGE_NAME=otel-collector</span><br><span class="line"><span class="built_in">export</span> BUILD_IMAGE_TAG=0.0.1</span><br><span class="line"></span><br><span class="line">docker build --platform linux/amd64 -t <span class="variable">$REGISTRY_URI</span>/<span class="variable">$BUILD_IMAGE_NAME</span>:<span class="variable">$BUILD_IMAGE_TAG</span> .</span><br><span class="line">docker push <span class="variable">$REGISTRY_URI</span>/<span class="variable">$BUILD_IMAGE_NAME</span>:<span class="variable">$BUILD_IMAGE_TAG</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>otel-config.yaml</strong>: This configuration file sets up the OpenTelemetry Collector to receive traces and metrics via OTLP over gRPC and HTTP. It includes exporters for sending data to Google Cloud Logging and various processors and extensions for managing the data.</li>
+<li><strong>Build and Push Docker Images</strong>: The commands build the Docker image using the specified Dockerfile and configuration file, then push the image to Google Artifact Registry. This ensures that your OpenTelemetry Collector configuration is containerized and ready for deployment on GCP.</li>
+</ul>
+<h2 id="Deploying-to-Google-Cloud-Platform"><a href="#Deploying-to-Google-Cloud-Platform" class="headerlink" title="Deploying to Google Cloud Platform"></a>Deploying to Google Cloud Platform</h2><p>To deploy your application and OpenTelemetry Collector to Google Cloud Platform, follow these steps to create and configure a Cloud Run service.</p>
+<h3 id="Create-a-Cloud-Run-Service-Configuration-File"><a href="#Create-a-Cloud-Run-Service-Configuration-File" class="headerlink" title="Create a Cloud Run Service Configuration File"></a>Create a Cloud Run Service Configuration File</h3><p>Create a <code>cloud-run.yaml</code> file with the following content:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">serving.knative.dev/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">otel-demo</span></span><br><span class="line">  <span class="attr">annotations:</span></span><br><span class="line">    <span class="attr">run.googleapis.com/ingress:</span> <span class="string">all</span></span><br><span class="line">    <span class="attr">run.googleapis.com/ingress-status:</span> <span class="string">all</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">cloud.googleapis.com/location:</span> <span class="string">asia-east1</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">annotations:</span></span><br><span class="line">        <span class="attr">autoscaling.knative.dev/maxScale:</span> <span class="string">&#x27;4&#x27;</span></span><br><span class="line">        <span class="attr">autoscaling.knative.dev/minScale:</span> <span class="string">&#x27;1&#x27;</span></span><br><span class="line">        <span class="attr">run.googleapis.com/cpu-throttling:</span> <span class="string">&#x27;false&#x27;</span></span><br><span class="line">        <span class="attr">run.googleapis.com/startup-cpu-boost:</span> <span class="string">&#x27;true&#x27;</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">run.googleapis.com/startupProbeType:</span> <span class="string">Custom</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containerConcurrency:</span> <span class="number">100</span></span><br><span class="line">      <span class="attr">timeoutSeconds:</span> <span class="number">300</span></span><br><span class="line">      <span class="attr">serviceAccountName:</span> <span class="string">$&#123;YOUR_SERVICE_ACCOUNT_NAME&#125;@$&#123;YOUR_PROJECT_ID&#125;.iam.gserviceaccount.com</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">otel-demo</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">$&#123;YOUR_REGION&#125;-docker.pkg.dev/$&#123;YOUR_PROJECT_ID&#125;/$&#123;YOUR_REPO&#125;/otel-demo:$&#123;YOUR_VERSION&#125;</span></span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">8080</span></span><br><span class="line">        <span class="attr">env:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">spring.profiles.active</span></span><br><span class="line">          <span class="attr">value:</span> <span class="string">test,gcp</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">logging.level.com.example.otel</span></span><br><span class="line">          <span class="attr">value:</span> <span class="string">debug</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">JAVA_TOOL_OPTIONS</span></span><br><span class="line">          <span class="attr">value:</span> <span class="string">-Djava.security.egd=file:/dev/./urandom</span> <span class="string">-Dfile.encoding=UTF-8</span></span><br><span class="line">        <span class="attr">resources:</span></span><br><span class="line">          <span class="attr">limits:</span></span><br><span class="line">            <span class="attr">cpu:</span> <span class="string">1000m</span></span><br><span class="line">            <span class="attr">memory:</span> <span class="string">1Gi</span></span><br><span class="line">        <span class="attr">startupProbe:</span></span><br><span class="line">          <span class="attr">httpGet:</span></span><br><span class="line">            <span class="attr">path:</span> <span class="string">/actuator/health/readiness</span></span><br><span class="line">            <span class="attr">port:</span> <span class="number">8080</span></span><br><span class="line">          <span class="attr">initialDelaySeconds:</span> <span class="number">10</span></span><br><span class="line">          <span class="attr">periodSeconds:</span> <span class="number">10</span></span><br><span class="line">          <span class="attr">failureThreshold:</span> <span class="number">10</span></span><br><span class="line">          <span class="attr">timeoutSeconds:</span> <span class="number">1</span></span><br><span class="line">        <span class="attr">livenessProbe:</span></span><br><span class="line">          <span class="attr">httpGet:</span></span><br><span class="line">            <span class="attr">path:</span> <span class="string">/actuator/health/liveness</span></span><br><span class="line">            <span class="attr">port:</span> <span class="number">8080</span></span><br><span class="line">          <span class="attr">initialDelaySeconds:</span> <span class="number">10</span></span><br><span class="line">          <span class="attr">periodSeconds:</span> <span class="number">10</span></span><br><span class="line">          <span class="attr">failureThreshold:</span> <span class="number">10</span></span><br><span class="line">          <span class="attr">timeoutSeconds:</span> <span class="number">1</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">otel-collector</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">$&#123;YOUR_REGION&#125;-docker.pkg.dev/$&#123;YOUR_PROJECT_ID&#125;/$&#123;YOUR_REPO&#125;/otel-collector:$&#123;YOUR_VERSION&#125;</span>  <span class="comment"># 替換為您的 Artifact Registry 路徑和版本</span></span><br><span class="line">        <span class="attr">resources:</span></span><br><span class="line">          <span class="attr">limits:</span></span><br><span class="line">            <span class="attr">cpu:</span> <span class="string">500m</span></span><br><span class="line">            <span class="attr">memory:</span> <span class="string">128Mi</span></span><br><span class="line">  <span class="attr">traffic:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">percent:</span> <span class="number">100</span></span><br><span class="line">    <span class="attr">latestRevision:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Deploying-the-Cloud-Run-Service"><a href="#Deploying-the-Cloud-Run-Service" class="headerlink" title="Deploying the Cloud Run Service"></a>Deploying the Cloud Run Service</h3><p>After creating the <code>cloud-run.yaml</code> file, deploy the Cloud Run service using the following command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcloud run services replace cloud-run.yaml</span><br></pre></td></tr></table></figure>
+
+<p>Once your application and OpenTelemetry Collector are deployed to Google Cloud Platform, you can view the tracing information in the GCP Console. Here is an example of what you might see:</p>
+<p><img src="https://i.imgur.com/v98oJ7P.jpeg" alt="GCP Trace Explorer Overview"></p>
+<p>In the provided screenshot, the trace for the <code>http post /api/orders</code> request is shown. This trace includes multiple spans such as <code>create-order</code> and <code>process-order-async</code>, indicating that asynchronous processing was correctly traced. Each span shows the duration and order of execution, providing a clear picture of the request’s flow.</p>
+<ul>
+<li><strong>Trace Overview</strong>: The trace overview shows that the total duration of the request was 2.572 seconds and it involved 7 spans. This overview helps you quickly understand the performance of the request.</li>
+<li><strong>Span Details</strong>: The span details show the execution time of each operation within the trace. For example, the <code>create-order</code> span took approximately 786 milliseconds, and the <code>process-order-async</code> span took about 2 seconds. This detailed breakdown helps you identify which parts of the request took the most time.</li>
+</ul>
+<p>In the GCP Trace Explorer, you can expand to view logs and traces together, providing a comprehensive view of your application’s behavior, as shown below:</p>
+<p><img src="https://i.imgur.com/tvgpIiv.jpeg" alt="GCP Trace Explorer expand"></p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>By following this step-by-step guide, you have successfully integrated OpenTelemetry with a Spring Boot application and deployed it to Google Cloud Platform. This setup includes:</p>
+<ol>
+<li><strong>Configuring Spring Boot for OpenTelemetry</strong>: Ensuring all necessary dependencies and settings are included for effective tracing and monitoring.</li>
+<li><strong>Creating Docker Environment</strong>: Setting up Docker Compose for local development and testing.</li>
+<li><strong>Deploying to GCP</strong>: Configuring and deploying your application and OpenTelemetry Collector to Google Cloud Platform using Cloud Run.</li>
+<li><strong>Monitoring and Analysis</strong>: Using Jaeger UI and GCP Trace Explorer to view and analyze traces, ensuring that asynchronous processing is correctly traced and providing insights into the application’s performance.</li>
+</ol>
+<p>This integration provides comprehensive observability, helping you monitor and analyze your application’s behavior in both development and production environments. With detailed tracing and monitoring, you can quickly identify and resolve performance bottlenecks and ensure a smooth and efficient application operation.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/samzhu/spring-boot-opentelemetry-demo-24-07">Demo project</a></li>
+<li><a target="_blank" rel="noopener" href="https://opentelemetry.io/docs/zero-code/java/spring-boot-starter/getting-started/">OpenTelemetry Spring Boot starter Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/reference/actuator/observability.html#actuator.observability.annotations">Spring Boot Actuator Observability Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.micrometer.io/context-propagation/reference/installing.html">Micrometer Context Propagation Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jaegertracing.io/docs/">Jaeger Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/run/docs">Google Cloud Run Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/trace/docs">Google Cloud Trace Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/examples/demo/README.md">OpenTelemetry Collector Demo</a></li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/@vineet.kumar_28230/springboot-app-monitoring-with-prometheus-and-grafana-f78ad2bd05cf">Springboot App Monitoring With Prometheus And Grafana</a></li>
+<li><a target="_blank" rel="noopener" href="https://amithkumarg.medium.com/micrometer-tracing-in-spring-boot-context-propagation-for-async-scheduled-newspan-b80f4f4b2c9f">Micrometer Tracing In Spring Boot — Context Propagation For @Async, @Scheduled, @NewSpan, @ContinueSpan And @SpanTag</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/open-telemetry/opentelemetry-java-examples/blob/main/spring-native/build.gradle.kts">opentelemetry-java-examples</a></li>
+</ul>
+<p>By leveraging these resources, you can further enhance your understanding and capabilities in integrating observability into your Spring Boot applications, ensuring robust and reliable performance in cloud environments.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>Sam Zhu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.samzhu.dev/2024/08/01/Step-by-Step-Guide-to-Integrating-Spring-Boot-with-OpenTelemetry-and-GCP/" title="Step-by-Step Guide to Integrating Spring Boot with OpenTelemetry and GCP">https://blog.samzhu.dev/2024/08/01/Step-by-Step-Guide-to-Integrating-Spring-Boot-with-OpenTelemetry-and-GCP/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+              <a href="/tags/GCP/" rel="tag"># GCP</a>
+              <a href="/tags/OpenTelemetry/" rel="tag"># OpenTelemetry</a>
+              <a href="/tags/Observability/" rel="tag"># Observability</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/06/17/Developing-a-Spring-Boot-Project-Using-Google-Project-IDX/" rel="prev" title="Developing a Spring Boot Project Using Google Project IDX">
+                  <i class="fa fa-angle-left"></i> Developing a Spring Boot Project Using Google Project IDX
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/08/07/Step-by-Step-Guide-to-Integrating-Spring-Boot-and-OpenTelemetry-with-Micrometer-on-GCP-for-Distributed-Tracing/" rel="next" title="Step-by-Step Guide to Integrating Spring Boot and OpenTelemetry with Micrometer on GCP for Distributed Tracing">
+                  Step-by-Step Guide to Integrating Spring Boot and OpenTelemetry with Micrometer on GCP for Distributed Tracing <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sam Zhu</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/samzhu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.3.0/mermaid.min.js","integrity":"sha256-9y71g5Lz/KLsHjB8uXwnkuWDtAMDSzD/HdIbqhJfTAI="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

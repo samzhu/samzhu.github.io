@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.samzhu.dev","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="現在要來把之前機器初始化的手動腳本, 改成自動化 如果你是 Mac 又沒裝 XCode 可參考做法 Install Ansible on Mac   如果是 CentOS 就順著往下做就可以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ansible install and introduction">
+<meta property="og:url" content="https://blog.samzhu.dev/2019/07/05/Ansible-install-and-introduction/index.html">
+<meta property="og:site_name" content="Sam&#39;s programming note">
+<meta property="og:description" content="現在要來把之前機器初始化的手動腳本, 改成自動化 如果你是 Mac 又沒裝 XCode 可參考做法 Install Ansible on Mac   如果是 CentOS 就順著往下做就可以">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png">
+<meta property="article:published_time" content="2019-07-05T03:58:04.000Z">
+<meta property="article:modified_time" content="2025-07-24T15:41:45.578Z">
+<meta property="article:author" content="Sam Zhu">
+<meta property="article:tag" content="Ansible">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png">
+<meta name="twitter:creator" content="@samzhu0318">
+
+
+<link rel="canonical" href="https://blog.samzhu.dev/2019/07/05/Ansible-install-and-introduction/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.samzhu.dev/2019/07/05/Ansible-install-and-introduction/","path":"2019/07/05/Ansible-install-and-introduction/","title":"Ansible install and introduction"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Ansible install and introduction | Sam's programming note</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CFLHEYEETG"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-CFLHEYEETG","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<meta name="google-adsense-account" content="ca-pub-5880479202699914">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880479202699914"
+     crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sam's programming note</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%9D-Ansible"><span class="nav-number">1.</span> <span class="nav-text">安裝 Ansible</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%88%E6%9B%B4%E6%96%B0"><span class="nav-number">1.1.</span> <span class="nav-text">先更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Install-python-pip-from-epel"><span class="nav-number">1.2.</span> <span class="nav-text">Install python-pip from epel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Verify-using"><span class="nav-number">1.3.</span> <span class="nav-text">Verify using</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Upgrade-pip"><span class="nav-number">1.4.</span> <span class="nav-text">Upgrade pip</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Install-Ansible"><span class="nav-number">1.5.</span> <span class="nav-text">Install Ansible</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Install-Verify-Tool"><span class="nav-number">1.6.</span> <span class="nav-text">Install Verify Tool</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ansible-config-file"><span class="nav-number">2.</span> <span class="nav-text">Ansible config file</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Inventory"><span class="nav-number">3.</span> <span class="nav-text">Inventory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ansible-initialization-folder"><span class="nav-number">4.</span> <span class="nav-text">Ansible initialization folder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Playbook"><span class="nav-number">5.</span> <span class="nav-text">Playbook</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E5%80%8B-playbook"><span class="nav-number">5.1.</span> <span class="nav-text">第一個 playbook</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%8D%E8%A9%A2%E5%95%8F%E7%99%BB%E5%85%A5"><span class="nav-number">5.2.</span> <span class="nav-text">免詢問登入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%BA-sshpass-%E5%B7%A5%E5%85%B7"><span class="nav-number">5.3.</span> <span class="nav-text">缺 sshpass 工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%B7%E8%A1%8C%E7%B5%90%E6%9E%9C"><span class="nav-number">5.4.</span> <span class="nav-text">執行結果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Role"><span class="nav-number">6.</span> <span class="nav-text">Role</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E7%B7%B4%E7%BF%92"><span class="nav-number">7.</span> <span class="nav-text">如何練習</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">8.</span> <span class="nav-text">References</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sam Zhu"
+      src="https://i.imgur.com/eLloI4N.png">
+  <p class="site-author-name" itemprop="name">Sam Zhu</p>
+  <div class="site-description" itemprop="description">Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">74</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/samzhu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;samzhu" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/samzhu0318" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;samzhu0318" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.samzhu.dev/2019/07/05/Ansible-install-and-introduction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.imgur.com/eLloI4N.png">
+      <meta itemprop="name" content="Sam Zhu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sam's programming note">
+      <meta itemprop="description" content="Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Ansible install and introduction | Sam's programming note">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Ansible install and introduction
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2019-07-05 11:58:04" itemprop="dateCreated datePublished" datetime="2019-07-05T11:58:04+08:00">2019-07-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-07-24 23:41:45" itemprop="dateModified" datetime="2025-07-24T23:41:45+08:00">2025-07-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/DevOps/" itemprop="url" rel="index"><span itemprop="name">DevOps</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>現在要來把之前機器初始化的手動腳本, 改成自動化</p>
+<p>如果你是 Mac 又沒裝 XCode 可參考做法 <a target="_blank" rel="noopener" href="https://blog.samchu.dev/2019/07/02/Install-Ansible-on-Mac/">Install Ansible on Mac</a>  </p>
+<p>如果是 CentOS 就順著往下做就可以</p>
+<span id="more"></span>
+
+<h2 id="安裝-Ansible"><a href="#安裝-Ansible" class="headerlink" title="安裝 Ansible"></a>安裝 Ansible</h2><h3 id="先更新"><a href="#先更新" class="headerlink" title="先更新"></a>先更新</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install epel-release -y</span><br><span class="line">sudo yum update -y</span><br></pre></td></tr></table></figure>
+
+<h3 id="Install-python-pip-from-epel"><a href="#Install-python-pip-from-epel" class="headerlink" title="Install python-pip from epel"></a>Install python-pip from epel</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install python-pip -y</span><br></pre></td></tr></table></figure>
+<h3 id="Verify-using"><a href="#Verify-using" class="headerlink" title="Verify using"></a>Verify using</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip -V</span><br></pre></td></tr></table></figure>
+<h3 id="Upgrade-pip"><a href="#Upgrade-pip" class="headerlink" title="Upgrade pip"></a>Upgrade pip</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install --upgrade pip</span><br></pre></td></tr></table></figure>
+
+<h3 id="Install-Ansible"><a href="#Install-Ansible" class="headerlink" title="Install Ansible"></a>Install Ansible</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install ansible -y</span><br><span class="line">sudo ansible --version</span><br></pre></td></tr></table></figure>
+
+<h3 id="Install-Verify-Tool"><a href="#Install-Verify-Tool" class="headerlink" title="Install Verify Tool"></a>Install Verify Tool</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install ansible-lint</span><br><span class="line">sudo ansible-lint --version</span><br></pre></td></tr></table></figure>
+
+<p>到這一步我們控制的主機基本上是裝好了<br>接下來我們來初始化 Ansible Controller 資料夾</p>
+<h2 id="Ansible-config-file"><a href="#Ansible-config-file" class="headerlink" title="Ansible config file"></a>Ansible config file</h2><p>配置文件 按優先級排序如下：  </p>
+<ul>
+<li>ANSIBLE_CONFIG (環境變量，如果不為空則最優先)  </li>
+<li>ansible.cfg (當前路徑下的配置)  </li>
+<li>~&#x2F;.ansible.cfg (用戶主目錄下)  </li>
+<li>&#x2F;etc&#x2F;ansible&#x2F;ansible.cfg （全局配置文件）</li>
+</ul>
+<p>CentOS 裝好預設是會有建立目錄</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">ls</span> -lh /etc/ansible</span><br><span class="line">total 24K</span><br><span class="line">-rw-r--r--. 1 root root  20K Feb 21 18:04 ansible.cfg</span><br><span class="line">-rw-r--r--. 1 root root 1016 Feb 21 18:04 hosts</span><br><span class="line">drwxr-xr-x. 2 root root    6 Feb 21 18:04 roles</span><br></pre></td></tr></table></figure>
+<p>ansible.cfg  &#x3D;&gt; Setting ansible執行roles路徑及其他設定功能<br>hosts        &#x3D;&gt; Setting ssh 遠端vm<br>roles        &#x3D;&gt; defule 角色</p>
+<p>如果沒有的話也可以下載範例來修改</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg -o ~/.ansible.cfg</span><br></pre></td></tr></table></figure>
+
+<h2 id="Inventory"><a href="#Inventory" class="headerlink" title="Inventory"></a>Inventory</h2><p>受 Ansible 管理的主機列表<br>格式如下  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[group_eureka]</span><br><span class="line">eureka-01 ansible_host=192.168.0.11 ansible_user=root</span><br><span class="line">eureka-02 ansible_host=192.168.0.12 ansible_user=root</span><br><span class="line"></span><br><span class="line">[group_config]</span><br><span class="line">config_01 ansible_host=192.168.0.31 ansible_user=root</span><br><span class="line">config_02 ansible_host=192.168.0.32 ansible_user=root</span><br></pre></td></tr></table></figure>
+<p>方括弧內的就是所謂群組, 你可以一次指定一個群組, 或是單一一台主機名<br>例如  </p>
+<p>指定 eureka-01 一台</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ansible-playbook playbooks/PLAYBOOK_NAME.yml --limit &quot;eureka-01&quot;</span><br></pre></td></tr></table></figure>
+
+<p>指定一個群組 group_config 主機 config_01 &amp; config_02 都會執行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ansible-playbook playbooks/PLAYBOOK_NAME.yml --limit &#x27;group_config&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>做個練習讓 Ansible 去 ping 看看所有主機</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &lt;&lt; <span class="string">&#x27;EOF&#x27;</span> &gt; inventory</span><br><span class="line">[group_eureka]</span><br><span class="line">eureka-01 ansible_host=192.168.0.11 ansible_user=root</span><br><span class="line">eureka-02 ansible_host=192.168.0.12 ansible_user=root</span><br><span class="line"></span><br><span class="line">[group_config]</span><br><span class="line">config_01 ansible_host=192.168.0.31 ansible_user=root</span><br><span class="line">config_02 ansible_host=192.168.0.32 ansible_user=root</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>假設 eureka-01 &amp; config_01 都是正常可以 ping 得到 結果應該類似如下就成功了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ansible -i ./inventory group_config -m ping </span><br><span class="line">config_02 | UNREACHABLE! =&gt; &#123;</span><br><span class="line">    <span class="string">&quot;changed&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="string">&quot;msg&quot;</span>: <span class="string">&quot;Failed to connect to the host via ssh: ssh: connect to host 192.168.0.32 port 22: Operation timed out&quot;</span>,</span><br><span class="line">    <span class="string">&quot;unreachable&quot;</span>: <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line">config_01 | SUCCESS =&gt; &#123;</span><br><span class="line">    <span class="string">&quot;changed&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="string">&quot;ping&quot;</span>: <span class="string">&quot;pong&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其他說明參考官網 <a target="_blank" rel="noopener" href="https://ansible-tips-and-tricks.readthedocs.io/en/latest/ansible/commands/#limiting-playbooktask-runs">Ansible Limiting Playbook&#x2F;Task Runs</a></p>
+<h2 id="Ansible-initialization-folder"><a href="#Ansible-initialization-folder" class="headerlink" title="Ansible initialization folder"></a>Ansible initialization folder</h2><p>要透過 ansible 操作當然免不了要分資料夾來做管理不同環境<br>你可以參考官方 <a target="_blank" rel="noopener" href="https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html#directory-layout">Ansible Best Practices Directory Layout</a>,<br>或是 <a target="_blank" rel="noopener" href="https://note.drx.tw/">凍仁翔</a> 大大的實戰分享 <a target="_blank" rel="noopener" href="https://ithelp.ithome.com.tw/articles/10186729">現代 IT 人一定要知道的 Ansible 自動化組態技巧 19. 如何維護大型的 Ansible Playbooks？</a><br><a target="_blank" rel="noopener" href="https://ansible-tran.readthedocs.io/en/latest/index.html"></a></p>
+<p>我簡化一下只列出這次練習會用得到的部分, 完整的到官網看吧</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">production                # 正式環境主機管理檔</span><br><span class="line">staging                   # 測試環境主機管理檔</span><br><span class="line"></span><br><span class="line">group_vars/               # 群組變數</span><br><span class="line">   all.yml                # 各環境共用的群組變數</span><br><span class="line">   production.yml         # 正式環境的群組變數</span><br><span class="line">   staging.yml            # 測試環境的群組變數</span><br><span class="line">host_vars/                # 主機變數</span><br><span class="line">   hostname1.yml          # here we assign variables to particular systems</span><br><span class="line">   hostname2.yml</span><br><span class="line"></span><br><span class="line">library/                  # if any custom modules, put them here (optional)</span><br><span class="line">module_utils/             # if any custom module_utils to support modules, put them here (optional)</span><br><span class="line">filter_plugins/           # if any custom filter plugins, put them here (optional)</span><br><span class="line"></span><br><span class="line">site.yml                  # master playbook</span><br><span class="line">webservers.yml            # playbook for webserver tier</span><br><span class="line">dbservers.yml             # playbook for dbserver tier</span><br><span class="line"></span><br><span class="line">roles/</span><br><span class="line">    common/               # this hierarchy represents a &quot;role&quot;</span><br><span class="line">        tasks/            #</span><br><span class="line">            main.yml      #  &lt;-- tasks file can include smaller files if warranted</span><br><span class="line">        handlers/         #</span><br><span class="line">            main.yml      #  &lt;-- handlers file</span><br><span class="line">        templates/        #  &lt;-- files for use with the template resource</span><br><span class="line">            ntp.conf.j2   #  &lt;------- templates end in .j2</span><br><span class="line">        files/            #</span><br><span class="line">            bar.txt       #  &lt;-- files for use with the copy resource</span><br><span class="line">            foo.sh        #  &lt;-- script files for use with the script resource</span><br><span class="line">        vars/             #</span><br><span class="line">            main.yml      #  &lt;-- variables associated with this role</span><br><span class="line">        defaults/         #</span><br><span class="line">            main.yml      #  &lt;-- default lower priority variables for this role</span><br><span class="line">        meta/             #</span><br><span class="line">            main.yml      #  &lt;-- role dependencies</span><br><span class="line">        library/          # roles can also include custom modules</span><br><span class="line">        module_utils/     # roles can also include custom module_utils</span><br><span class="line">        lookup_plugins/   # or other types of plugins, like lookup in this case</span><br><span class="line"></span><br><span class="line">    webtier/              # same kind of structure as &quot;common&quot; was above, done for the webtier role</span><br><span class="line">    monitoring/           # &quot;&quot;</span><br><span class="line">    fooapp/               # &quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<p>在範例資料夾來建立一些目錄讓他跟官方建議的目錄比較接近</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt; &#x27;EOF&#x27; &gt; README.md</span><br><span class="line">Ansible 腳本範例</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"># 開發環境</span><br><span class="line">cat &lt;&lt; &#x27;EOF&#x27; &gt; dev</span><br><span class="line">[group_eureka]</span><br><span class="line">eureka-01 ansible_host=192.168.1.11 ansible_user=root</span><br><span class="line">eureka-02 ansible_host=192.168.1.12 ansible_user=root</span><br><span class="line"></span><br><span class="line">[group_config]</span><br><span class="line">config_01 ansible_host=192.168.1.31 ansible_user=root</span><br><span class="line">config_02 ansible_host=192.168.1.32 ansible_user=root</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"># 開發預發佈環境</span><br><span class="line">cat &lt;&lt; &#x27;EOF&#x27; &gt; dev-release</span><br><span class="line">[group_eureka]</span><br><span class="line">eureka-01 ansible_host=192.168.2.11 ansible_user=root</span><br><span class="line">eureka-02 ansible_host=192.168.2.12 ansible_user=root</span><br><span class="line"></span><br><span class="line">[group_config]</span><br><span class="line">config_01 ansible_host=192.168.2.31 ansible_user=root</span><br><span class="line">config_02 ansible_host=192.168.2.32 ansible_user=root</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">mkdir group_vars</span><br><span class="line"></span><br><span class="line">mkdir roles</span><br><span class="line"></span><br><span class="line">mkdir files</span><br></pre></td></tr></table></figure>
+
+<h2 id="Playbook"><a href="#Playbook" class="headerlink" title="Playbook"></a>Playbook</h2><h3 id="第一個-playbook"><a href="#第一個-playbook" class="headerlink" title="第一個 playbook"></a>第一個 playbook</h3><p>建立初始化 playbook, 但是剛開始練首先用簡單一點的 印出主機名稱</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt; &#x27;EOF&#x27; &gt; initial.yml</span><br><span class="line">- name: Ansible Check</span><br><span class="line">  hosts: &quot;&#123;&#123; myhosts &#125;&#125;&quot;</span><br><span class="line">  serial: 1</span><br><span class="line">  tasks:</span><br><span class="line">    - name: echo whoami</span><br><span class="line">      command: whoami</span><br><span class="line">      register: whoami_result</span><br><span class="line"></span><br><span class="line">    - name: print whoami result</span><br><span class="line">      debug:</span><br><span class="line">        msg: &quot;&#123;&#123; whoami_result.stdout &#125;&#125;&quot;</span><br><span class="line"></span><br><span class="line">    - name: echo hostname</span><br><span class="line">      command: hostname</span><br><span class="line">      register: hostname_result</span><br><span class="line"></span><br><span class="line">    - name: print hostname result</span><br><span class="line">      debug:</span><br><span class="line">        msg: &quot;&#123;&#123; hostname_result.stdout &#125;&#125;&quot;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>目前結構</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ tree</span><br><span class="line">.</span><br><span class="line">├── README.md</span><br><span class="line">├── dev</span><br><span class="line">├── dev-release</span><br><span class="line">├── group_vars</span><br><span class="line">├── initial.yml</span><br><span class="line">└── roles</span><br><span class="line"></span><br><span class="line">2 directories, 4 files</span><br></pre></td></tr></table></figure>
+
+<p>如何執行, 重要的參數使用系統變數來讀入執行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export myhosts=all</span><br><span class="line">export ansible_password=1qaz2wsx</span><br><span class="line">ansible-playbook -i ./dev ./initial.yml -e &quot;myhosts=$&#123;myhosts&#125;&quot; -vv --extra-vars &quot;ansible_password=$&#123;ANSIBLE_PASSWORD&#125;&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="免詢問登入"><a href="#免詢問登入" class="headerlink" title="免詢問登入"></a>免詢問登入</h3><p>如果你還沒有修改免確認登入會變成卡在這邊</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ ansible-playbook -i ./dev ./initial.yml -e <span class="string">&quot;myhosts=<span class="variable">$&#123;myhosts&#125;</span>&quot;</span> -vv --extra-vars <span class="string">&quot;ansible_password=<span class="variable">$&#123;ANSIBLE_PASSWORD&#125;</span>&quot;</span></span><br><span class="line">ansible-playbook 2.8.1</span><br><span class="line">  config file = None</span><br><span class="line">  configured module search path = [<span class="string">&#x27;/Users/shanglichu/.ansible/plugins/modules&#x27;</span>, <span class="string">&#x27;/usr/share/ansible/plugins/modules&#x27;</span>]</span><br><span class="line">  ansible python module location = /usr/local/Cellar/ansible/2.8.1_1/libexec/lib/python3.7/site-packages/ansible</span><br><span class="line">  executable location = /usr/local/bin/ansible-playbook</span><br><span class="line">  python version = 3.7.3 (default, Jun 19 2019, 07:38:49) [Clang 10.0.1 (clang-1001.0.46.4)]</span><br><span class="line">No config file found; using defaults</span><br><span class="line"></span><br><span class="line">PLAYBOOK: initial.yml ****************************************************************************************************************************************************</span><br><span class="line">1 plays <span class="keyword">in</span> ./initial.yml</span><br><span class="line"></span><br><span class="line">PLAY [Ansible Check] *****************************************************************************************************************************************************</span><br><span class="line"></span><br><span class="line">TASK [Gathering Facts] ***************************************************************************************************************************************************</span><br><span class="line">task path: /ansible-demo/initial.yml:1</span><br><span class="line">The authenticity of host <span class="string">&#x27;10.0.29.95 (10.0.29.95)&#x27;</span> can<span class="string">&#x27;t be established.</span></span><br><span class="line"><span class="string">ECDSA key fingerprint is SHA256:rfeIQ8KcFwSk24fnjYelPAb1wXFuL4Byok0hPXMzylQ.</span></span><br><span class="line"><span class="string">Are you sure you want to continue connecting (yes/no)?</span></span><br></pre></td></tr></table></figure>
+
+<p>依照官方文件<a target="_blank" rel="noopener" href="https://docs.ansible.com/ansible/latest/user_guide/intro_getting_started.html#host-key-checking">Host Key Checking</a><br>你可以在設定檔 &#x2F;etc&#x2F;ansible&#x2F;ansible.cfg or ~&#x2F;.ansible.cfg 配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[defaults]</span><br><span class="line">host_key_checking = False</span><br></pre></td></tr></table></figure>
+
+<p>或是配在環境變數</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export ANSIBLE_HOST_KEY_CHECKING=False</span><br></pre></td></tr></table></figure>
+
+<h3 id="缺-sshpass-工具"><a href="#缺-sshpass-工具" class="headerlink" title="缺 sshpass 工具"></a>缺 sshpass 工具</h3><p>接下來你可能會遇到這個錯</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ ansible-playbook -i ./dev ./initial.yml -e <span class="string">&quot;myhosts=<span class="variable">$&#123;myhosts&#125;</span>&quot;</span> -e ansible_password=1qaz2wsx</span><br><span class="line"></span><br><span class="line">PLAY [Ansible Check] *****************************************************************************************************************************************************</span><br><span class="line"></span><br><span class="line">TASK [Gathering Facts] ***************************************************************************************************************************************************</span><br><span class="line">fatal: [eureka-01]: FAILED! =&gt; &#123;<span class="string">&quot;msg&quot;</span>: <span class="string">&quot;to use the &#x27;ssh&#x27; connection type with passwords, you must install the sshpass program&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line">PLAY RECAP ***************************************************************************************************************************************************************</span><br><span class="line">eureka-01                  : ok=0    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0</span><br></pre></td></tr></table></figure>
+
+<p>安裝方式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># CentOS</span></span><br><span class="line">yum -y install sshpass</span><br><span class="line"></span><br><span class="line"><span class="comment"># Mac</span></span><br><span class="line">brew install https://raw.githubusercontent.com/kadwanev/bigboybrew/master/Library/Formula/sshpass.rb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 網路找到另一個地方 程式碼一樣</span></span><br><span class="line">brew install http://git.io/sshpass.rb</span><br></pre></td></tr></table></figure>
+
+<p>Mac 執行結果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ brew install https://raw.githubusercontent.com/kadwanev/bigboybrew/master/Library/Formula/sshpass.rb</span><br><span class="line">Updating Homebrew...</span><br><span class="line">==&gt; Auto-updated Homebrew!</span><br><span class="line">Updated 1 tap (homebrew/core).</span><br><span class="line">==&gt; Updated Formulae</span><br><span class="line">angular-cli        bazel              devspace           exploitdb          grpc               libuv              neo4j              skaffold           wireguard-tools</span><br><span class="line">argon2             blink1             dub                gatsby-cli         kubeless           mujs               paket              terragrunt</span><br><span class="line"></span><br><span class="line"><span class="comment">######################################################################## 100.0%</span></span><br><span class="line">==&gt; Downloading http://sourceforge.net/projects/sshpass/files/sshpass/1.06/sshpass-1.06.tar.gz</span><br><span class="line">==&gt; Downloading from https://nchc.dl.sourceforge.net/project/sshpass/sshpass/1.06/sshpass-1.06.tar.gz</span><br><span class="line"><span class="comment">######################################################################## 100.0%</span></span><br><span class="line">==&gt; ./configure --prefix=/usr/local/Cellar/sshpass/1.06</span><br><span class="line">==&gt; make install</span><br><span class="line">🍺  /usr/local/Cellar/sshpass/1.06: 9 files, 41.6KB, built <span class="keyword">in</span> 24 seconds</span><br></pre></td></tr></table></figure>
+
+<h3 id="執行結果"><a href="#執行結果" class="headerlink" title="執行結果"></a>執行結果</h3><p>再執行一次</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> myhosts=all</span><br><span class="line">$ <span class="built_in">export</span> ansible_password=1qaz2wsx</span><br><span class="line">$ <span class="built_in">export</span> ANSIBLE_HOST_KEY_CHECKING=False</span><br><span class="line">$ ansible-playbook -i ./dev ./initial.yml -e <span class="string">&quot;myhosts=<span class="variable">$&#123;myhosts&#125;</span>&quot;</span> -e <span class="string">&quot;ansible_password=<span class="variable">$&#123;ansible_password&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line">PLAY [Ansible Check] *****************************************************************************************************************************************************</span><br><span class="line"></span><br><span class="line">TASK [Gathering Facts] ***************************************************************************************************************************************************</span><br><span class="line">ok: [eureka-01]</span><br><span class="line"></span><br><span class="line">TASK [<span class="built_in">echo</span> <span class="built_in">whoami</span>] *******************************************************************************************************************************************************</span><br><span class="line">changed: [eureka-01]</span><br><span class="line"></span><br><span class="line">TASK [<span class="built_in">print</span> <span class="built_in">whoami</span> result] ***********************************************************************************************************************************************</span><br><span class="line">ok: [eureka-01] =&gt; &#123;</span><br><span class="line">    <span class="string">&quot;msg&quot;</span>: <span class="string">&quot;root&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">TASK [<span class="built_in">echo</span> hostname] *****************************************************************************************************************************************************</span><br><span class="line">changed: [eureka-01]</span><br><span class="line"></span><br><span class="line">TASK [<span class="built_in">print</span> hostname result] *********************************************************************************************************************************************</span><br><span class="line">ok: [eureka-01] =&gt; &#123;</span><br><span class="line">    <span class="string">&quot;msg&quot;</span>: <span class="string">&quot;localhost.localdomain&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PLAY RECAP ***************************************************************************************************************************************************************</span><br><span class="line">eureka-01                  : ok=5    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0</span><br></pre></td></tr></table></figure>
+<p>這樣我們就可以順利操作遠端的機器, 並取得登入帳號跟 hostname 了</p>
+<h2 id="Role"><a href="#Role" class="headerlink" title="Role"></a>Role</h2><p>當你要配置的功能種類越來越多的時候, Role 會是比較好管理的選擇  </p>
+<p>初始化特定角色資料夾</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ansible-galaxy init roles/springboot</span><br><span class="line">- roles/springboot was created successfully</span><br></pre></td></tr></table></figure>
+<p>這樣我們就有一個 springboot 角色資料夾, 有關 springboot 部署要用的檔案或配置就可以放這了</p>
+<p>完整結構</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$ tree</span><br><span class="line">.</span><br><span class="line">├── README.md</span><br><span class="line">├── dev</span><br><span class="line">├── dev-release</span><br><span class="line">├── group_vars</span><br><span class="line">├── initial.yml</span><br><span class="line">└── roles</span><br><span class="line">    └── springboot</span><br><span class="line">        ├── README.md</span><br><span class="line">        ├── defaults</span><br><span class="line">        │   └── main.yml</span><br><span class="line">        ├── files</span><br><span class="line">        ├── handlers</span><br><span class="line">        │   └── main.yml</span><br><span class="line">        ├── meta</span><br><span class="line">        │   └── main.yml</span><br><span class="line">        ├── tasks</span><br><span class="line">        │   └── main.yml</span><br><span class="line">        ├── templates</span><br><span class="line">        ├── tests</span><br><span class="line">        │   ├── inventory</span><br><span class="line">        │   └── test.yml</span><br><span class="line">        └── vars</span><br><span class="line">            └── main.yml</span><br><span class="line"></span><br><span class="line">11 directories, 12 files</span><br></pre></td></tr></table></figure>
+
+<h2 id="如何練習"><a href="#如何練習" class="headerlink" title="如何練習"></a>如何練習</h2><p>基本的介紹完了<br>要開始正式寫腳本, 會需要常常重置 VM, 蠻推薦使用<br><a target="_blank" rel="noopener" href="https://www.virtualbox.org/">VirtualBox</a>  加上 <a target="_blank" rel="noopener" href="https://www.vagrantup.com/">Vagrant</a><br>來當作一個組合技, 非常之好用.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p><a target="_blank" rel="noopener" href="https://ithelp.ithome.com.tw/articles/10186729">現代 IT 人一定要知道的 Ansible 自動化組態技巧 19. 如何維護大型的 Ansible Playbooks？</a><br><a target="_blank" rel="noopener" href="https://ansible-tran.readthedocs.io/en/latest/index.html">Ansible中文权威指南</a></p>
+<p><a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="創用 CC 授權條款" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">SAM的程式筆記 </span>由<a xmlns:cc="http://creativecommons.org/ns#" target="_blank" href="https://blog.samchu.dev/" property="cc:attributionName" rel="cc:attributionURL noopener">朱尚禮</a>製作，以<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">創用CC 姓名標示-非商業性-相同方式分享 4.0 國際 授權條款</a>釋出。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>Sam Zhu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.samzhu.dev/2019/07/05/Ansible-install-and-introduction/" title="Ansible install and introduction">https://blog.samzhu.dev/2019/07/05/Ansible-install-and-introduction/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Ansible/" rel="tag"># Ansible</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/07/03/Mac-%E5%A5%97%E4%BB%B6%E5%B7%A5%E5%85%B7/" rel="prev" title="Mac 套件工具">
+                  <i class="fa fa-angle-left"></i> Mac 套件工具
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/07/08/Server-Sent-Events-in-Spring/" rel="next" title="Server-Sent Events in Spring">
+                  Server-Sent Events in Spring <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sam Zhu</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/samzhu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.3.0/mermaid.min.js","integrity":"sha256-9y71g5Lz/KLsHjB8uXwnkuWDtAMDSzD/HdIbqhJfTAI="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

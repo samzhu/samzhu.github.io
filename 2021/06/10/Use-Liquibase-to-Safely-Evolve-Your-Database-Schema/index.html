@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.samzhu.dev","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Recently I was looking at Google Cloud Spanner and ClickHouse and found that Liquibase is supported. This surprised me, so I studied Liquibase again.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Use Liquibase to Safely Evolve Your Database Schema">
+<meta property="og:url" content="https://blog.samzhu.dev/2021/06/10/Use-Liquibase-to-Safely-Evolve-Your-Database-Schema/index.html">
+<meta property="og:site_name" content="Sam&#39;s programming note">
+<meta property="og:description" content="Recently I was looking at Google Cloud Spanner and ClickHouse and found that Liquibase is supported. This surprised me, so I studied Liquibase again.">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-06-10T11:36:10.000Z">
+<meta property="article:modified_time" content="2025-07-24T15:41:45.580Z">
+<meta property="article:author" content="Sam Zhu">
+<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="Liquibase">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@samzhu0318">
+
+
+<link rel="canonical" href="https://blog.samzhu.dev/2021/06/10/Use-Liquibase-to-Safely-Evolve-Your-Database-Schema/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.samzhu.dev/2021/06/10/Use-Liquibase-to-Safely-Evolve-Your-Database-Schema/","path":"2021/06/10/Use-Liquibase-to-Safely-Evolve-Your-Database-Schema/","title":"Use Liquibase to Safely Evolve Your Database Schema"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Use Liquibase to Safely Evolve Your Database Schema | Sam's programming note</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CFLHEYEETG"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-CFLHEYEETG","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<meta name="google-adsense-account" content="ca-pub-5880479202699914">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880479202699914"
+     crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sam's programming note</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-use-Liquibase"><span class="nav-number">1.</span> <span class="nav-text">Why use Liquibase?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-use-CLI-Jar-to-generate"><span class="nav-number">2.</span> <span class="nav-text">How to use CLI &amp; Jar to generate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-make-a-diff-changelog"><span class="nav-number">3.</span> <span class="nav-text">How to make a diff changelog</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Integrate-with-SpringBoot"><span class="nav-number">4.</span> <span class="nav-text">Integrate with SpringBoot</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Install-dependencies"><span class="nav-number">4.1.</span> <span class="nav-text">Install dependencies</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Configure-your-database-and-liquibase"><span class="nav-number">4.2.</span> <span class="nav-text">Configure your database and liquibase</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#resources"><span class="nav-number">4.3.</span> <span class="nav-text">resources</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Start-springboot"><span class="nav-number">5.</span> <span class="nav-text">Start springboot</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sam Zhu"
+      src="https://i.imgur.com/eLloI4N.png">
+  <p class="site-author-name" itemprop="name">Sam Zhu</p>
+  <div class="site-description" itemprop="description">Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">74</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/samzhu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;samzhu" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/samzhu0318" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;samzhu0318" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.samzhu.dev/2021/06/10/Use-Liquibase-to-Safely-Evolve-Your-Database-Schema/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.imgur.com/eLloI4N.png">
+      <meta itemprop="name" content="Sam Zhu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sam's programming note">
+      <meta itemprop="description" content="Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Use Liquibase to Safely Evolve Your Database Schema | Sam's programming note">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Use Liquibase to Safely Evolve Your Database Schema
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-06-10 19:36:10" itemprop="dateCreated datePublished" datetime="2021-06-10T19:36:10+08:00">2021-06-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-07-24 23:41:45" itemprop="dateModified" datetime="2025-07-24T23:41:45+08:00">2025-07-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Recently I was looking at Google Cloud Spanner and ClickHouse and found that Liquibase is supported. This surprised me, so I studied Liquibase again.</p>
+<span id="more"></span>
+
+<h2 id="Why-use-Liquibase"><a href="#Why-use-Liquibase" class="headerlink" title="Why use Liquibase?"></a>Why use Liquibase?</h2><p>Liquibase uses XML to define schema most of the time, which brings a more flexible design than SQL to apply to various RDBMS or NoSQL</p>
+<h2 id="How-to-use-CLI-Jar-to-generate"><a href="#How-to-use-CLI-Jar-to-generate" class="headerlink" title="How to use CLI &amp; Jar to generate"></a>How to use CLI &amp; Jar to generate</h2><p>You can use the Homebrew package manager to install Liquibase on macOS.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew install gcc</span><br><span class="line">brew install liquibase</span><br></pre></td></tr></table></figure>
+<p>or Download liquibase 4.3.5.tar.gz on <a target="_blank" rel="noopener" href="https://www.liquibase.org/download">download page</a>.  </p>
+<p>I will use the jar file as an example in this article, the directory structure is as follows.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ tree</span><br><span class="line">.</span><br><span class="line">├── libs</span><br><span class="line">│   ├── commons-cli-1.4.jar</span><br><span class="line">│   ├── jaxb-api-2.3.0.jar</span><br><span class="line">│   ├── jaxb-core-2.3.0.jar</span><br><span class="line">│   ├── jaxb-impl-2.3.0.jar</span><br><span class="line">│   ├── liquibase.jar</span><br><span class="line">│   └── postgresql-42.2.20.jar</span><br><span class="line">└── liquibase.properties</span><br></pre></td></tr></table></figure>
+<p>The contents of liquibase.properties are as follows</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">changeLogFile: changelog-2021.0.0.xml</span><br><span class="line">url: jdbc:postgresql://localhost:5432/testdb?currentSchema=abc</span><br><span class="line"># schemas=abc</span><br><span class="line">username: postgres</span><br><span class="line">password: pw123456</span><br><span class="line">classpath: libs/postgresql-42.2.20.jar</span><br><span class="line">logLevel: Info</span><br></pre></td></tr></table></figure>
+
+<p>Then execute the jar file</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -cp libs/liquibase.jar:libs/commons-cli-1.4.jar:libs/jaxb-api-2.3.0.jar:libs/jaxb-core-2.3.0.jar:libs/jaxb-impl-2.3.0.jar:libs/snakeyaml-1.27.jar liquibase.integration.commandline.Main generateChangeLog</span><br></pre></td></tr></table></figure>
+
+<p>Then you will get the file <strong>changelog-2021.0.0.xml</strong> </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.1&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span> standalone=<span class="string">&quot;no&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">databaseChangeLog</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.liquibase.org/xml/ns/dbchangelog&quot;</span> <span class="attr">xmlns:ext</span>=<span class="string">&quot;http://www.liquibase.org/xml/ns/dbchangelog-ext&quot;</span> <span class="attr">xmlns:pro</span>=<span class="string">&quot;http://www.liquibase.org/xml/ns/pro&quot;</span> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">changeSet</span> <span class="attr">author</span>=<span class="string">&quot;samzhu (generated)&quot;</span> <span class="attr">id</span>=<span class="string">&quot;1623332621406-1&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">createTable</span> <span class="attr">remarks</span>=<span class="string">&quot;Questionnaire master file&quot;</span> <span class="attr">tableName</span>=<span class="string">&quot;dtbga129&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">column</span> <span class="attr">autoIncrement</span>=<span class="string">&quot;true&quot;</span> <span class="attr">name</span>=<span class="string">&quot;ser_no&quot;</span> <span class="attr">remarks</span>=<span class="string">&quot;Serial number&quot;</span> <span class="attr">type</span>=<span class="string">&quot;INTEGER&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">constraints</span> <span class="attr">nullable</span>=<span class="string">&quot;false&quot;</span> <span class="attr">primaryKey</span>=<span class="string">&quot;true&quot;</span> <span class="attr">primaryKeyName</span>=<span class="string">&quot;dtbga129_pkey&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">column</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">column</span> <span class="attr">name</span>=<span class="string">&quot;trn_id&quot;</span> <span class="attr">remarks</span>=<span class="string">&quot;Transaction code&quot;</span> <span class="attr">type</span>=<span class="string">&quot;VARCHAR(10)&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">column</span> <span class="attr">name</span>=<span class="string">&quot;role&quot;</span> <span class="attr">remarks</span>=<span class="string">&quot;rule&quot;</span> <span class="attr">type</span>=<span class="string">&quot;JSON&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">column</span> <span class="attr">name</span>=<span class="string">&quot;recommend&quot;</span> <span class="attr">remarks</span>=<span class="string">&quot;Recommended products&quot;</span> <span class="attr">type</span>=<span class="string">&quot;JSON&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">column</span> <span class="attr">name</span>=<span class="string">&quot;input_date&quot;</span> <span class="attr">remarks</span>=<span class="string">&quot;Enter date&quot;</span> <span class="attr">type</span>=<span class="string">&quot;TIMESTAMP WITHOUT TIME ZONE&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">createTable</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">changeSet</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">databaseChangeLog</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>If you want to use SQL for management, you can modify liquibase.properties changeLogFile to <strong>.sql</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">changeLogFile: changelog-2021.0.0.sql</span><br><span class="line">url: jdbc:postgresql://localhost:5432/testdb?currentSchema=abc</span><br><span class="line"># schemas=abc</span><br><span class="line">username: postgres</span><br><span class="line">password: pw123456</span><br><span class="line">classpath: libs/postgresql-42.2.20.jar</span><br><span class="line">logLevel: Info</span><br></pre></td></tr></table></figure>
+
+<p>try again generateChangeLog than get the <strong>changelog-2021.0.0.sql</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- liquibase formatted sql</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- changeset samzhu:1623333065736-1</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> &quot;abc&quot;.&quot;dtbga129&quot; (&quot;ser_no&quot; <span class="type">INTEGER</span> GENERATED <span class="keyword">BY</span> <span class="keyword">DEFAULT</span> <span class="keyword">AS</span> <span class="keyword">IDENTITY</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>, &quot;trn_id&quot; <span class="type">VARCHAR</span>(<span class="number">10</span>), &quot;role&quot; JSON, &quot;recommend&quot; JSON, &quot;input_date&quot; <span class="type">TIMESTAMP</span> <span class="keyword">WITHOUT</span> <span class="type">TIME</span> ZONE, <span class="keyword">CONSTRAINT</span> &quot;dtbga129_pkey&quot; <span class="keyword">PRIMARY</span> KEY (&quot;ser_no&quot;));</span><br><span class="line">COMMENT <span class="keyword">ON</span> <span class="keyword">TABLE</span> &quot;abc&quot;.&quot;dtbga129&quot; <span class="keyword">IS</span> <span class="string">&#x27;Questionnaire master file&#x27;</span>;</span><br><span class="line">COMMENT <span class="keyword">ON</span> <span class="keyword">COLUMN</span> &quot;abc&quot;.&quot;dtbga129&quot;.&quot;ser_no&quot; <span class="keyword">IS</span> <span class="string">&#x27;Serial number&#x27;</span>;</span><br><span class="line">COMMENT <span class="keyword">ON</span> <span class="keyword">COLUMN</span> &quot;abc&quot;.&quot;dtbga129&quot;.&quot;trn_id&quot; <span class="keyword">IS</span> <span class="string">&#x27;Transaction code&#x27;</span>;</span><br><span class="line">COMMENT <span class="keyword">ON</span> <span class="keyword">COLUMN</span> &quot;abc&quot;.&quot;dtbga129&quot;.&quot;role&quot; <span class="keyword">IS</span> <span class="string">&#x27;rule&#x27;</span>;</span><br><span class="line">COMMENT <span class="keyword">ON</span> <span class="keyword">COLUMN</span> &quot;abc&quot;.&quot;dtbga129&quot;.&quot;recommend&quot; <span class="keyword">IS</span> <span class="string">&#x27;Recommended products&#x27;</span>;</span><br><span class="line">COMMENT <span class="keyword">ON</span> <span class="keyword">COLUMN</span> &quot;abc&quot;.&quot;dtbga129&quot;.&quot;input_date&quot; <span class="keyword">IS</span> <span class="string">&#x27;Enter date&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>Very easy to generate even you can use gradle or maven plugin to do automatic processing.</p>
+<h2 id="How-to-make-a-diff-changelog"><a href="#How-to-make-a-diff-changelog" class="headerlink" title="How to make a diff changelog"></a>How to make a diff changelog</h2><p>Assuming that you make changes to the database in the development environment, you can generate a diff changelog by comparing the differences between the two databases.  </p>
+<p>liquibase.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set a different file name for easy management</span></span><br><span class="line"><span class="attr">changeLogFile</span>: <span class="string">changelog-2021.1.0.xml</span></span><br><span class="line"></span><br><span class="line"><span class="attr">url</span>: <span class="string">jdbc:postgresql://localhost:5432/testdb?currentSchema=abc</span></span><br><span class="line"><span class="comment"># schemas=dbbg</span></span><br><span class="line"><span class="attr">username</span>: <span class="string">postgres</span></span><br><span class="line"><span class="attr">password</span>: <span class="string">pw123456</span></span><br><span class="line"><span class="attr">classpath</span>: <span class="string">libs/postgresql-42.2.20.jar</span></span><br><span class="line"><span class="attr">logLevel</span>: <span class="string">Info</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># This reference is the database of your development environment, you have made some changes to it, it has the latest table schema</span></span><br><span class="line"><span class="attr">referenceUrl</span>: <span class="string">jdbc:postgresql://localhost:5432/testdb?currentSchema=dev</span></span><br><span class="line"><span class="attr">referenceUsername</span>: <span class="string">postgres</span></span><br><span class="line"><span class="attr">referencePassword</span>: <span class="string">pw123456</span></span><br></pre></td></tr></table></figure>
+
+<p>Then execute the jar file, but this time I use the <strong>diffChangeLog</strong> function.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -cp libs/liquibase.jar:libs/commons-cli-1.4.jar:libs/jaxb-api-2.3.0.jar:libs/jaxb-core-2.3.0.jar:libs/jaxb-impl-2.3.0.jar:libs/snakeyaml-1.27.jar liquibase.integration.commandline.Main diffChangeLog</span><br></pre></td></tr></table></figure>
+<p>Then you will get the <strong>changelog-2021.1.0.xml</strong> file, which only describes the differences between the two databases.</p>
+<h2 id="Integrate-with-SpringBoot"><a href="#Integrate-with-SpringBoot" class="headerlink" title="Integrate with SpringBoot"></a>Integrate with SpringBoot</h2><h3 id="Install-dependencies"><a href="#Install-dependencies" class="headerlink" title="Install dependencies"></a>Install dependencies</h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">	implementation <span class="string">&#x27;org.liquibase:liquibase-core&#x27;</span></span><br><span class="line">	runtimeOnly <span class="string">&#x27;org.postgresql:postgresql&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Configure-your-database-and-liquibase"><a href="#Configure-your-database-and-liquibase" class="headerlink" title="Configure your database and liquibase"></a>Configure your database and liquibase</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">    <span class="attr">driver-class-name:</span> <span class="string">org.postgresql.Driver</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">jdbc:postgresql://127.0.0.1:5432/testdb?currentSchema=dev</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">postgres</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">pw123456</span></span><br><span class="line">  <span class="attr">liquibase:</span></span><br><span class="line">    <span class="attr">change-log:</span> <span class="string">classpath:liquibase/master.xml</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="resources"><a href="#resources" class="headerlink" title="resources"></a>resources</h3><p>Springboot resources folder.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── application.yml</span><br><span class="line">├── liquibase</span><br><span class="line">│   ├── changelog</span><br><span class="line">│   │   ├── changelog-2021.0.0.xml</span><br><span class="line">│   │   └── changelog-2021.1.0.xml</span><br><span class="line">│   └── master.xml</span><br><span class="line">├── static</span><br><span class="line">└── templates</span><br><span class="line"></span><br><span class="line">4 directories, 4 files</span><br></pre></td></tr></table></figure>
+
+<p>Contents of master.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">databaseChangeLog</span></span></span><br><span class="line"><span class="tag">	<span class="attr">xmlns</span>=<span class="string">&quot;http://www.liquibase.org/xml/ns/dbchangelog&quot;</span></span></span><br><span class="line"><span class="tag">	<span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">includeAll</span> <span class="attr">path</span>=<span class="string">&quot;liquibase/changelog/&quot;</span> <span class="attr">relativeToChangelogFile</span>=<span class="string">&quot;false&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">databaseChangeLog</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>The includeAll tag can load all changelogs in a folder. If a single load can be used include.  </li>
+<li>path: specifies the location of the file or folder to be loaded</li>
+<li>relativeToChangelogFile: Whether the path of the file location is relative to the root changelog, the default is false, that is, relative to the classpath.</li>
+</ol>
+<h2 id="Start-springboot"><a href="#Start-springboot" class="headerlink" title="Start springboot"></a>Start springboot</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line">  .   ____          _            __ _ _</span><br><span class="line"> /\\ / ___<span class="string">&#x27;_ __ _ _(_)_ __  __ _ \ \ \ \</span></span><br><span class="line"><span class="string">( ( )\___ | &#x27;</span>_ | <span class="string">&#x27;_| | &#x27;</span>_ \/ _` | \ \ \ \</span><br><span class="line"> \\/  ___)| |_)| | | | | || (_| |  ) ) ) )</span><br><span class="line">  <span class="string">&#x27;  |____| .__|_| |_|_| |_\__, | / / / /</span></span><br><span class="line"><span class="string"> =========|_|==============|___/=/_/_/_/</span></span><br><span class="line"><span class="string"> :: Spring Boot ::                (v2.5.0)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2021-06-10 22:26:41.947  INFO 25361 --- [           main] com.example.demo.DemoApplication         : Starting DemoApplication using Java 11.0.9 on samzhude-MacBook-Pro.local with PID 25361 (/Users/samzhu/workspace/liquibase/spring/bin/main started by samzhu in /Users/samzhu/workspace/liquibase/spring)</span></span><br><span class="line"><span class="string">2021-06-10 22:26:41.950  INFO 25361 --- [           main] com.example.demo.DemoApplication         : No active profile set, falling back to default profiles: default</span></span><br><span class="line"><span class="string">2021-06-10 22:26:42.540  INFO 25361 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.</span></span><br><span class="line"><span class="string">2021-06-10 22:26:42.561  INFO 25361 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 8 ms. Found 0 JPA repository interfaces.</span></span><br><span class="line"><span class="string">2021-06-10 22:26:43.062  INFO 25361 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)</span></span><br><span class="line"><span class="string">2021-06-10 22:26:43.076  INFO 25361 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]</span></span><br><span class="line"><span class="string">2021-06-10 22:26:43.076  INFO 25361 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.46]</span></span><br><span class="line"><span class="string">2021-06-10 22:26:43.181  INFO 25361 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext</span></span><br><span class="line"><span class="string">2021-06-10 22:26:43.181  INFO 25361 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1173 ms</span></span><br><span class="line"><span class="string">2021-06-10 22:26:43.310  INFO 25361 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...</span></span><br><span class="line"><span class="string">2021-06-10 22:26:43.444  INFO 25361 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.</span></span><br><span class="line"><span class="string">2021-06-10 22:26:43.943  INFO 25361 --- [           main] liquibase.lockservice                    : Successfully acquired change log lock</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.106  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/AbstractChangeLogHistoryService.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.106  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangeLogChild.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.107  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangeLogHistoryService.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.107  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangeLogHistoryServiceFactory$1.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.107  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangeLogHistoryServiceFactory.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.107  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangeLogInclude.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.107  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangeLogIncludeAll.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.108  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangeLogIterator$1.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.108  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangeLogIterator$2.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.108  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangeLogIterator.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.108  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangeLogParameters$1.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.108  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangeLogParameters$ChangeLogParameter.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.108  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangeLogParameters$ExpressionExpander.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.109  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangeLogParameters.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.109  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangeLogProperty.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.109  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangeSet$ExecType.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.110  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangeSet$RunStatus.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.110  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangeSet$ValidationFailOption.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.110  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangeSet.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.110  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangeSetStatus.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.110  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangelogRewriter$ChangeLogRewriterResult.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.110  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/ChangelogRewriter.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.110  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/DatabaseChangeLog$1.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.111  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/DatabaseChangeLog.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.111  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/IncludeAllFilter.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.111  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/MockChangeLogHistoryService.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.111  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/OfflineChangeLogHistoryService$1.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.112  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/OfflineChangeLogHistoryService$2.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.112  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/OfflineChangeLogHistoryService$3.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.114  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/OfflineChangeLogHistoryService$4.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.114  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/OfflineChangeLogHistoryService$5.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.114  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/OfflineChangeLogHistoryService$Columns.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.114  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/OfflineChangeLogHistoryService$ReplaceChangeSetLogic.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.114  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/OfflineChangeLogHistoryService.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.117  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/RanChangeSet.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.117  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/RollbackContainer.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.117  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/StandardChangeLogHistoryService.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.117  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/column/LiquibaseColumn.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.118  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/filter/ActuallyExecutedChangeSetFilter.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.118  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/filter/AfterTagChangeSetFilter.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.118  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/filter/AlreadyRanChangeSetFilter.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.119  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/filter/ChangeSetFilter.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.120  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/filter/ChangeSetFilterResult.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.120  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/filter/ContextChangeSetFilter.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.120  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/filter/CountChangeSetFilter.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.120  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/filter/DbmsChangeSetFilter.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.121  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/filter/ExecutedAfterChangeSetFilter.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.122  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/filter/IgnoreChangeSetFilter.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.123  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/filter/LabelChangeSetFilter.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.123  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/filter/NotInChangeLogChangeSetFilter.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.125  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/filter/NotRanChangeSetFilter.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.125  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/filter/RanChangeSetFilter.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.125  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/filter/ShouldRunChangeSetFilter.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.125  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/filter/UpToTagChangeSetFilter.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.127  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/visitor/AbstractChangeExecListener.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.127  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/visitor/ChangeExecListener.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.127  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/visitor/ChangeLogSyncListener.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.128  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/visitor/ChangeLogSyncVisitor.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.130  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/visitor/ChangeSetVisitor$Direction.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.131  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/visitor/ChangeSetVisitor.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.131  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/visitor/DBDocVisitor$1.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.131  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/visitor/DBDocVisitor$ChangeLogInfo.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.132  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/visitor/DBDocVisitor.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.132  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/visitor/DetermineNumberChangesFollowingVisitor.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.132  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/visitor/ExpectedChangesVisitor.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.132  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/visitor/ListVisitor.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.134  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/visitor/LoggingChangeExecListener.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.134  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/visitor/RollbackListVisitor.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.134  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/visitor/RollbackVisitor.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.134  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/visitor/SkippedChangeSetVisitor.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.135  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/visitor/StatusVisitor.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.135  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/visitor/UpdateVisitor.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.135  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: /liquibase/changelog/visitor/ValidatingVisitor.class</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.135  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: liquibase/changelog/changelog-2021.0.0.xml</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.288  INFO 25361 --- [           main] liquibase.changelog                      : Reading resource: liquibase/changelog/changelog-2021.1.0.xml</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.324  INFO 25361 --- [           main] liquibase.changelog                      : Creating database history table with name: abc.databasechangelog</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.343  INFO 25361 --- [           main] liquibase.changelog                      : Reading from abc.databasechangelog</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.408  INFO 25361 --- [           main] liquibase.lockservice                    : Successfully released change log lock</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.421  INFO 25361 --- [           main] liquibase.lockservice                    : Successfully acquired change log lock</span></span><br><span class="line"><span class="string">Skipping auto-registration</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.424  WARN 25361 --- [           main] liquibase.hub                            : Skipping auto-registration</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.462  INFO 25361 --- [           main] liquibase.changelog                      : Table dtbga129 created</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.466  INFO 25361 --- [           main] liquibase.changelog                      : ChangeSet liquibase/changelog/changelog-2021.0.0.xml::1623332621406-1::samzhu (generated) ran successfully in 37ms</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.530  INFO 25361 --- [           main] liquibase.changelog                      : Table dtbga130 created</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.534  INFO 25361 --- [           main] liquibase.changelog                      : ChangeSet liquibase/changelog/changelog-2021.1.0.xml::1623333952699-7::samzhu (generated) ran successfully in 50ms</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.545  INFO 25361 --- [           main] liquibase.lockservice                    : Successfully released change log lock</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.664  INFO 25361 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.719  INFO 25361 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.31.Final</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.868  INFO 25361 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations &#123;5.1.2.Final&#125;</span></span><br><span class="line"><span class="string">2021-06-10 22:26:44.986  INFO 25361 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL10Dialect</span></span><br><span class="line"><span class="string">2021-06-10 22:26:45.197  INFO 25361 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]</span></span><br><span class="line"><span class="string">2021-06-10 22:26:45.211  INFO 25361 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit &#x27;</span>default<span class="string">&#x27;</span></span><br><span class="line"><span class="string">2021-06-10 22:26:45.279  WARN 25361 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning</span></span><br><span class="line"><span class="string">2021-06-10 22:26:45.644  INFO 25361 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path &#x27;</span><span class="string">&#x27;</span></span><br><span class="line"><span class="string">2021-06-10 22:26:45.654  INFO 25361 --- [           main] com.example.demo.DemoApplication         : Started DemoApplication in 4.312 seconds (JVM running for 4.714)</span></span><br><span class="line"><span class="string">2021-06-10 22:26:45.655  INFO 25361 --- [           main] o.s.b.a.ApplicationAvailabilityBean      : Application availability state LivenessState changed to CORRECT</span></span><br><span class="line"><span class="string">2021-06-10 22:26:45.656  INFO 25361 --- [           main] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed to ACCEPTING_TRAFFIC</span></span><br></pre></td></tr></table></figure>
+<p>Completion!</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a target="_blank" rel="noopener" href="https://www.liquibase.org/get-started/quickstart">Get Started with Liquibase</a><br><a target="_blank" rel="noopener" href="https://www.liquibase.org/blog/comparing-two-states-database-schema">Comparing Two States of the Same Database Schema</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_41404773/article/details/106355563">liquibase集成springboot使用步骤</a><br><a target="_blank" rel="noopener" href="https://tolkiana.com/managing-database-migrations-with-liquibase-and-spring-boot/">Managing Database migrations with Liquibase and Spring Boot</a><br><a target="_blank" rel="noopener" href="https://medium.com/podiihq/getting-started-with-liquibase-8965897092aa">Getting Started with Liquibase</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>Sam Zhu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.samzhu.dev/2021/06/10/Use-Liquibase-to-Safely-Evolve-Your-Database-Schema/" title="Use Liquibase to Safely Evolve Your Database Schema">https://blog.samzhu.dev/2021/06/10/Use-Liquibase-to-Safely-Evolve-Your-Database-Schema/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+              <a href="/tags/Liquibase/" rel="tag"># Liquibase</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/06/02/Use-GitHub-action-to-publish-docker-image-and-jar-to-GitHub-Packages/" rel="prev" title="Use GitHub action to publish docker image and jar to GitHub Packages">
+                  <i class="fa fa-angle-left"></i> Use GitHub action to publish docker image and jar to GitHub Packages
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/07/17/Use-Spring-Cloud-Function-to-develop-serverless-service-in-Google-Cloud-Function/" rel="next" title="Use Spring Cloud Function to develop serverless service in Google Cloud Function">
+                  Use Spring Cloud Function to develop serverless service in Google Cloud Function <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sam Zhu</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/samzhu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.3.0/mermaid.min.js","integrity":"sha256-9y71g5Lz/KLsHjB8uXwnkuWDtAMDSzD/HdIbqhJfTAI="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

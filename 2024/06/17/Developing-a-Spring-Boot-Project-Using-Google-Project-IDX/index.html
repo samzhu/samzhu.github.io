@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.samzhu.dev","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="In modern software development, cloud-based development environments are becoming increasingly popular. Google Project IDX is a powerful tool that helps developers efficiently develop and deploy appli">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Developing a Spring Boot Project Using Google Project IDX">
+<meta property="og:url" content="https://blog.samzhu.dev/2024/06/17/Developing-a-Spring-Boot-Project-Using-Google-Project-IDX/index.html">
+<meta property="og:site_name" content="Sam&#39;s programming note">
+<meta property="og:description" content="In modern software development, cloud-based development environments are becoming increasingly popular. Google Project IDX is a powerful tool that helps developers efficiently develop and deploy appli">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.imgur.com/GFn8s5L.png">
+<meta property="article:published_time" content="2024-06-17T06:28:44.000Z">
+<meta property="article:modified_time" content="2025-07-24T15:41:45.583Z">
+<meta property="article:author" content="Sam Zhu">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="ProjectIDX">
+<meta property="article:tag" content="CloudDevelopment">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/GFn8s5L.png">
+<meta name="twitter:creator" content="@samzhu0318">
+
+
+<link rel="canonical" href="https://blog.samzhu.dev/2024/06/17/Developing-a-Spring-Boot-Project-Using-Google-Project-IDX/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.samzhu.dev/2024/06/17/Developing-a-Spring-Boot-Project-Using-Google-Project-IDX/","path":"2024/06/17/Developing-a-Spring-Boot-Project-Using-Google-Project-IDX/","title":"Developing a Spring Boot Project Using Google Project IDX"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Developing a Spring Boot Project Using Google Project IDX | Sam's programming note</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CFLHEYEETG"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-CFLHEYEETG","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<meta name="google-adsense-account" content="ca-pub-5880479202699914">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880479202699914"
+     crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sam's programming note</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Opening-Google-Project-IDX"><span class="nav-number">1.</span> <span class="nav-text">Opening Google Project IDX</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Creating-a-New-Blank-Project"><span class="nav-number">1.1.</span> <span class="nav-text">Creating a New Blank Project</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Downloading-a-Spring-Boot-Project"><span class="nav-number">2.</span> <span class="nav-text">Downloading a Spring Boot Project</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Configuring-the-Development-Environment"><span class="nav-number">3.</span> <span class="nav-text">Configuring the Development Environment</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Explanation-of-the-Configuration-File"><span class="nav-number">3.1.</span> <span class="nav-text">Explanation of the Configuration File</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Starting-the-Project"><span class="nav-number">4.</span> <span class="nav-text">Starting the Project</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Previewing-Your-Application-in-Google-Project-IDX"><span class="nav-number">5.</span> <span class="nav-text">Previewing Your Application in Google Project IDX</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Step-by-Step-Guide-to-Setting-Up-Previews"><span class="nav-number">5.1.</span> <span class="nav-text">Step-by-Step Guide to Setting Up Previews</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#References"><span class="nav-number">6.</span> <span class="nav-text">References</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sam Zhu"
+      src="https://i.imgur.com/eLloI4N.png">
+  <p class="site-author-name" itemprop="name">Sam Zhu</p>
+  <div class="site-description" itemprop="description">Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">74</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/samzhu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;samzhu" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/samzhu0318" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;samzhu0318" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.samzhu.dev/2024/06/17/Developing-a-Spring-Boot-Project-Using-Google-Project-IDX/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.imgur.com/eLloI4N.png">
+      <meta itemprop="name" content="Sam Zhu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sam's programming note">
+      <meta itemprop="description" content="Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Developing a Spring Boot Project Using Google Project IDX | Sam's programming note">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Developing a Spring Boot Project Using Google Project IDX
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-06-17 14:28:44" itemprop="dateCreated datePublished" datetime="2024-06-17T14:28:44+08:00">2024-06-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-07-24 23:41:45" itemprop="dateModified" datetime="2025-07-24T23:41:45+08:00">2025-07-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SoftwareDevelopment/" itemprop="url" rel="index"><span itemprop="name">SoftwareDevelopment</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>In modern software development, cloud-based development environments are becoming increasingly popular. Google Project IDX is a powerful tool that helps developers efficiently develop and deploy applications. This article will guide you through using Google Project IDX to develop a Spring Boot project, covering the necessary configurations and usage. If you want to try it out immediately, you can open it directly using my GitHub at <a target="_blank" rel="noopener" href="https://github.com/samzhu/demo-project-idx">https://github.com/samzhu/demo-project-idx</a>.</p>
+<span id="more"></span>
+
+<p><img src="https://i.imgur.com/GFn8s5L.png" alt="cover"></p>
+<h3 id="Opening-Google-Project-IDX"><a href="#Opening-Google-Project-IDX" class="headerlink" title="Opening Google Project IDX"></a>Opening Google Project IDX</h3><p>First, open <a target="_blank" rel="noopener" href="https://developers.google.com/idx">Google Project IDX</a> and log in with your Google account. Once inside Project IDX, you can choose to create a new development project or import an existing one.</p>
+<h4 id="Creating-a-New-Blank-Project"><a href="#Creating-a-New-Blank-Project" class="headerlink" title="Creating a New Blank Project"></a>Creating a New Blank Project</h4><ol>
+<li>After logging in, click the “New Project” button to create a new project.</li>
+<li>In the pop-up window, name your project and select “Blank Project” as the template.</li>
+<li>Click “Create” to create your blank project.</li>
+</ol>
+<p>With this, you have successfully created a blank development project and can begin your Spring Boot development journey.</p>
+<h3 id="Downloading-a-Spring-Boot-Project"><a href="#Downloading-a-Spring-Boot-Project" class="headerlink" title="Downloading a Spring Boot Project"></a>Downloading a Spring Boot Project</h3><p>To download and extract a new Spring Boot project, use the following command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -G https://start.spring.io/starter.tgz -d dependencies=web,actuator \</span><br><span class="line">  -d <span class="built_in">type</span>=gradle-project | tar -xzvf -</span><br></pre></td></tr></table></figure>
+
+<p>This command will generate a Spring Boot project with basic configurations, including the Web and Actuator dependencies.</p>
+<p>Here’s what the command does:</p>
+<ul>
+<li><strong><code>curl -G https://start.spring.io/starter.tgz</code></strong>: Downloads the Spring Boot project as a tar.gz archive.</li>
+<li><strong><code>-d dependencies=web,actuator</code></strong>: Specifies the dependencies to include in the project. In this case, it includes the Web and Actuator dependencies.</li>
+<li><strong><code>-d type=gradle-project</code></strong>: Specifies the build system to use. Here, it sets the project to use Gradle.</li>
+<li><strong><code>| tar -xzvf -</code></strong>: Extracts the downloaded tar.gz archive.</li>
+</ul>
+<p>This will create a directory structure for a Spring Boot project with the specified dependencies, ready for further development.</p>
+<h3 id="Configuring-the-Development-Environment"><a href="#Configuring-the-Development-Environment" class="headerlink" title="Configuring the Development Environment"></a>Configuring the Development Environment</h3><p>Next, we need to configure the development environment. Google Project IDX uses Nix to manage the development environment. Here’s how you can set it up:</p>
+<p>Create a <code>.idx/dev.nix</code> file in the root directory of your project and add the following content:</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&#123; pkgs, ... &#125;: &#123;</span><br><span class="line">  <span class="attr">channel</span> = <span class="string">&quot;stable-23.11&quot;</span>; <span class="comment"># or &quot;unstable&quot;</span></span><br><span class="line">  services.docker.<span class="attr">enable</span> = <span class="literal">true</span>;</span><br><span class="line">  <span class="attr">packages</span> = [</span><br><span class="line">    pkgs.apt</span><br><span class="line">    pkgs.jdk21</span><br><span class="line">  ];</span><br><span class="line">  <span class="attr">env</span> = &#123;&#125;;</span><br><span class="line">  <span class="attr">idx</span> = &#123;</span><br><span class="line">    <span class="attr">extensions</span> = [</span><br><span class="line">      <span class="string">&quot;redhat.java&quot;</span></span><br><span class="line">      <span class="string">&quot;vscjava.vscode-java-debug&quot;</span></span><br><span class="line">      <span class="string">&quot;vscjava.vscode-java-dependency&quot;</span></span><br><span class="line">      <span class="string">&quot;vscjava.vscode-java-pack&quot;</span></span><br><span class="line">      <span class="string">&quot;vscjava.vscode-java-test&quot;</span></span><br><span class="line">      <span class="string">&quot;vscjava.vscode-maven&quot;</span></span><br><span class="line">      <span class="string">&quot;Pivotal.vscode-boot-dev-pack&quot;</span></span><br><span class="line">      <span class="string">&quot;vmware.vscode-spring-boot&quot;</span></span><br><span class="line">      <span class="string">&quot;vscjava.vscode-spring-boot-dashboard&quot;</span></span><br><span class="line">      <span class="string">&quot;vscjava.vscode-spring-initializr&quot;</span></span><br><span class="line">      <span class="string">&quot;java-extension-pack-jdk&quot;</span></span><br><span class="line">    ];</span><br><span class="line">    <span class="attr">previews</span> = &#123;</span><br><span class="line">      <span class="attr">enable</span> = <span class="literal">false</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="attr">workspace</span> = &#123;</span><br><span class="line">      <span class="attr">onCreate</span> = &#123;&#125;;</span><br><span class="line">      <span class="attr">onStart</span> = &#123;&#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Explanation-of-the-Configuration-File"><a href="#Explanation-of-the-Configuration-File" class="headerlink" title="Explanation of the Configuration File"></a>Explanation of the Configuration File</h4><ul>
+<li><strong><code>channel = &quot;stable-23.11&quot;;</code></strong>: Specifies the Nixpkgs channel to use. You can choose between “stable” and “unstable” versions.</li>
+<li><strong><code>services.docker.enable = true;</code></strong>: Enables Docker services within the development environment. By setting this to <code>true</code>, you allow the use of Rootless Docker, which is a version of Docker that does not require root privileges.</li>
+<li><strong><code>packages = [ pkgs.apt pkgs.jdk21 ];</code></strong>: Lists the packages to be included in the environment. Here, it includes the <code>apt</code> package manager and JDK 21.</li>
+<li><strong><code>env = &#123;&#125;;</code></strong>: Sets environment variables in the workspace. Currently, it is empty.</li>
+<li><strong><code>idx = &#123; extensions = [ ... ]; &#125;</code></strong>: Specifies the extensions to be installed in the IDE. This example includes various Java and Spring Boot extensions.</li>
+<li><strong><code>previews = &#123; enable = false; &#125;</code></strong>: Disables the web preview feature. You can enable and configure it if needed.</li>
+<li><strong><code>workspace = &#123; onCreate = &#123; ... &#125;; onStart = &#123; ... &#125;; &#125;</code></strong>: Defines lifecycle hooks for the workspace. You can specify commands to run when the workspace is created or started.</li>
+</ul>
+<p>For more details on how to customize the environment using Nix, refer to the <a target="_blank" rel="noopener" href="https://developers.google.com/idx/guides/customize-idx-env">Google Project IDX guides</a>.</p>
+<h3 id="Starting-the-Project"><a href="#Starting-the-Project" class="headerlink" title="Starting the Project"></a>Starting the Project</h3><p>After completing the configuration, you can start your Spring Boot project in Google Project IDX. Use the following command to start the project:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./gradlew bootRun</span><br></pre></td></tr></table></figure>
+
+<p>This will start the Spring Boot application and allow you to preview the application in your browser. </p>
+<h3 id="Previewing-Your-Application-in-Google-Project-IDX"><a href="#Previewing-Your-Application-in-Google-Project-IDX" class="headerlink" title="Previewing Your Application in Google Project IDX"></a>Previewing Your Application in Google Project IDX</h3><p>To preview your application in Google Project IDX, follow these steps. The preview feature allows you to run and view your application within the Google Project IDX environment.</p>
+<h4 id="Step-by-Step-Guide-to-Setting-Up-Previews"><a href="#Step-by-Step-Guide-to-Setting-Up-Previews" class="headerlink" title="Step-by-Step Guide to Setting Up Previews"></a>Step-by-Step Guide to Setting Up Previews</h4><ol>
+<li><p><strong>Enable Preview Feature</strong></p>
+<p>In your <code>.idx/dev.nix</code> file, ensure the preview feature is enabled. If not, update the file as follows:</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">previews</span> = &#123;</span><br><span class="line">  <span class="attr">enable</span> = <span class="literal">true</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Configure the Preview Command</strong></p>
+<p>You need to specify the command to start your application for preview. Add the following configuration within the <code>previews</code> section:</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">previews</span> = &#123;</span><br><span class="line">  <span class="attr">enable</span> = <span class="literal">true</span>;</span><br><span class="line">  <span class="attr">web</span> = &#123;</span><br><span class="line">    <span class="attr">command</span> = [<span class="string">&quot;./gradlew&quot;</span> <span class="string">&quot;:bootRun&quot;</span> <span class="string">&quot;--args=&#x27;--server.port=$PORT&#x27;&quot;</span>];</span><br><span class="line">    <span class="attr">manager</span> = <span class="string">&quot;web&quot;</span>;</span><br><span class="line">    <span class="attr">env</span> = &#123;</span><br><span class="line">      <span class="attr">PORT</span> = <span class="string">&quot;$PORT&quot;</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong><code>command</code></strong>: Specifies the command to run your application. Here, it uses <code>Gradle</code> to run the Spring Boot application and sets the server port to <code>$PORT</code>, dynamically assigned by the IDX environment.</li>
+<li><strong><code>manager</code></strong>: Indicates this is a web preview.</li>
+<li><strong><code>env</code></strong>: Sets the environment variables for the server, with <code>PORT</code> dynamically assigned.</li>
+</ul>
+</li>
+<li><p><strong>Open the Required Port</strong></p>
+<p>Ensure the port used by your application is open and not restricted. The following example opens port 4000:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> port=4000 <span class="comment"># Don&#x27;t use restricted ports (8000, 9000-9002)</span></span><br><span class="line"><span class="built_in">export</span> API_SERVICE=<span class="string">&quot;https://<span class="variable">$port</span>-<span class="variable">$WEB_HOST</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$API_SERVICE</span></span><br></pre></td></tr></table></figure>
+
+<p>This sets the <code>API_SERVICE</code> environment variable to point to the correct port, ensuring that the frontend can access the backend services.</p>
+</li>
+<li><p><strong>Start the Application</strong></p>
+<p>Use the following command to start your Spring Boot application:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./gradlew bootRun</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Access the Web Preview</strong></p>
+<ul>
+<li>Open the command palette in Google Project IDX (Cmd+Shift+P on Mac or Ctrl+Shift+P on ChromeOS, Windows, or Linux).</li>
+<li>Select <code>Project IDX: Show Web Preview</code> to open the web preview.</li>
+</ul>
+</li>
+<li><p><strong>Refresh the Preview</strong></p>
+<p>If the preview does not update correctly, perform a Hard Restart:</p>
+<ul>
+<li>Open the command palette (Cmd+Shift+P on Mac or Ctrl+Shift+P on ChromeOS, Windows, or Linux).</li>
+<li>Select <code>Hard Restart</code> under the IDX category.</li>
+</ul>
+</li>
+</ol>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://developers.google.com/idx/guides/customize-idx-env">Customize your IDX workspace</a></li>
+<li><a target="_blank" rel="noopener" href="https://community.postman.com/t/project-idx-docker/60612">Project IDX + Docker</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>Sam Zhu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.samzhu.dev/2024/06/17/Developing-a-Spring-Boot-Project-Using-Google-Project-IDX/" title="Developing a Spring Boot Project Using Google Project IDX">https://blog.samzhu.dev/2024/06/17/Developing-a-Spring-Boot-Project-Using-Google-Project-IDX/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Docker/" rel="tag"># Docker</a>
+              <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+              <a href="/tags/ProjectIDX/" rel="tag"># ProjectIDX</a>
+              <a href="/tags/CloudDevelopment/" rel="tag"># CloudDevelopment</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/05/07/Building-AI-Applications-with-Spring-AI-4-with-Function-Calling/" rel="prev" title="Building AI Applications with Spring AI (4): with Function Calling">
+                  <i class="fa fa-angle-left"></i> Building AI Applications with Spring AI (4): with Function Calling
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/08/01/Step-by-Step-Guide-to-Integrating-Spring-Boot-with-OpenTelemetry-and-GCP/" rel="next" title="Step-by-Step Guide to Integrating Spring Boot with OpenTelemetry and GCP">
+                  Step-by-Step Guide to Integrating Spring Boot with OpenTelemetry and GCP <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sam Zhu</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/samzhu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.3.0/mermaid.min.js","integrity":"sha256-9y71g5Lz/KLsHjB8uXwnkuWDtAMDSzD/HdIbqhJfTAI="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

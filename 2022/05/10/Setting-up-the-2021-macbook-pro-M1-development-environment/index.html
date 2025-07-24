@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.samzhu.dev","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="This is the record of the process of changing to the M1 chip.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Setting up the 2021 macbook pro M1 development environment">
+<meta property="og:url" content="https://blog.samzhu.dev/2022/05/10/Setting-up-the-2021-macbook-pro-M1-development-environment/index.html">
+<meta property="og:site_name" content="Sam&#39;s programming note">
+<meta property="og:description" content="This is the record of the process of changing to the M1 chip.">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-05-10T15:59:25.000Z">
+<meta property="article:modified_time" content="2025-07-24T15:41:45.581Z">
+<meta property="article:author" content="Sam Zhu">
+<meta property="article:tag" content="life">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@samzhu0318">
+
+
+<link rel="canonical" href="https://blog.samzhu.dev/2022/05/10/Setting-up-the-2021-macbook-pro-M1-development-environment/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.samzhu.dev/2022/05/10/Setting-up-the-2021-macbook-pro-M1-development-environment/","path":"2022/05/10/Setting-up-the-2021-macbook-pro-M1-development-environment/","title":"Setting up the 2021 macbook pro M1 development environment"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Setting up the 2021 macbook pro M1 development environment | Sam's programming note</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CFLHEYEETG"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-CFLHEYEETG","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<meta name="google-adsense-account" content="ca-pub-5880479202699914">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880479202699914"
+     crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sam's programming note</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#OS-configuration"><span class="nav-number">1.</span> <span class="nav-text">OS configuration</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Change-the-screenshot-storage-location"><span class="nav-number">1.1.</span> <span class="nav-text">Change the screenshot storage location</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Modify-screenshot-filename-prefix"><span class="nav-number">1.2.</span> <span class="nav-text">Modify screenshot filename prefix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Change-a-screenshot-to-JPG"><span class="nav-number">1.3.</span> <span class="nav-text">Change a screenshot to JPG</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ssh-key-setup"><span class="nav-number">1.4.</span> <span class="nav-text">ssh key setup</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Git-config"><span class="nav-number">1.5.</span> <span class="nav-text">Git config</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Application-software"><span class="nav-number">2.</span> <span class="nav-text">Application software</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Rosetta-2"><span class="nav-number">2.1.</span> <span class="nav-text">Rosetta 2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VSCode-Apple-Silicon"><span class="nav-number">2.2.</span> <span class="nav-text">VSCode(Apple Silicon)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-Apple-Silicon-docker-compose"><span class="nav-number">2.3.</span> <span class="nav-text">Docker(Apple Silicon) &amp; docker-compose</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jdownloader-Apple-Silicon"><span class="nav-number">2.4.</span> <span class="nav-text">jdownloader(Apple Silicon)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DBeaver-Apple-Silicon"><span class="nav-number">2.5.</span> <span class="nav-text">DBeaver(Apple Silicon)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#KKBox-Intel"><span class="nav-number">2.6.</span> <span class="nav-text">KKBox (Intel)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Stoplight-Studio-Intel"><span class="nav-number">2.7.</span> <span class="nav-text">Stoplight Studio (Intel)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Development-tools"><span class="nav-number">3.</span> <span class="nav-text">Development tools</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SDKMAN"><span class="nav-number">3.1.</span> <span class="nav-text">SDKMAN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-use-SDKMAN"><span class="nav-number">3.2.</span> <span class="nav-text">Java (use SDKMAN)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Homebrew"><span class="nav-number">3.3.</span> <span class="nav-text">Homebrew</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Terraform-use-Homebrew"><span class="nav-number">3.4.</span> <span class="nav-text">Terraform (use Homebrew)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NVM-use-Homebrew-NodeJS"><span class="nav-number">3.5.</span> <span class="nav-text">NVM (use Homebrew) &amp; NodeJS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gcloud-CLI"><span class="nav-number">3.6.</span> <span class="nav-text">gcloud CLI</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mac-App-Store"><span class="nav-number">4.</span> <span class="nav-text">Mac App Store</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sam Zhu"
+      src="https://i.imgur.com/eLloI4N.png">
+  <p class="site-author-name" itemprop="name">Sam Zhu</p>
+  <div class="site-description" itemprop="description">Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">74</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/samzhu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;samzhu" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/samzhu0318" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;samzhu0318" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.samzhu.dev/2022/05/10/Setting-up-the-2021-macbook-pro-M1-development-environment/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.imgur.com/eLloI4N.png">
+      <meta itemprop="name" content="Sam Zhu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sam's programming note">
+      <meta itemprop="description" content="Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Setting up the 2021 macbook pro M1 development environment | Sam's programming note">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Setting up the 2021 macbook pro M1 development environment
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-05-10 23:59:25" itemprop="dateCreated datePublished" datetime="2022-05-10T23:59:25+08:00">2022-05-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-07-24 23:41:45" itemprop="dateModified" datetime="2025-07-24T23:41:45+08:00">2025-07-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/life/" itemprop="url" rel="index"><span itemprop="name">life</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>This is the record of the process of changing to the M1 chip.</p>
+<span id="more"></span>
+
+<h2 id="OS-configuration"><a href="#OS-configuration" class="headerlink" title="OS configuration"></a>OS configuration</h2><h3 id="Change-the-screenshot-storage-location"><a href="#Change-the-screenshot-storage-location" class="headerlink" title="Change the screenshot storage location"></a>Change the screenshot storage location</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/screenshot</span><br><span class="line">defaults write com.apple.screencapture location ~/screenshot</span><br></pre></td></tr></table></figure>
+
+<h3 id="Modify-screenshot-filename-prefix"><a href="#Modify-screenshot-filename-prefix" class="headerlink" title="Modify screenshot filename prefix"></a>Modify screenshot filename prefix</h3><p>Default will be this <code>截圖 2022-04-29 上午11.58.03.png</code>  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">defaults write com.apple.screencapture name <span class="string">&quot;screenshot&quot;</span></span><br></pre></td></tr></table></figure>
+<p>modified to become <code>screenshot 2022-04-29 下午4.19.43.png</code>  </p>
+<h3 id="Change-a-screenshot-to-JPG"><a href="#Change-a-screenshot-to-JPG" class="headerlink" title="Change a screenshot to JPG"></a>Change a screenshot to JPG</h3><p>The default is to save png, the following command is changed to jpg.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">defaults write com.apple.screencapture <span class="built_in">type</span> jpg</span><br></pre></td></tr></table></figure>
+<p>You can also change to pdf tiff gif.</p>
+<h3 id="ssh-key-setup"><a href="#ssh-key-setup" class="headerlink" title="ssh key setup"></a>ssh key setup</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">% ssh-keygen -t ed25519 -C <span class="string">&quot;samzhu&#x27;mac&quot;</span> -P <span class="string">&quot;&quot;</span></span><br><span class="line">Generating public/private ed25519 key pair.</span><br><span class="line">Enter file <span class="keyword">in</span> <span class="built_in">which</span> to save the key (/Users/samzhu/.ssh/id_ed25519): </span><br><span class="line">Created directory <span class="string">&#x27;/Users/samzhu/.ssh&#x27;</span>.</span><br><span class="line">Enter passphrase (empty <span class="keyword">for</span> no passphrase): </span><br><span class="line">Enter same passphrase again: </span><br><span class="line">Your identification has been saved <span class="keyword">in</span> /Users/samzhu/.ssh/id_ed25519</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> /Users/samzhu/.ssh/id_ed25519.pub</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:ZG/BLmGG0QbjTIPhZ3MPxKhVgnzchM92bRvLTdR2HWw github_spike19820318</span><br><span class="line">The key<span class="string">&#x27;s randomart image is:</span></span><br><span class="line"><span class="string">+--[ED25519 256]--+</span></span><br><span class="line"><span class="string">|   ..=BX+     .oo|</span></span><br><span class="line"><span class="string">|   .++*B=.    .E=|</span></span><br><span class="line"><span class="string">|    .+B+O o. ....|</span></span><br><span class="line"><span class="string">|    .o B+*..+ .  |</span></span><br><span class="line"><span class="string">|       .S.=o *   |</span></span><br><span class="line"><span class="string">|         o  + .  |</span></span><br><span class="line"><span class="string">|                 |</span></span><br><span class="line"><span class="string">|                 |</span></span><br><span class="line"><span class="string">|                 |</span></span><br><span class="line"><span class="string">+----[SHA256]-----+</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">% cat ~/.ssh/id_ed25519.pub</span></span><br></pre></td></tr></table></figure>
+<p>copy id_ed25519.pub to github.  </p>
+<p>The old way.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -b 2048 -C <span class="string">&quot;samzhu&#x27;mac&quot;</span> -P <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>if Host key verification failed.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keyscan -t rsa github.com &gt;&gt; ~/.ssh/known_hosts</span><br></pre></td></tr></table></figure>
+
+<h3 id="Git-config"><a href="#Git-config" class="headerlink" title="Git config"></a>Git config</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name samzhu</span><br><span class="line">git config --global user.email spikexxxx@gmail.com</span><br><span class="line"></span><br><span class="line">git config user.name &quot;samzhu&quot;</span><br><span class="line">git config user.email &quot;spikexxxx@gmail.com&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Application-software"><a href="#Application-software" class="headerlink" title="Application software"></a>Application software</h2><h3 id="Rosetta-2"><a href="#Rosetta-2" class="headerlink" title="Rosetta 2"></a>Rosetta 2</h3><p>Rosetta 2 enables a Mac with Apple silicon to use apps built for a Mac with an Intel processor.<br><a target="_blank" rel="noopener" href="https://support.apple.com/en-us/HT211861">Installing Rosetta</a></p>
+<h3 id="VSCode-Apple-Silicon"><a href="#VSCode-Apple-Silicon" class="headerlink" title="VSCode(Apple Silicon)"></a>VSCode(Apple Silicon)</h3><p><a target="_blank" rel="noopener" href="https://code.visualstudio.com/download">https://code.visualstudio.com/download</a>  </p>
+<p>Extension  </p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one">yzhang.markdown-all-in-one</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack">vscjava.vscode-java-pack</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-gradle">vscjava.vscode-gradle</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=GabrielBB.vscode-lombok">GabrielBB.vscode-lombok</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=Pivotal.vscode-boot-dev-pack">Pivotal.vscode-boot-dev-pack</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=shengchen.vscode-checkstyle">shengchen.vscode-checkstyle</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=richardwillis.vscode-spotless-gradle">richardwillis.vscode-spotless-gradle</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=richardwillis.vscode-gradle-extension-pack">richardwillis.vscode-gradle-extension-pack</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph">mhutchie.git-graph</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens">eamodio.gitlens</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=GitHub.copilot">GitHub.copilot</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml">redhat.vscode-yaml</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=redhat.vscode-xml">redhat.vscode-xml</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarlint-vscode">SonarSource.sonarlint-vscode</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=redhat.fabric8-analytics">redhat.fabric8-analytics</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint">DavidAnson.vscode-markdownlint</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=HashiCorp.terraform">HashiCorp.terraform</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker">ms-azuretools.vscode-docker</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml">jebbs.plantuml</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=docsmsft.docs-yaml">docsmsft.docs-yaml</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio">hediet.vscode-drawio</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=ms-kubernetes-tools.vscode-kubernetes-tools">ms-kubernetes-tools.vscode-kubernetes-tools</a>  </p>
+</li>
+<li><p><a href="">shd101wyy.markdown-preview-enhanced</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=marp-team.marp-vscode">marp-team.marp-vscode</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme">PKief.material-icon-theme</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack">ms-vscode-remote.vscode-remote-extensionpack</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=dawhite.mustache">dawhite.mustache</a>  </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=42Crunch.vscode-openapi">42Crunch.vscode-openapi</a></p>
+</li>
+</ul>
+<h3 id="Docker-Apple-Silicon-docker-compose"><a href="#Docker-Apple-Silicon-docker-compose" class="headerlink" title="Docker(Apple Silicon) &amp; docker-compose"></a>Docker(Apple Silicon) &amp; docker-compose</h3><p><a target="_blank" rel="noopener" href="https://www.docker.com/get-started/">https://www.docker.com/get-started/</a></p>
+<h3 id="jdownloader-Apple-Silicon"><a href="#jdownloader-Apple-Silicon" class="headerlink" title="jdownloader(Apple Silicon)"></a>jdownloader(Apple Silicon)</h3><p><a target="_blank" rel="noopener" href="https://jdownloader.org/download/index">https://jdownloader.org/download/index</a></p>
+<h3 id="DBeaver-Apple-Silicon"><a href="#DBeaver-Apple-Silicon" class="headerlink" title="DBeaver(Apple Silicon)"></a>DBeaver(Apple Silicon)</h3><p><a target="_blank" rel="noopener" href="https://dbeaver.io/">https://dbeaver.io/</a></p>
+<h3 id="KKBox-Intel"><a href="#KKBox-Intel" class="headerlink" title="KKBox (Intel)"></a>KKBox (Intel)</h3><p><a target="_blank" rel="noopener" href="https://www.kkbox.com/tw/tc/">https://www.kkbox.com/tw/tc/</a></p>
+<h3 id="Stoplight-Studio-Intel"><a href="#Stoplight-Studio-Intel" class="headerlink" title="Stoplight Studio (Intel)"></a>Stoplight Studio (Intel)</h3><p><a target="_blank" rel="noopener" href="https://stoplight.io/studio">https://stoplight.io/studio</a></p>
+<h2 id="Development-tools"><a href="#Development-tools" class="headerlink" title="Development tools"></a>Development tools</h2><h3 id="SDKMAN"><a href="#SDKMAN" class="headerlink" title="SDKMAN"></a>SDKMAN</h3><p><a target="_blank" rel="noopener" href="https://sdkman.io/install">https://sdkman.io/install</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;https://get.sdkman.io&quot;</span> | bash</span><br><span class="line"><span class="built_in">source</span> <span class="string">&quot;<span class="variable">$HOME</span>/.sdkman/bin/sdkman-init.sh&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Java-use-SDKMAN"><a href="#Java-use-SDKMAN" class="headerlink" title="Java (use SDKMAN)"></a>Java (use SDKMAN)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">% sdk list java</span><br><span class="line">================================================================================</span><br><span class="line">Available Java Versions <span class="keyword">for</span> macOS ARM 64bit</span><br><span class="line">================================================================================</span><br><span class="line"> Vendor        | Use | Version      | Dist    | Status     | Identifier</span><br><span class="line">--------------------------------------------------------------------------------</span><br><span class="line"> Corretto      |     | 18           | amzn    |            | 18-amzn             </span><br><span class="line">               |     | 18.0.1       | amzn    |            | 18.0.1-amzn         </span><br><span class="line">               |     | 17.0.3.6.1   | amzn    |            | 17.0.3.6.1-amzn     </span><br><span class="line">               |     | 17.0.2.8.1   | amzn    |            | 17.0.2.8.1-amzn     </span><br><span class="line"> Java.net      |     | 19.ea.18     | open    |            | 19.ea.18-open       </span><br><span class="line">               |     | 19.ea.5.lm   | open    |            | 19.ea.5.lm-open     </span><br><span class="line">               |     | 18           | open    |            | 18-open             </span><br><span class="line">               |     | 18.0.1       | open    |            | 18.0.1-open         </span><br><span class="line">               |     | 17.0.2       | open    |            | 17.0.2-open         </span><br><span class="line"> Liberica      |     | 18.fx        | librca  |            | 18.fx-librca        </span><br><span class="line">               |     | 18           | librca  |            | 18-librca           </span><br><span class="line">               |     | 17.0.2.fx    | librca  |            | 17.0.2.fx-librca    </span><br><span class="line">               |     | 17.0.2       | librca  |            | 17.0.2-librca       </span><br><span class="line">               |     | 11.0.14      | librca  |            | 11.0.14-librca      </span><br></pre></td></tr></table></figure>
+
+<p>install</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sdk install java 17.0.2-librca</span><br><span class="line">sdk default java 17.0.2-librca</span><br></pre></td></tr></table></figure>
+
+<p>test</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">% java --version</span><br><span class="line">openjdk 17.0.2 2022-01-18 LTS</span><br><span class="line">OpenJDK Runtime Environment (build 17.0.2+9-LTS)</span><br><span class="line">OpenJDK 64-Bit Server VM (build 17.0.2+9-LTS, mixed mode, sharing)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Homebrew"><a href="#Homebrew" class="headerlink" title="Homebrew"></a>Homebrew</h3><p><a target="_blank" rel="noopener" href="https://brew.sh/">https://brew.sh/</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">/bin/bash -c <span class="string">&quot;<span class="subst">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)</span>&quot;</span></span><br><span class="line"></span><br><span class="line">==&gt; Checking <span class="keyword">for</span> `sudo` access (<span class="built_in">which</span> may request your password)...</span><br><span class="line">Password:</span><br><span class="line">==&gt; This script will install:</span><br><span class="line">/opt/homebrew/bin/brew</span><br><span class="line">/opt/homebrew/share/doc/homebrew</span><br><span class="line">/opt/homebrew/share/man/man1/brew.1</span><br><span class="line">/opt/homebrew/share/zsh/site-functions/_brew</span><br><span class="line">/opt/homebrew/etc/bash_completion.d/brew</span><br><span class="line">/opt/homebrew</span><br><span class="line">==&gt; The following new directories will be created:</span><br><span class="line">/opt/homebrew/bin</span><br><span class="line">/opt/homebrew/etc</span><br><span class="line">...</span><br><span class="line">Downloading Command Line Tools <span class="keyword">for</span> Xcode</span><br><span class="line">==&gt; Homebrew is run entirely by unpaid volunteers. Please consider donating:</span><br><span class="line">  https://github.com/Homebrew/brew<span class="comment">#donations</span></span><br><span class="line"></span><br><span class="line">==&gt; Next steps:</span><br><span class="line">- Run these two commands <span class="keyword">in</span> your terminal to add Homebrew to your PATH:</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&#x27;eval &quot;$(/opt/homebrew/bin/brew shellenv)&quot;&#x27;</span> &gt;&gt; /Users/samzhu/.zprofile</span><br><span class="line">    <span class="built_in">eval</span> <span class="string">&quot;<span class="subst">$(/opt/homebrew/bin/brew shellenv)</span>&quot;</span></span><br><span class="line">- Run brew <span class="built_in">help</span> to get started</span><br><span class="line">- Further documentation:</span><br><span class="line">    https://docs.brew.sh</span><br></pre></td></tr></table></figure>
+
+<p>test</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">brew --version</span><br><span class="line">Homebrew 3.4.7</span><br><span class="line">Homebrew/homebrew-core (git revision af15a30b144; last commit 2022-04-21)</span><br></pre></td></tr></table></figure>
+
+<p>upgrade</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew update --force --quiet</span><br></pre></td></tr></table></figure>
+
+<h3 id="Terraform-use-Homebrew"><a href="#Terraform-use-Homebrew" class="headerlink" title="Terraform (use Homebrew)"></a>Terraform (use Homebrew)</h3><p><a target="_blank" rel="noopener" href="https://www.terraform.io/downloads">https://www.terraform.io/downloads</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew tap hashicorp/tap</span><br><span class="line">brew install hashicorp/tap/terraform</span><br></pre></td></tr></table></figure>
+
+<h3 id="NVM-use-Homebrew-NodeJS"><a href="#NVM-use-Homebrew-NodeJS" class="headerlink" title="NVM (use Homebrew) &amp; NodeJS"></a>NVM (use Homebrew) &amp; NodeJS</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">% brew install nvm</span><br><span class="line">Please note that upstream has asked us to make explicit managing</span><br><span class="line">nvm via Homebrew is unsupported by them and you should check any</span><br><span class="line">problems against the standard nvm install method prior to reporting.</span><br><span class="line"></span><br><span class="line">You should create NVM<span class="string">&#x27;s working directory if it doesn&#x27;</span>t exist:</span><br><span class="line"></span><br><span class="line">  <span class="built_in">mkdir</span> ~/.nvm</span><br><span class="line"></span><br><span class="line">Add the following to ~/.zshrc or your desired shell</span><br><span class="line">configuration file:</span><br><span class="line"></span><br><span class="line">  <span class="built_in">export</span> NVM_DIR=<span class="string">&quot;<span class="variable">$HOME</span>/.nvm&quot;</span></span><br><span class="line">  [ -s <span class="string">&quot;/opt/homebrew/opt/nvm/nvm.sh&quot;</span> ] &amp;&amp; \. <span class="string">&quot;/opt/homebrew/opt/nvm/nvm.sh&quot;</span>  <span class="comment"># This loads nvm</span></span><br><span class="line">  [ -s <span class="string">&quot;/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm&quot;</span> ] &amp;&amp; \. <span class="string">&quot;/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm&quot;</span>  <span class="comment"># This loads nvm bash_completion</span></span><br><span class="line"></span><br><span class="line">You can <span class="built_in">set</span> <span class="variable">$NVM_DIR</span> to any location, but leaving it unchanged from</span><br><span class="line">/opt/homebrew/opt/nvm will destroy any nvm-installed Node installations</span><br><span class="line">upon upgrade/reinstall.</span><br><span class="line"></span><br><span class="line">Type `nvm <span class="built_in">help</span>` <span class="keyword">for</span> further information.</span><br><span class="line">==&gt; Summary</span><br><span class="line">🍺  /opt/homebrew/Cellar/nvm/0.39.1_1: 9 files, 184.1KB</span><br><span class="line">==&gt; Running `brew cleanup nvm`...</span><br><span class="line">Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.</span><br><span class="line">Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).</span><br></pre></td></tr></table></figure>
+
+<p>List all installable versions</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm ls-remote</span><br></pre></td></tr></table></figure>
+
+<p>Install the specified version</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm install v16.15.0</span><br></pre></td></tr></table></figure>
+
+<p>Uninstall</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm uninstall v15.12.0</span><br></pre></td></tr></table></figure>
+
+<p>Select the version to use</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm use v15.12.0</span><br></pre></td></tr></table></figure>
+
+<p>Show the version currently in use</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm current</span><br></pre></td></tr></table></figure>
+
+<p>Set default <code>node</code> version</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm <span class="built_in">alias</span> default &lt;version&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Using nvm in a project, create a .nvmrc file with the content:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">v15.12.0</span><br></pre></td></tr></table></figure>
+
+<p>In the terminal we can use <code>which node</code> to see where our node is installed</p>
+<h3 id="gcloud-CLI"><a href="#gcloud-CLI" class="headerlink" title="gcloud CLI"></a>gcloud CLI</h3><p><a target="_blank" rel="noopener" href="https://cloud.google.com/sdk/docs/install#mac">https://cloud.google.com/sdk/docs/install#mac</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-382.0.0-darwin-arm.tar.gz -o google-cloud-cli-382.0.0-darwin-arm.tar.gz</span><br><span class="line">tar -zxvf google-cloud-cli-382.0.0-darwin-arm.tar.gz -C ~/tools</span><br><span class="line"><span class="built_in">cd</span> ~/tools</span><br><span class="line">./google-cloud-sdk/install.sh</span><br></pre></td></tr></table></figure>
+
+<p>test</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">% gcloud --version</span><br><span class="line">Google Cloud SDK 382.0.0</span><br><span class="line">bq 2.0.74</span><br><span class="line">core 2022.04.15</span><br><span class="line">gsutil 5.9</span><br></pre></td></tr></table></figure>
+
+<h2 id="Mac-App-Store"><a href="#Mac-App-Store" class="headerlink" title="Mac App Store"></a>Mac App Store</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://apps.apple.com/tw/app/hidden-bar/id1452453066?mt=12">Hidden Bar</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://apps.apple.com/tw/app/pixea/id1507782672?mt=12">Pixea</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://apps.apple.com/tw/app/daisydisk/id411643860?mt=12">DaisyDisk</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://apps.apple.com/tw/app/magnet/id441258766?mt=12">Magnet</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://apps.apple.com/tw/app/keka/id470158793?mt=12">Keka</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://apps.apple.com/tw/app/nplayer/id1451273814?mt=12">nPlayer</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://apps.apple.com/tw/app/istat-menus/id1319778037?mt=12">iStat Menus</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://apps.apple.com/tw/app/telegram/id747648890?mt=12">Telegram</a></li>
+</ul>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000039005726">M1芯片Mac搭建前端开发环境</a></li>
+<li><a target="_blank" rel="noopener" href="https://dev.to/httpjunkie/setup-node-version-manager-nvm-on-mac-m1-7kl">Setup Node Version Manager (NVM) on macOS M1 Silicon</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7000245004526419981">Mac M1芯片安装NVM踩坑记</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.github.com/en/get-started/getting-started-with-git/setting-your-username-in-git">Setting your username in Git</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>Sam Zhu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.samzhu.dev/2022/05/10/Setting-up-the-2021-macbook-pro-M1-development-environment/" title="Setting up the 2021 macbook pro M1 development environment">https://blog.samzhu.dev/2022/05/10/Setting-up-the-2021-macbook-pro-M1-development-environment/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/life/" rel="tag"># life</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/01/03/Host-key-verification-failed-on-GitHub/" rel="prev" title="Host key verification failed on GitHub">
+                  <i class="fa fa-angle-left"></i> Host key verification failed on GitHub
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/06/30/nats-simple-test/" rel="next" title="nats simple test">
+                  nats simple test <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sam Zhu</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/samzhu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.3.0/mermaid.min.js","integrity":"sha256-9y71g5Lz/KLsHjB8uXwnkuWDtAMDSzD/HdIbqhJfTAI="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

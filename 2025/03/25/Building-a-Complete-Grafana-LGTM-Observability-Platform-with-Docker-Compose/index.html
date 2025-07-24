@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.samzhu.dev","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="What is LGTM?LGTM stands for Loki, Grafana, Tempo, and Metrics (usually Prometheus). It’s an open-source toolkit for monitoring your applications and infrastructure. Think of it as a control center wh">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Building a Complete Grafana LGTM Observability Platform with Docker Compose">
+<meta property="og:url" content="https://blog.samzhu.dev/2025/03/25/Building-a-Complete-Grafana-LGTM-Observability-Platform-with-Docker-Compose/index.html">
+<meta property="og:site_name" content="Sam&#39;s programming note">
+<meta property="og:description" content="What is LGTM?LGTM stands for Loki, Grafana, Tempo, and Metrics (usually Prometheus). It’s an open-source toolkit for monitoring your applications and infrastructure. Think of it as a control center wh">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://grafana.com/media/blog/otel-lgtm-docker-image/docker-image_components.png">
+<meta property="article:published_time" content="2025-03-25T14:59:05.000Z">
+<meta property="article:modified_time" content="2025-07-24T15:41:45.586Z">
+<meta property="article:author" content="Sam Zhu">
+<meta property="article:tag" content="OpenTelemetry">
+<meta property="article:tag" content="Observability">
+<meta property="article:tag" content="Grafana">
+<meta property="article:tag" content="Monitoring">
+<meta property="article:tag" content="Prometheus">
+<meta property="article:tag" content="Loki">
+<meta property="article:tag" content="Tempo">
+<meta property="article:tag" content="Tutorial]">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://grafana.com/media/blog/otel-lgtm-docker-image/docker-image_components.png">
+<meta name="twitter:creator" content="@samzhu0318">
+
+
+<link rel="canonical" href="https://blog.samzhu.dev/2025/03/25/Building-a-Complete-Grafana-LGTM-Observability-Platform-with-Docker-Compose/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.samzhu.dev/2025/03/25/Building-a-Complete-Grafana-LGTM-Observability-Platform-with-Docker-Compose/","path":"2025/03/25/Building-a-Complete-Grafana-LGTM-Observability-Platform-with-Docker-Compose/","title":"Building a Complete Grafana LGTM Observability Platform with Docker Compose"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Building a Complete Grafana LGTM Observability Platform with Docker Compose | Sam's programming note</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CFLHEYEETG"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-CFLHEYEETG","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<meta name="google-adsense-account" content="ca-pub-5880479202699914">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880479202699914"
+     crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sam's programming note</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#What-is-LGTM"><span class="nav-number">1.</span> <span class="nav-text">What is LGTM?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-Should-You-Care"><span class="nav-number">2.</span> <span class="nav-text">Why Should You Care?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-You%E2%80%99ll-Build"><span class="nav-number">3.</span> <span class="nav-text">What You’ll Build</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ready-to-Use-Sample-Repository"><span class="nav-number">4.</span> <span class="nav-text">Ready-to-Use Sample Repository</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Prerequisites"><span class="nav-number">5.</span> <span class="nav-text">Prerequisites</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Installing-Docker-for-Absolute-Beginners"><span class="nav-number">5.1.</span> <span class="nav-text">Installing Docker (for Absolute Beginners)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start-Guide"><span class="nav-number">6.</span> <span class="nav-text">Quick Start Guide</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-1-Setting-Up-Your-Environment"><span class="nav-number">6.1.</span> <span class="nav-text">Step 1: Setting Up Your Environment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-2-Starting-the-System"><span class="nav-number">6.2.</span> <span class="nav-text">Step 2: Starting the System</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-3-Accessing-Your-New-Monitoring-System"><span class="nav-number">6.3.</span> <span class="nav-text">Step 3: Accessing Your New Monitoring System</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What%E2%80%99s-Included-in-Your-Monitoring-System"><span class="nav-number">7.</span> <span class="nav-text">What’s Included in Your Monitoring System</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Main-Components"><span class="nav-number">7.1.</span> <span class="nav-text">Main Components</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Understanding-OTLP-OpenTelemetry-Protocol"><span class="nav-number">7.2.</span> <span class="nav-text">Understanding OTLP (OpenTelemetry Protocol)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Configuration-Files-Explained"><span class="nav-number">8.</span> <span class="nav-text">Configuration Files Explained</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-Compose-File-docker-compose-yml"><span class="nav-number">8.1.</span> <span class="nav-text">Docker Compose File (docker-compose.yml)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OpenTelemetry-Collector-Configuration-otel-collector-config-yaml"><span class="nav-number">8.2.</span> <span class="nav-text">OpenTelemetry Collector Configuration (otel-collector-config.yaml)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Prometheus-Configuration-prometheus-yml"><span class="nav-number">8.3.</span> <span class="nav-text">Prometheus Configuration (prometheus.yml)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Loki-Configuration-loki-local-config-yaml"><span class="nav-number">8.4.</span> <span class="nav-text">Loki Configuration (loki-local-config.yaml)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tempo-Configuration-tempo-local-yaml"><span class="nav-number">8.5.</span> <span class="nav-text">Tempo Configuration (tempo-local.yaml)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Grafana-Configuration"><span class="nav-number">8.6.</span> <span class="nav-text">Grafana Configuration</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Data-Sources-grafana-datasources-yml"><span class="nav-number">8.6.1.</span> <span class="nav-text">Data Sources (grafana&#x2F;datasources.yml)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dashboard-Provider-grafana-dashboards-yml"><span class="nav-number">8.6.2.</span> <span class="nav-text">Dashboard Provider (grafana&#x2F;dashboards.yml)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Sample-Dashboard-grafana-dashboards-springboot-observability-json"><span class="nav-number">8.6.3.</span> <span class="nav-text">Sample Dashboard (grafana&#x2F;dashboards&#x2F;springboot-observability.json)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Connecting-Your-Applications"><span class="nav-number">9.</span> <span class="nav-text">Connecting Your Applications</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#For-Java-Applications"><span class="nav-number">9.1.</span> <span class="nav-text">For Java Applications</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#For-Node-js-Applications"><span class="nav-number">9.2.</span> <span class="nav-text">For Node.js Applications</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Viewing-Your-Data"><span class="nav-number">10.</span> <span class="nav-text">Viewing Your Data</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Basic-Query-Examples"><span class="nav-number">10.1.</span> <span class="nav-text">Basic Query Examples</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Prometheus-for-metrics"><span class="nav-number">10.1.1.</span> <span class="nav-text">Prometheus (for metrics)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Loki-for-logs"><span class="nav-number">10.1.2.</span> <span class="nav-text">Loki (for logs)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tempo-for-traces"><span class="nav-number">10.1.3.</span> <span class="nav-text">Tempo (for traces)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Common-Tasks-and-Commands"><span class="nav-number">11.</span> <span class="nav-text">Common Tasks and Commands</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Restarting-or-Resetting-Everything"><span class="nav-number">11.1.</span> <span class="nav-text">Restarting or Resetting Everything</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Checking-for-Problems"><span class="nav-number">11.2.</span> <span class="nav-text">Checking for Problems</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Glossary-for-Beginners"><span class="nav-number">12.</span> <span class="nav-text">Glossary for Beginners</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Next-Steps"><span class="nav-number">13.</span> <span class="nav-text">Next Steps</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Resources-for-Learning-More"><span class="nav-number">14.</span> <span class="nav-text">Resources for Learning More</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Troubleshooting-Common-Issues"><span class="nav-number">15.</span> <span class="nav-text">Troubleshooting Common Issues</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Services-Won%E2%80%99t-Start"><span class="nav-number">15.1.</span> <span class="nav-text">Services Won’t Start</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Can%E2%80%99t-See-Data-in-Grafana"><span class="nav-number">15.2.</span> <span class="nav-text">Can’t See Data in Grafana</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OpenTelemetry-Issues"><span class="nav-number">15.3.</span> <span class="nav-text">OpenTelemetry Issues</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">16.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sam Zhu"
+      src="https://i.imgur.com/eLloI4N.png">
+  <p class="site-author-name" itemprop="name">Sam Zhu</p>
+  <div class="site-description" itemprop="description">Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">74</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/samzhu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;samzhu" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/samzhu0318" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;samzhu0318" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.samzhu.dev/2025/03/25/Building-a-Complete-Grafana-LGTM-Observability-Platform-with-Docker-Compose/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.imgur.com/eLloI4N.png">
+      <meta itemprop="name" content="Sam Zhu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sam's programming note">
+      <meta itemprop="description" content="Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Building a Complete Grafana LGTM Observability Platform with Docker Compose | Sam's programming note">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Building a Complete Grafana LGTM Observability Platform with Docker Compose
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-03-25 22:59:05" itemprop="dateCreated datePublished" datetime="2025-03-25T22:59:05+08:00">2025-03-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-07-24 23:41:45" itemprop="dateModified" datetime="2025-07-24T23:41:45+08:00">2025-07-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="What-is-LGTM"><a href="#What-is-LGTM" class="headerlink" title="What is LGTM?"></a>What is LGTM?</h2><p>LGTM stands for <strong>L</strong>oki, <strong>G</strong>rafana, <strong>T</strong>empo, and <strong>M</strong>etrics (usually Prometheus). It’s an open-source toolkit for monitoring your applications and infrastructure.</p>
+<p>Think of it as a control center where you can:</p>
+<ul>
+<li>See all your logs in one place (Loki)</li>
+<li>View beautiful dashboards of your system’s performance (Grafana)</li>
+<li>Track requests as they move through your system (Tempo)</li>
+<li>Monitor key metrics like CPU, memory usage, and more (Prometheus)</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="Why-Should-You-Care"><a href="#Why-Should-You-Care" class="headerlink" title="Why Should You Care?"></a>Why Should You Care?</h2><ul>
+<li><strong>Find Problems Faster</strong>: When something breaks, quickly see what happened</li>
+<li><strong>Understand Your System</strong>: Get insights into how your application performs</li>
+<li><strong>Plan Better</strong>: Use real data to make decisions about scaling or optimizing</li>
+<li><strong>Learn by Doing</strong>: Perfect project to understand modern monitoring techniques</li>
+</ul>
+<h2 id="What-You’ll-Build"><a href="#What-You’ll-Build" class="headerlink" title="What You’ll Build"></a>What You’ll Build</h2><p>This guide will show you how to create a complete monitoring system using Docker Compose. When finished, you’ll have:</p>
+<p><img src="https://grafana.com/media/blog/otel-lgtm-docker-image/docker-image_components.png" alt="LGTM Architecture"><br><em>How it works: Your applications send data to the OpenTelemetry Collector, which forwards it to specialized storage systems. Grafana brings everything together in one dashboard.</em></p>
+<h2 id="Ready-to-Use-Sample-Repository"><a href="#Ready-to-Use-Sample-Repository" class="headerlink" title="Ready-to-Use Sample Repository"></a>Ready-to-Use Sample Repository</h2><p>For convenience, you can directly use or reference a complete sample repository containing all the configuration files and setup described in this guide:</p>
+<ul>
+<li><strong>GitHub Repository</strong>: <a target="_blank" rel="noopener" href="https://github.com/samzhu/grafana-otel-lgtm-stack">samzhu&#x2F;grafana-otel-lgtm-stack</a></li>
+</ul>
+<p>This repository includes all the configuration files for:</p>
+<ul>
+<li>OpenTelemetry Collector</li>
+<li>Prometheus</li>
+<li>Loki</li>
+<li>Tempo</li>
+<li>Grafana (with pre-configured datasources and dashboards)</li>
+</ul>
+<p>You can either clone this repository to get started immediately or follow the step-by-step guide below to understand each component.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Clone the repository</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/samzhu/grafana-otel-lgtm-stack.git</span><br><span class="line"><span class="built_in">cd</span> grafana-otel-lgtm-stack</span><br><span class="line"></span><br><span class="line"><span class="comment"># Start the stack</span></span><br><span class="line">docker compose up -d</span><br></pre></td></tr></table></figure>
+
+<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><ul>
+<li>Basic knowledge of command line and Docker</li>
+<li>Docker and Docker Compose installed on your computer</li>
+<li>A terminal to run commands</li>
+</ul>
+<h3 id="Installing-Docker-for-Absolute-Beginners"><a href="#Installing-Docker-for-Absolute-Beginners" class="headerlink" title="Installing Docker (for Absolute Beginners)"></a>Installing Docker (for Absolute Beginners)</h3><p>If you don’t have Docker installed yet:</p>
+<ul>
+<li><strong>Windows&#x2F;Mac</strong>: Download and install <a target="_blank" rel="noopener" href="https://www.docker.com/products/docker-desktop">Docker Desktop</a></li>
+<li><strong>Linux</strong>: Follow the <a target="_blank" rel="noopener" href="https://docs.docker.com/engine/install/">installation instructions</a> for your distribution</li>
+</ul>
+<p>Docker Compose is included with Docker Desktop. For Linux, you might need to <a target="_blank" rel="noopener" href="https://docs.docker.com/compose/install/">install it separately</a>.</p>
+<h2 id="Quick-Start-Guide"><a href="#Quick-Start-Guide" class="headerlink" title="Quick Start Guide"></a>Quick Start Guide</h2><h3 id="Step-1-Setting-Up-Your-Environment"><a href="#Step-1-Setting-Up-Your-Environment" class="headerlink" title="Step 1: Setting Up Your Environment"></a>Step 1: Setting Up Your Environment</h3><p>Create a new directory for your project:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> grafana-lgtm</span><br><span class="line"><span class="built_in">cd</span> grafana-lgtm</span><br></pre></td></tr></table></figure>
+
+<p>Create the following files with the configurations shown below.</p>
+<h3 id="Step-2-Starting-the-System"><a href="#Step-2-Starting-the-System" class="headerlink" title="Step 2: Starting the System"></a>Step 2: Starting the System</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Start all services</span></span><br><span class="line">docker compose up -d</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check if everything is running</span></span><br><span class="line">docker compose ps</span><br></pre></td></tr></table></figure>
+
+<h3 id="Step-3-Accessing-Your-New-Monitoring-System"><a href="#Step-3-Accessing-Your-New-Monitoring-System" class="headerlink" title="Step 3: Accessing Your New Monitoring System"></a>Step 3: Accessing Your New Monitoring System</h3><p>Open your browser and visit:</p>
+<ul>
+<li><strong>Grafana Dashboard</strong>: <a target="_blank" rel="noopener" href="http://localhost:3000/">http://localhost:3000</a><ul>
+<li>Username: <code>admin</code></li>
+<li>Password: <code>admin</code></li>
+</ul>
+</li>
+</ul>
+<p>Congratulations! You now have a professional-grade monitoring system running on your computer.</p>
+<h2 id="What’s-Included-in-Your-Monitoring-System"><a href="#What’s-Included-in-Your-Monitoring-System" class="headerlink" title="What’s Included in Your Monitoring System"></a>What’s Included in Your Monitoring System</h2><h3 id="Main-Components"><a href="#Main-Components" class="headerlink" title="Main Components"></a>Main Components</h3><ol>
+<li><p><strong>Grafana</strong> (<a target="_blank" rel="noopener" href="http://localhost:3000/">http://localhost:3000</a>)</p>
+<ul>
+<li>The dashboard where you view everything</li>
+<li>Pre-configured to show logs, metrics, and traces</li>
+</ul>
+</li>
+<li><p><strong>Prometheus</strong> (<a target="_blank" rel="noopener" href="http://localhost:9090/">http://localhost:9090</a>)</p>
+<ul>
+<li>Stores performance metrics</li>
+<li>Keeps track of numbers like CPU usage, memory consumption, etc.</li>
+</ul>
+</li>
+<li><p><strong>Loki</strong> (<a target="_blank" rel="noopener" href="http://localhost:3100/">http://localhost:3100</a>)</p>
+<ul>
+<li>Stores logs from your applications</li>
+<li>Lets you search through logs efficiently</li>
+</ul>
+</li>
+<li><p><strong>Tempo</strong> (<a target="_blank" rel="noopener" href="http://localhost:3200/">http://localhost:3200</a>)</p>
+<ul>
+<li>Stores traces of requests through your system</li>
+<li>Helps you understand how requests flow through your applications</li>
+</ul>
+</li>
+<li><p><strong>OpenTelemetry Collector</strong> (<a target="_blank" rel="noopener" href="http://localhost:4318/">http://localhost:4318</a>)</p>
+<ul>
+<li>Central receiver for all monitoring data</li>
+<li>Routes each type of data to the right storage system</li>
+</ul>
+</li>
+</ol>
+<h3 id="Understanding-OTLP-OpenTelemetry-Protocol"><a href="#Understanding-OTLP-OpenTelemetry-Protocol" class="headerlink" title="Understanding OTLP (OpenTelemetry Protocol)"></a>Understanding OTLP (OpenTelemetry Protocol)</h3><p>Throughout this guide, you’ll see “OTLP” mentioned. This is the OpenTelemetry Protocol - a standardized way for applications to send monitoring data. Think of it as a common language that your applications speak to tell the monitoring system what’s happening.</p>
+<h2 id="Configuration-Files-Explained"><a href="#Configuration-Files-Explained" class="headerlink" title="Configuration Files Explained"></a>Configuration Files Explained</h2><p>Let’s look at the main configuration files you’ll need to create:</p>
+<h3 id="Docker-Compose-File-docker-compose-yml"><a href="#Docker-Compose-File-docker-compose-yml" class="headerlink" title="Docker Compose File (docker-compose.yml)"></a>Docker Compose File (<code>docker-compose.yml</code>)</h3><p>This file tells Docker how to set up all the services:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">otel-collector:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">otel/opentelemetry-collector-contrib:latest</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">otel-collector</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro</span></span><br><span class="line">    <span class="attr">command:</span> [<span class="string">&quot;--config&quot;</span>, <span class="string">&quot;/etc/otel-collector-config.yaml&quot;</span>]</span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;4318:4318&quot;</span>                   <span class="comment"># OTLP HTTP</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;9464:9464&quot;</span>                   <span class="comment"># Prometheus metrics</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">prometheus</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">loki</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">tempo</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">prometheus:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">prom/prometheus:latest</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">prometheus</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./prometheus.yml:/etc/prometheus/prometheus.yml:ro</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;9090:9090&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">loki:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">grafana/loki:latest</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">loki</span></span><br><span class="line">    <span class="attr">user:</span> <span class="string">&quot;0:0&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./loki-local-config.yaml:/etc/loki/local-config.yaml:ro</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">loki-data:/tmp/loki</span></span><br><span class="line">    <span class="attr">command:</span> <span class="string">-config.file=/etc/loki/local-config.yaml</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;3100:3100&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">tempo:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">grafana/tempo:latest</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">tempo</span></span><br><span class="line">    <span class="attr">user:</span> <span class="string">&quot;0:0&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./tempo-local.yaml:/etc/tempo/tempo-local.yaml:ro</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">tempo-data:/tmp/tempo</span></span><br><span class="line">    <span class="attr">command:</span> [<span class="string">&quot;-config.file=/etc/tempo/tempo-local.yaml&quot;</span>]</span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;3200:3200&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">grafana:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">grafana/grafana:latest</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">grafana</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">GF_SECURITY_ADMIN_USER=admin</span> </span><br><span class="line">      <span class="bullet">-</span> <span class="string">GF_SECURITY_ADMIN_PASSWORD=admin</span> </span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml:ro</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./grafana/dashboards/:/var/lib/grafana/dashboards:ro</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;3000:3000&quot;</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">prometheus</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">loki</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">tempo</span></span><br><span class="line"></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">loki-data:</span> &#123;&#125;</span><br><span class="line">  <span class="attr">tempo-data:</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="OpenTelemetry-Collector-Configuration-otel-collector-config-yaml"><a href="#OpenTelemetry-Collector-Configuration-otel-collector-config-yaml" class="headerlink" title="OpenTelemetry Collector Configuration (otel-collector-config.yaml)"></a>OpenTelemetry Collector Configuration (<code>otel-collector-config.yaml</code>)</h3><p>The collector receives data from your applications and sends it to the right place:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">receivers:</span></span><br><span class="line">  <span class="attr">otlp:</span></span><br><span class="line">    <span class="attr">protocols:</span></span><br><span class="line">      <span class="attr">http:</span></span><br><span class="line">        <span class="attr">endpoint:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">:4318</span></span><br><span class="line">      <span class="attr">grpc:</span></span><br><span class="line">        <span class="attr">endpoint:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">:4317</span></span><br><span class="line"></span><br><span class="line"><span class="attr">processors:</span></span><br><span class="line">  <span class="attr">batch:</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="attr">exporters:</span></span><br><span class="line">  <span class="attr">prometheus:</span></span><br><span class="line">    <span class="attr">endpoint:</span> <span class="string">&quot;0.0.0.0:9464&quot;</span></span><br><span class="line">    <span class="attr">resource_to_telemetry_conversion:</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">otlphttp/loki:</span></span><br><span class="line">    <span class="attr">endpoint:</span> <span class="string">&quot;http://loki:3100/loki/api/v1/push&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">otlp/tempo:</span></span><br><span class="line">    <span class="attr">endpoint:</span> <span class="string">&quot;tempo:4317&quot;</span></span><br><span class="line">    <span class="attr">insecure:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="attr">service:</span></span><br><span class="line">  <span class="attr">pipelines:</span></span><br><span class="line">    <span class="attr">metrics:</span></span><br><span class="line">      <span class="attr">receivers:</span> [<span class="string">otlp</span>]</span><br><span class="line">      <span class="attr">processors:</span> [<span class="string">batch</span>]</span><br><span class="line">      <span class="attr">exporters:</span> [<span class="string">prometheus</span>]</span><br><span class="line">    <span class="attr">logs:</span></span><br><span class="line">      <span class="attr">receivers:</span> [<span class="string">otlp</span>]</span><br><span class="line">      <span class="attr">processors:</span> [<span class="string">batch</span>]</span><br><span class="line">      <span class="attr">exporters:</span> [<span class="string">otlphttp/loki</span>]</span><br><span class="line">    <span class="attr">traces:</span></span><br><span class="line">      <span class="attr">receivers:</span> [<span class="string">otlp</span>]</span><br><span class="line">      <span class="attr">processors:</span> [<span class="string">batch</span>]</span><br><span class="line">      <span class="attr">exporters:</span> [<span class="string">otlp/tempo</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="Prometheus-Configuration-prometheus-yml"><a href="#Prometheus-Configuration-prometheus-yml" class="headerlink" title="Prometheus Configuration (prometheus.yml)"></a>Prometheus Configuration (<code>prometheus.yml</code>)</h3><p>Prometheus collects metrics from the OpenTelemetry Collector:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">global:</span></span><br><span class="line">  <span class="attr">scrape_interval:</span> <span class="string">5s</span></span><br><span class="line"><span class="attr">scrape_configs:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">job_name:</span> <span class="string">&#x27;otel-collector&#x27;</span></span><br><span class="line">    <span class="attr">static_configs:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">targets:</span> [<span class="string">&#x27;otel-collector:9464&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="Loki-Configuration-loki-local-config-yaml"><a href="#Loki-Configuration-loki-local-config-yaml" class="headerlink" title="Loki Configuration (loki-local-config.yaml)"></a>Loki Configuration (<code>loki-local-config.yaml</code>)</h3><p>Loki stores and indexes your logs:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">auth_enabled:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">http_listen_port:</span> <span class="number">3100</span></span><br><span class="line"></span><br><span class="line"><span class="attr">common:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">/tmp/loki</span></span><br><span class="line">  <span class="attr">storage:</span></span><br><span class="line">    <span class="attr">filesystem:</span></span><br><span class="line">      <span class="attr">chunks_directory:</span> <span class="string">/tmp/loki/chunks</span></span><br><span class="line">      <span class="attr">rules_directory:</span> <span class="string">/tmp/loki/rules</span></span><br><span class="line">  <span class="attr">replication_factor:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">ring:</span></span><br><span class="line">    <span class="attr">kvstore:</span></span><br><span class="line">      <span class="attr">store:</span> <span class="string">inmemory</span></span><br><span class="line"></span><br><span class="line"><span class="attr">schema_config:</span></span><br><span class="line">  <span class="attr">configs:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">from:</span> <span class="number">2022-10-24</span></span><br><span class="line">      <span class="attr">store:</span> <span class="string">boltdb-shipper</span></span><br><span class="line">      <span class="attr">object_store:</span> <span class="string">filesystem</span></span><br><span class="line">      <span class="attr">schema:</span> <span class="string">v12</span></span><br><span class="line">      <span class="attr">index:</span></span><br><span class="line">        <span class="attr">prefix:</span> <span class="string">index_</span></span><br><span class="line">        <span class="attr">period:</span> <span class="string">24h</span></span><br><span class="line"></span><br><span class="line"><span class="attr">limits_config:</span></span><br><span class="line">  <span class="attr">enforce_metric_name:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">reject_old_samples:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">reject_old_samples_max_age:</span> <span class="string">168h</span></span><br><span class="line">  <span class="attr">allow_structured_metadata:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Tempo-Configuration-tempo-local-yaml"><a href="#Tempo-Configuration-tempo-local-yaml" class="headerlink" title="Tempo Configuration (tempo-local.yaml)"></a>Tempo Configuration (<code>tempo-local.yaml</code>)</h3><p>Tempo stores trace data that shows how requests move through your system:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">http_listen_port:</span> <span class="number">3200</span></span><br><span class="line">  <span class="attr">grpc_listen_port:</span> <span class="number">4317</span></span><br><span class="line"></span><br><span class="line"><span class="attr">distributor:</span></span><br><span class="line">  <span class="attr">receivers:</span></span><br><span class="line">    <span class="attr">otlp:</span></span><br><span class="line">      <span class="attr">protocols:</span></span><br><span class="line">        <span class="attr">grpc:</span></span><br><span class="line">        <span class="attr">http:</span></span><br><span class="line"></span><br><span class="line"><span class="attr">ingester:</span></span><br><span class="line">  <span class="attr">lifecycler:</span></span><br><span class="line">    <span class="attr">ring:</span></span><br><span class="line">      <span class="attr">kvstore:</span></span><br><span class="line">        <span class="attr">store:</span> <span class="string">inmemory</span></span><br><span class="line">      <span class="attr">replication_factor:</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="attr">compactor:</span></span><br><span class="line">  <span class="attr">compaction:</span></span><br><span class="line">    <span class="attr">block_retention:</span> <span class="string">1h</span></span><br><span class="line"></span><br><span class="line"><span class="attr">storage:</span></span><br><span class="line">  <span class="attr">trace:</span></span><br><span class="line">    <span class="attr">backend:</span> <span class="string">local</span></span><br><span class="line">    <span class="attr">wal:</span></span><br><span class="line">      <span class="attr">path:</span> <span class="string">/tmp/tempo/wal</span></span><br><span class="line">    <span class="attr">local:</span></span><br><span class="line">      <span class="attr">path:</span> <span class="string">/tmp/tempo/blocks</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Grafana-Configuration"><a href="#Grafana-Configuration" class="headerlink" title="Grafana Configuration"></a>Grafana Configuration</h3><h4 id="Data-Sources-grafana-datasources-yml"><a href="#Data-Sources-grafana-datasources-yml" class="headerlink" title="Data Sources (grafana/datasources.yml)"></a>Data Sources (<code>grafana/datasources.yml</code>)</h4><p>This tells Grafana where to find your data:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">datasources:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Prometheus</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">prometheus</span></span><br><span class="line">    <span class="attr">access:</span> <span class="string">proxy</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">http://prometheus:9090</span></span><br><span class="line">    <span class="attr">isDefault:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Loki</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">loki</span></span><br><span class="line">    <span class="attr">access:</span> <span class="string">proxy</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">http://loki:3100</span></span><br><span class="line">    <span class="attr">isDefault:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Tempo</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">tempo</span></span><br><span class="line">    <span class="attr">access:</span> <span class="string">proxy</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">http://tempo:3200</span></span><br><span class="line">    <span class="attr">isDefault:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Dashboard-Provider-grafana-dashboards-yml"><a href="#Dashboard-Provider-grafana-dashboards-yml" class="headerlink" title="Dashboard Provider (grafana/dashboards.yml)"></a>Dashboard Provider (<code>grafana/dashboards.yml</code>)</h4><p>This tells Grafana where to find dashboard definitions:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">providers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">&#x27;Local Dashboards&#x27;</span></span><br><span class="line">    <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">folder:</span> <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">file</span></span><br><span class="line">    <span class="attr">disableDeletion:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">updateIntervalSeconds:</span> <span class="number">5</span></span><br><span class="line">    <span class="attr">options:</span></span><br><span class="line">      <span class="attr">path:</span> <span class="string">/var/lib/grafana/dashboards</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Sample-Dashboard-grafana-dashboards-springboot-observability-json"><a href="#Sample-Dashboard-grafana-dashboards-springboot-observability-json" class="headerlink" title="Sample Dashboard (grafana/dashboards/springboot-observability.json)"></a>Sample Dashboard (<code>grafana/dashboards/springboot-observability.json</code>)</h4><p>Create this directory and file to include a sample dashboard:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p grafana/dashboards</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;uid&quot;</span><span class="punctuation">:</span> <span class="string">&quot;springboot-observability&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Spring Boot OTEL Demo Dashboard&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;time&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;from&quot;</span><span class="punctuation">:</span> <span class="string">&quot;now-5m&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;to&quot;</span><span class="punctuation">:</span> <span class="string">&quot;now&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;panels&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;timeseries&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="string">&quot;JVM Heap Memory Used&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;datasource&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Prometheus&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;targets&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">                <span class="punctuation">&#123;</span></span><br><span class="line">                    <span class="attr">&quot;expr&quot;</span><span class="punctuation">:</span> <span class="string">&quot;process_runtime_jvm_memory_usage&#123;service_name=\&quot;springboot-otel-demo\&quot;, type=\&quot;heap\&quot;&#125;&quot;</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;fieldConfig&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;defaults&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                    <span class="attr">&quot;unit&quot;</span><span class="punctuation">:</span> <span class="string">&quot;bytes&quot;</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;gridPos&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;x&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;y&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;w&quot;</span><span class="punctuation">:</span> <span class="number">12</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;h&quot;</span><span class="punctuation">:</span> <span class="number">8</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;logs&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Application Logs (springboot-otel-demo)&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;datasource&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Loki&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;targets&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">                <span class="punctuation">&#123;</span></span><br><span class="line">                    <span class="attr">&quot;expr&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&#123;service_name=\&quot;springboot-otel-demo\&quot;&#125;&quot;</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;gridPos&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;x&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;y&quot;</span><span class="punctuation">:</span> <span class="number">8</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;w&quot;</span><span class="punctuation">:</span> <span class="number">24</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;h&quot;</span><span class="punctuation">:</span> <span class="number">8</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Connecting-Your-Applications"><a href="#Connecting-Your-Applications" class="headerlink" title="Connecting Your Applications"></a>Connecting Your Applications</h2><p>To get the most value from your monitoring system, you need to connect your applications to it. Here’s how to do it for some common languages:</p>
+<h3 id="For-Java-Applications"><a href="#For-Java-Applications" class="headerlink" title="For Java Applications"></a>For Java Applications</h3><p>Add the OpenTelemetry Java Agent when starting your application:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Download the agent (if you haven&#x27;t already)</span></span><br><span class="line">curl -L -o opentelemetry-javaagent.jar https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run your application with the agent</span></span><br><span class="line">java -javaagent:opentelemetry-javaagent.jar \</span><br><span class="line">     -Dotel.exporter.otlp.endpoint=http://localhost:4318 \</span><br><span class="line">     -Dotel.resource.attributes=service.name=my-java-app \</span><br><span class="line">     -jar your-application.jar</span><br></pre></td></tr></table></figure>
+
+<h3 id="For-Node-js-Applications"><a href="#For-Node-js-Applications" class="headerlink" title="For Node.js Applications"></a>For Node.js Applications</h3><p>Install OpenTelemetry packages:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @opentelemetry/sdk-node @opentelemetry/exporter-trace-otlp-http @opentelemetry/exporter-metrics-otlp-http @opentelemetry/exporter-logs-otlp-http</span><br></pre></td></tr></table></figure>
+
+<p>Add this code to your application:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; <span class="title class_">NodeSDK</span> &#125; = <span class="built_in">require</span>(<span class="string">&#x27;@opentelemetry/sdk-node&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> &#123; <span class="title class_">OTLPTraceExporter</span> &#125; = <span class="built_in">require</span>(<span class="string">&#x27;@opentelemetry/exporter-trace-otlp-http&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> &#123; <span class="title class_">OTLPMetricExporter</span> &#125; = <span class="built_in">require</span>(<span class="string">&#x27;@opentelemetry/exporter-metrics-otlp-http&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> &#123; <span class="title class_">OTLPLogExporter</span> &#125; = <span class="built_in">require</span>(<span class="string">&#x27;@opentelemetry/exporter-logs-otlp-http&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> sdk = <span class="keyword">new</span> <span class="title class_">NodeSDK</span>(&#123;</span><br><span class="line">  <span class="attr">traceExporter</span>: <span class="keyword">new</span> <span class="title class_">OTLPTraceExporter</span>(&#123;</span><br><span class="line">    <span class="attr">url</span>: <span class="string">&#x27;http://localhost:4318/v1/traces&#x27;</span></span><br><span class="line">  &#125;),</span><br><span class="line">  <span class="attr">metricExporter</span>: <span class="keyword">new</span> <span class="title class_">OTLPMetricExporter</span>(&#123;</span><br><span class="line">    <span class="attr">url</span>: <span class="string">&#x27;http://localhost:4318/v1/metrics&#x27;</span></span><br><span class="line">  &#125;),</span><br><span class="line">  <span class="attr">logExporter</span>: <span class="keyword">new</span> <span class="title class_">OTLPLogExporter</span>(&#123;</span><br><span class="line">    <span class="attr">url</span>: <span class="string">&#x27;http://localhost:4318/v1/logs&#x27;</span></span><br><span class="line">  &#125;),</span><br><span class="line">  <span class="attr">serviceName</span>: <span class="string">&#x27;my-nodejs-app&#x27;</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">sdk.<span class="title function_">start</span>();</span><br></pre></td></tr></table></figure>
+
+<h2 id="Viewing-Your-Data"><a href="#Viewing-Your-Data" class="headerlink" title="Viewing Your Data"></a>Viewing Your Data</h2><ol>
+<li>Open Grafana at <a target="_blank" rel="noopener" href="http://localhost:3000/">http://localhost:3000</a></li>
+<li>Login with username <code>admin</code> and password <code>admin</code> </li>
+<li>Click “Explore” in the left sidebar to query your data</li>
+<li>Select a data source (Prometheus, Loki, or Tempo) and start exploring</li>
+</ol>
+<h3 id="Basic-Query-Examples"><a href="#Basic-Query-Examples" class="headerlink" title="Basic Query Examples"></a>Basic Query Examples</h3><p>Here are some simple queries to get you started:</p>
+<h4 id="Prometheus-for-metrics"><a href="#Prometheus-for-metrics" class="headerlink" title="Prometheus (for metrics)"></a>Prometheus (for metrics)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Show all metrics for a specific service</span><br><span class="line">&#123;service_name=&quot;my-java-app&quot;&#125;</span><br><span class="line"></span><br><span class="line"># Show CPU usage</span><br><span class="line">process_cpu_usage&#123;service_name=&quot;my-java-app&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Loki-for-logs"><a href="#Loki-for-logs" class="headerlink" title="Loki (for logs)"></a>Loki (for logs)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Show all logs for a specific service</span><br><span class="line">&#123;service_name=&quot;my-java-app&quot;&#125;</span><br><span class="line"></span><br><span class="line"># Show only error logs</span><br><span class="line">&#123;service_name=&quot;my-java-app&quot;&#125; |= &quot;error&quot;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Tempo-for-traces"><a href="#Tempo-for-traces" class="headerlink" title="Tempo (for traces)"></a>Tempo (for traces)</h4><p>Usually, you’ll click on a trace ID in a log or metric to see a trace. But you can also search:</p>
+<ul>
+<li>By service name</li>
+<li>By duration (to find slow requests)</li>
+<li>By trace ID (if you know it)</li>
+</ul>
+<h2 id="Common-Tasks-and-Commands"><a href="#Common-Tasks-and-Commands" class="headerlink" title="Common Tasks and Commands"></a>Common Tasks and Commands</h2><h3 id="Restarting-or-Resetting-Everything"><a href="#Restarting-or-Resetting-Everything" class="headerlink" title="Restarting or Resetting Everything"></a>Restarting or Resetting Everything</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Restart all services</span></span><br><span class="line">docker compose restart</span><br><span class="line"></span><br><span class="line"><span class="comment"># Completely reset (deletes all data)</span></span><br><span class="line">docker compose down -v</span><br><span class="line">docker compose up -d</span><br></pre></td></tr></table></figure>
+
+<h3 id="Checking-for-Problems"><a href="#Checking-for-Problems" class="headerlink" title="Checking for Problems"></a>Checking for Problems</h3><p>If something isn’t working right:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># View logs from all services</span></span><br><span class="line">docker compose logs</span><br><span class="line"></span><br><span class="line"><span class="comment"># View logs from just one service (e.g., Grafana)</span></span><br><span class="line">docker compose logs grafana</span><br></pre></td></tr></table></figure>
+
+<h2 id="Glossary-for-Beginners"><a href="#Glossary-for-Beginners" class="headerlink" title="Glossary for Beginners"></a>Glossary for Beginners</h2><ul>
+<li><strong>Logs</strong>: Text messages your applications produce, like “User logged in” or “Error occurred”</li>
+<li><strong>Metrics</strong>: Numbers that measure performance, like CPU usage or request count</li>
+<li><strong>Traces</strong>: Records of a request as it travels through your system</li>
+<li><strong>Dashboard</strong>: A screen showing charts and data visualizations</li>
+<li><strong>OpenTelemetry</strong>: A standard way to collect and send monitoring data</li>
+<li><strong>Docker</strong>: A tool for running applications in containers</li>
+<li><strong>Docker Compose</strong>: A tool for running multiple containers together</li>
+</ul>
+<h2 id="Next-Steps"><a href="#Next-Steps" class="headerlink" title="Next Steps"></a>Next Steps</h2><p>Once you’re comfortable with the basics:</p>
+<ol>
+<li>Create custom dashboards for your applications</li>
+<li>Set up alerts to notify you when problems occur</li>
+<li>Add more applications to your monitoring system</li>
+<li>Learn PromQL (Prometheus Query Language) for advanced metrics analysis</li>
+<li>Explore more OpenTelemetry features</li>
+</ol>
+<h2 id="Resources-for-Learning-More"><a href="#Resources-for-Learning-More" class="headerlink" title="Resources for Learning More"></a>Resources for Learning More</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://grafana.com/docs/">Grafana Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://opentelemetry.io/docs/">OpenTelemetry Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://prometheus.io/docs/">Prometheus Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://grafana.com/docs/loki/latest/">Loki Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://grafana.com/docs/tempo/latest/">Tempo Documentation</a></li>
+</ul>
+<h2 id="Troubleshooting-Common-Issues"><a href="#Troubleshooting-Common-Issues" class="headerlink" title="Troubleshooting Common Issues"></a>Troubleshooting Common Issues</h2><h3 id="Services-Won’t-Start"><a href="#Services-Won’t-Start" class="headerlink" title="Services Won’t Start"></a>Services Won’t Start</h3><p>If some services fail to start:</p>
+<ol>
+<li>Make sure all your configuration files are correctly named and placed</li>
+<li>Check for port conflicts - another application might be using the same ports</li>
+<li>Check the logs with <code>docker compose logs [service-name]</code></li>
+</ol>
+<h3 id="Can’t-See-Data-in-Grafana"><a href="#Can’t-See-Data-in-Grafana" class="headerlink" title="Can’t See Data in Grafana"></a>Can’t See Data in Grafana</h3><p>If Grafana is running but you don’t see data:</p>
+<ol>
+<li>Verify all services are running with <code>docker compose ps</code></li>
+<li>Check if data sources are correctly configured in Grafana</li>
+<li>Make sure your application is correctly sending data to the collector</li>
+</ol>
+<h3 id="OpenTelemetry-Issues"><a href="#OpenTelemetry-Issues" class="headerlink" title="OpenTelemetry Issues"></a>OpenTelemetry Issues</h3><p>If your application connects but data doesn’t appear:</p>
+<ol>
+<li>Confirm you’re using the correct endpoint URL (<a target="_blank" rel="noopener" href="http://localhost:4318/">http://localhost:4318</a>)</li>
+<li>Check for firewall or network issues blocking connections</li>
+<li>Verify your application is properly configured with the correct service name</li>
+</ol>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://grafana.com/blog/2024/03/13/an-opentelemetry-backend-in-a-docker-image-introducing-grafana/otel-lgtm/">Grafana LGTM Introduction</a></li>
+<li><a target="_blank" rel="noopener" href="https://grafana.com/docs/">Grafana Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://opentelemetry.io/docs/">OpenTelemetry Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://prometheus.io/docs/">Prometheus Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://grafana.com/docs/loki/latest/">Loki Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://grafana.com/docs/tempo/latest/">Tempo Documentation</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>Sam Zhu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.samzhu.dev/2025/03/25/Building-a-Complete-Grafana-LGTM-Observability-Platform-with-Docker-Compose/" title="Building a Complete Grafana LGTM Observability Platform with Docker Compose">https://blog.samzhu.dev/2025/03/25/Building-a-Complete-Grafana-LGTM-Observability-Platform-with-Docker-Compose/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/OpenTelemetry/" rel="tag"># OpenTelemetry</a>
+              <a href="/tags/Observability/" rel="tag"># Observability</a>
+              <a href="/tags/Grafana/" rel="tag"># Grafana</a>
+              <a href="/tags/Monitoring/" rel="tag"># Monitoring</a>
+              <a href="/tags/Prometheus/" rel="tag"># Prometheus</a>
+              <a href="/tags/Loki/" rel="tag"># Loki</a>
+              <a href="/tags/Tempo/" rel="tag"># Tempo</a>
+              <a href="/tags/Tutorial/" rel="tag"># Tutorial]</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/03/07/How-to-Deploy-Ollama-on-GCP-Cloud-Run-to-Run-Large-Language-Models/" rel="prev" title="How to Deploy Ollama on GCP Cloud Run to Run Large Language Models">
+                  <i class="fa fa-angle-left"></i> How to Deploy Ollama on GCP Cloud Run to Run Large Language Models
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/07/24/A-Developer-s-Guide-to-Spring-Boot-3-Exploring-Modern-Practices/" rel="next" title="A Developer's Guide to Spring Boot 3 - Exploring Modern Practices">
+                  A Developer's Guide to Spring Boot 3 - Exploring Modern Practices <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sam Zhu</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/samzhu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.3.0/mermaid.min.js","integrity":"sha256-9y71g5Lz/KLsHjB8uXwnkuWDtAMDSzD/HdIbqhJfTAI="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

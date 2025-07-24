@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.samzhu.dev","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="In this installment of our series on building AI applications with Spring AI, we explore the powerful capabilities of vector databases. These specialized databases enhance AI systems by efficiently ma">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Building AI Applications with Spring AI (3): Vector Databases">
+<meta property="og:url" content="https://blog.samzhu.dev/2024/05/01/Building-AI-Applications-with-Spring-AI-3-Vector-Databases/index.html">
+<meta property="og:site_name" content="Sam&#39;s programming note">
+<meta property="og:description" content="In this installment of our series on building AI applications with Spring AI, we explore the powerful capabilities of vector databases. These specialized databases enhance AI systems by efficiently ma">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.imgur.com/EOzSRDC.png">
+<meta property="article:published_time" content="2024-05-01T11:03:54.000Z">
+<meta property="article:modified_time" content="2025-07-24T15:41:45.583Z">
+<meta property="article:author" content="Sam Zhu">
+<meta property="article:tag" content="Spring AI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/EOzSRDC.png">
+<meta name="twitter:creator" content="@samzhu0318">
+
+
+<link rel="canonical" href="https://blog.samzhu.dev/2024/05/01/Building-AI-Applications-with-Spring-AI-3-Vector-Databases/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.samzhu.dev/2024/05/01/Building-AI-Applications-with-Spring-AI-3-Vector-Databases/","path":"2024/05/01/Building-AI-Applications-with-Spring-AI-3-Vector-Databases/","title":"Building AI Applications with Spring AI (3): Vector Databases"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Building AI Applications with Spring AI (3): Vector Databases | Sam's programming note</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CFLHEYEETG"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-CFLHEYEETG","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<meta name="google-adsense-account" content="ca-pub-5880479202699914">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880479202699914"
+     crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sam's programming note</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#What-is-an-Embedding"><span class="nav-number">1.</span> <span class="nav-text">What is an Embedding?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-Use-Embeddings-with-OpenAI"><span class="nav-number">2.</span> <span class="nav-text">How to Use Embeddings with OpenAI</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-Implementation-Example"><span class="nav-number">2.1.</span> <span class="nav-text">Java Implementation Example</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Output-Explanation"><span class="nav-number">2.2.</span> <span class="nav-text">Output Explanation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-are-Vector-Databases"><span class="nav-number">3.</span> <span class="nav-text">What are Vector Databases?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Preparing-PostgreSQL-with-Docker"><span class="nav-number">3.1.</span> <span class="nav-text">Preparing PostgreSQL with Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Understanding-the-compose-yaml-Configuration"><span class="nav-number">3.1.1.</span> <span class="nav-text">Understanding the compose.yaml Configuration</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Starting-the-Services"><span class="nav-number">3.2.</span> <span class="nav-text">Starting the Services</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Accessing-pgAdmin-and-Connecting-to-PostgreSQL"><span class="nav-number">3.3.</span> <span class="nav-text">Accessing pgAdmin and Connecting to PostgreSQL</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Project-Adjustments-for-Vector-Database-Integration"><span class="nav-number">4.</span> <span class="nav-text">Project Adjustments for Vector Database Integration</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Configuration-in-application-yml"><span class="nav-number">4.1.</span> <span class="nav-text">Configuration in application.yml</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Explanation-of-Vector-Database-Parameters"><span class="nav-number">4.1.1.</span> <span class="nav-text">Explanation of Vector Database Parameters:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Example-Code"><span class="nav-number">4.2.</span> <span class="nav-text">Example Code:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">5.</span> <span class="nav-text">References</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Videos"><span class="nav-number">5.1.</span> <span class="nav-text">Videos</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Documentation-and-Articles"><span class="nav-number">5.2.</span> <span class="nav-text">Documentation and Articles</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sam Zhu"
+      src="https://i.imgur.com/eLloI4N.png">
+  <p class="site-author-name" itemprop="name">Sam Zhu</p>
+  <div class="site-description" itemprop="description">Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">74</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/samzhu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;samzhu" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/samzhu0318" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;samzhu0318" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.samzhu.dev/2024/05/01/Building-AI-Applications-with-Spring-AI-3-Vector-Databases/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.imgur.com/eLloI4N.png">
+      <meta itemprop="name" content="Sam Zhu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sam's programming note">
+      <meta itemprop="description" content="Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Building AI Applications with Spring AI (3): Vector Databases | Sam's programming note">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Building AI Applications with Spring AI (3): Vector Databases
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-05-01 19:03:54" itemprop="dateCreated datePublished" datetime="2024-05-01T19:03:54+08:00">2024-05-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-07-24 23:41:45" itemprop="dateModified" datetime="2025-07-24T23:41:45+08:00">2025-07-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>In this installment of our series on building AI applications with Spring AI, we explore the powerful capabilities of vector databases. These specialized databases enhance AI systems by efficiently managing and utilizing embeddings—dense vector representations crucial for processing and understanding large-scale, complex data sets. Read on to learn how vector databases integrate seamlessly with Spring AI to revolutionize data handling in AI applications.</p>
+<span id="more"></span>
+
+<p><img src="https://i.imgur.com/EOzSRDC.png" alt="cover"></p>
+<h2 id="What-is-an-Embedding"><a href="#What-is-an-Embedding" class="headerlink" title="What is an Embedding?"></a>What is an Embedding?</h2><p>An embedding is a dense vector of floating-point numbers that transforms words, sentences, or entire documents into a format that machines can process. This technique is crucial in natural language processing as it helps capture semantic relationships, enabling the quantification of similarities and differences between words. Embeddings are widely used in applications such as search, recommendation systems, and anomaly detection. Advanced models, particularly those that use deep learning, enhance embeddings by learning deeper semantic relationships, thereby improving the performance and accuracy of tasks like sentiment analysis, word sense disambiguation, and contextual understanding. This makes embeddings a fundamental tool in AI applications, enabling machines to handle language with sophisticated nuance and precision.</p>
+<h2 id="How-to-Use-Embeddings-with-OpenAI"><a href="#How-to-Use-Embeddings-with-OpenAI" class="headerlink" title="How to Use Embeddings with OpenAI"></a>How to Use Embeddings with OpenAI</h2><p>In Java, using the OpenAI API to generate embeddings involves utilizing the <code>OpenAiEmbeddingClient</code>. This client facilitates the conversion of textual data into vector representations. The process is straightforward: you instantiate the client, send a request with your data, and then receive embeddings along with metadata about the request. This method simplifies the transformation from text to vectors, allowing developers to focus on applying these embeddings to enhance features like the relevance of search engines or the personalization of recommendation systems.</p>
+<h3 id="Java-Implementation-Example"><a href="#Java-Implementation-Example" class="headerlink" title="Java Implementation Example"></a>Java Implementation Example</h3><p>Below is a practical example demonstrating how to use the <code>OpenAiEmbeddingClient</code> to generate embeddings for textual data in Java:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> OpenAiEmbeddingClient openAiEmbeddingClient;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">embeddingClientTest</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// Create a request for embeddings using specific texts and a predefined model</span></span><br><span class="line">    <span class="type">EmbeddingResponse</span> <span class="variable">embeddingResponse</span> <span class="operator">=</span> openAiEmbeddingClient.call(</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">EmbeddingRequest</span>(List.of(<span class="string">&quot;Hello World&quot;</span>, <span class="string">&quot;World is big and salvation is near&quot;</span>),</span><br><span class="line">            OpenAiEmbeddingOptions.builder()</span><br><span class="line">                .withModel(OpenAiApi.EmbeddingModel.TEXT_EMBEDDING_3_SMALL.value)</span><br><span class="line">                .build()));</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Print each embedding value</span></span><br><span class="line">    embeddingResponse.getResult().getOutput().forEach(embedding -&gt; &#123;</span><br><span class="line">        System.out.println(embedding);</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Print metadata for additional insights</span></span><br><span class="line">    embeddingResponse.getMetadata().forEach((key, value) -&gt; &#123;</span><br><span class="line">        System.out.println(key + <span class="string">&quot; : &quot;</span> + value);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>In this snippet, the <code>OpenAiEmbeddingClient</code> is configured to send a request to the OpenAI API, specifying the <code>TEXT_EMBEDDING_3_SMALL</code> model for processing. The request includes a list of text strings, and the response comprises both the generated embeddings and associated metadata. The embeddings are arrays of floating-point numbers, each representing the corresponding input text in a multi-dimensional vector space. The metadata provides additional context such as the model used, the number of tokens in the input, and other pertinent details.</p>
+<h3 id="Output-Explanation"><a href="#Output-Explanation" class="headerlink" title="Output Explanation"></a>Output Explanation</h3><p>When executed, the output will display the numerical vectors for the input phrases, effectively demonstrating how each phrase is transformed into a multi-dimensional vector space. Here’s a sample of what the output might look like:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">-0.0069795838</span><br><span class="line">0.02052451</span><br><span class="line">0.015975665</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">-0.0023037316</span><br><span class="line">-0.0057915696</span><br><span class="line">-0.00749934</span><br><span class="line"></span><br><span class="line">completion-tokens : null</span><br><span class="line">total-tokens : 9</span><br><span class="line">model : text-embedding-3-small</span><br><span class="line">prompt-tokens : 9</span><br></pre></td></tr></table></figure>
+
+<p>The vector output from <code>embeddingResponse.getResult().getOutput()</code> can be used for tasks such as similarity comparisons, where vectors of different text inputs are compared to find how closely related they are. The metadata from <code>embeddingResponse.getMetadata()</code> offers insights such as the model used (<code>model</code>), and the total number of tokens processed (<code>total-tokens</code>), which are useful for understanding the scope and scale of the embedding process. This method facilitates a wide range of applications, from semantic search to personalized recommendations, by quantifying and leveraging the similarity of text-based data.</p>
+<h2 id="What-are-Vector-Databases"><a href="#What-are-Vector-Databases" class="headerlink" title="What are Vector Databases?"></a>What are Vector Databases?</h2><p>Vector databases are specialized systems specifically designed to store and manage high-dimensional vector embeddings, which are essential in fields such as natural language processing and machine learning. These databases are optimized for performing fast similarity searches, making them ideal for applications that require quick retrieval of similar items from large datasets. They are also scalable, capable of handling vast amounts of data without compromising performance.</p>
+<p>In our example, we utilize PostgreSQL equipped with the <code>vector</code> extension to facilitate vector operations. This configuration enables efficient storage, updating, and querying of vector data, integrating seamlessly into a relational database environment. The addition of the <code>vector</code> extension allows PostgreSQL to perform sophisticated vector operations, thereby providing a robust solution for managing embeddings across various AI applications.</p>
+<h3 id="Preparing-PostgreSQL-with-Docker"><a href="#Preparing-PostgreSQL-with-Docker" class="headerlink" title="Preparing PostgreSQL with Docker"></a>Preparing PostgreSQL with Docker</h3><p>Setting up a PostgreSQL database with vector capabilities involves using Docker to run a PostgreSQL server with the necessary extensions. Here’s how you can use a <code>compose.yaml</code> file to configure and launch PostgreSQL with the <code>vector</code> extension and pgAdmin, a widely-used web-based administration tool for managing PostgreSQL databases.</p>
+<h4 id="Understanding-the-compose-yaml-Configuration"><a href="#Understanding-the-compose-yaml-Configuration" class="headerlink" title="Understanding the compose.yaml Configuration"></a>Understanding the <code>compose.yaml</code> Configuration</h4><p>Here’s the breakdown of the Docker Compose configuration needed to set up the services:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">pgvector:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">&#x27;ankane/pgvector&#x27;</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">POSTGRES_USER=postgres</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">POSTGRES_PASSWORD=postgres</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">POSTGRES_DB=vector_store</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PGPASSWORD=postgres</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&#x27;5432:5432&#x27;</span></span><br><span class="line">    <span class="attr">healthcheck:</span></span><br><span class="line">      <span class="attr">test:</span> <span class="string">&quot;pg_isready -U postgres -d vector_store&quot;</span></span><br><span class="line">      <span class="attr">interval:</span> <span class="string">2s</span></span><br><span class="line">      <span class="attr">timeout:</span> <span class="string">20s</span></span><br><span class="line">      <span class="attr">retries:</span> <span class="number">10</span></span><br><span class="line">    <span class="attr">logging:</span></span><br><span class="line">      <span class="attr">options:</span></span><br><span class="line">        <span class="attr">max-size:</span> <span class="string">10m</span></span><br><span class="line">        <span class="attr">max-file:</span> <span class="string">&quot;3&quot;</span></span><br><span class="line">  <span class="attr">pgadmin:</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">pgadmin_container</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">dpage/pgadmin4</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">PGADMIN_DEFAULT_EMAIL:</span> <span class="string">$&#123;PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org&#125;</span></span><br><span class="line">      <span class="attr">PGADMIN_DEFAULT_PASSWORD:</span> <span class="string">$&#123;PGADMIN_DEFAULT_PASSWORD:-admin&#125;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./servers.json:/pgadmin4/servers.json</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;$&#123;PGADMIN_PORT:-5050&#125;:80&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>The <code>pgvector</code> service uses the <code>ankane/pgvector</code> Docker image which integrates PostgreSQL with the <code>pgvector</code> extension. It sets environment variables for database credentials and configures port mapping, health checks, and logging. The <code>pgadmin</code> service runs pgAdmin, providing a user-friendly interface for database administration through specified email and password credentials, with port and volume configurations.  </p>
+<p>This setup ensures that you have a powerful, ready-to-use PostgreSQL database with vector capabilities and a convenient administrative interface, all running in a controlled Docker environment.</p>
+<h3 id="Starting-the-Services"><a href="#Starting-the-Services" class="headerlink" title="Starting the Services"></a>Starting the Services</h3><p>To initiate the Docker Compose setup and start your services, use the following command in your terminal:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker compose up</span><br></pre></td></tr></table></figure>
+
+<p>Executing this command will launch both the PostgreSQL server equipped with vector support and the pgAdmin interface. This operation initializes the services defined in your Docker Compose configuration, setting up the necessary environment for managing vector data.</p>
+<h3 id="Accessing-pgAdmin-and-Connecting-to-PostgreSQL"><a href="#Accessing-pgAdmin-and-Connecting-to-PostgreSQL" class="headerlink" title="Accessing pgAdmin and Connecting to PostgreSQL"></a>Accessing pgAdmin and Connecting to PostgreSQL</h3><p>Once the services are running, you can access and manage your PostgreSQL database through pgAdmin by following these steps:</p>
+<ol>
+<li><p><strong>Access pgAdmin</strong>:</p>
+<ul>
+<li>Open a web browser and navigate to <code>http://localhost:5050/</code>.</li>
+<li>Use the credentials specified in the <code>compose.yaml</code> file to log in:<ul>
+<li><strong>Username</strong>: <code>pgadmin4@pgadmin.org</code> (default)</li>
+<li><strong>Password</strong>: <code>admin</code> (default)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Add a New Server in pgAdmin</strong>:</p>
+<ul>
+<li><strong>Step 1</strong>: Inside pgAdmin, right-click on ‘Servers’ in the left-hand menu and choose ‘Create’ -&gt; ‘Server’.</li>
+<li><strong>Step 2</strong>: In the ‘Create - Server’ dialog box, navigate to the ‘General’ tab and enter a name for your server connection. This name will help you identify this connection in pgAdmin.</li>
+<li><strong>Step 3</strong>: Move to the ‘Connection’ tab:<ul>
+<li>For ‘Host name&#x2F;address’, enter <code>pgvector</code>. This is the service name as defined in your Docker Compose, which resolves to your container running PostgreSQL.</li>
+<li>Fill in the ‘Username’ and ‘Password’ fields with the values set in the Docker environment variables (<code>postgres</code>).</li>
+<li>Specify the ‘Database’ name as set in your Docker Compose configuration (<code>vector_store</code>).</li>
+</ul>
+</li>
+<li><strong>Step 4</strong>: Click ‘Save’ to finalize the server connection setup.</li>
+</ul>
+</li>
+</ol>
+<p>By completing these steps, you will establish a connection to your PostgreSQL database with vector capabilities, all running within Docker. This setup is perfect for developing and experimenting with applications that leverage vector data in a stable, reproducible environment. You can now manage your database through the web interface of pgAdmin, which provides tools for creating, modifying, and querying data.</p>
+<h2 id="Project-Adjustments-for-Vector-Database-Integration"><a href="#Project-Adjustments-for-Vector-Database-Integration" class="headerlink" title="Project Adjustments for Vector Database Integration"></a>Project Adjustments for Vector Database Integration</h2><p>To facilitate the management of vector databases, we’ve added the <code>org.springframework.ai:spring-ai-pgvector-store-spring-boot-starter</code> package. Additionally, we’ve introduced the <code>VectorDatabase</code> class to handle operations specific to vector databases.</p>
+<h3 id="Configuration-in-application-yml"><a href="#Configuration-in-application-yml" class="headerlink" title="Configuration in application.yml"></a>Configuration in <code>application.yml</code></h3><p>We have updated our <code>application.yml</code> with settings for the database connection and additional configurations for vector database operations as follows:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">sam-ai</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">jdbc:postgresql://localhost:5432/vector_store</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">postgres</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">postgres</span></span><br><span class="line">  <span class="attr">vectorstore:</span></span><br><span class="line">    <span class="attr">pgvector:</span></span><br><span class="line">      <span class="attr">index-type:</span> <span class="string">HNSW</span></span><br><span class="line">      <span class="attr">distance-type:</span> <span class="string">COSINE_DISTANCE</span></span><br><span class="line">      <span class="attr">dimensions:</span> <span class="number">1536</span></span><br></pre></td></tr></table></figure>
+
+<p>The inclusion of <code>developmentOnly &#39;org.springframework.boot:spring-boot-docker-compose&#39;</code> simplifies the process of launching PostgreSQL with Docker Compose during development.</p>
+<h4 id="Explanation-of-Vector-Database-Parameters"><a href="#Explanation-of-Vector-Database-Parameters" class="headerlink" title="Explanation of Vector Database Parameters:"></a>Explanation of Vector Database Parameters:</h4><ol>
+<li><p><strong>Index-Type: HNSW</strong></p>
+<ul>
+<li><strong>Parameter</strong>: <code>index-type</code></li>
+<li><strong>Value</strong>: <code>HNSW</code> (Hierarchical Navigable Small World)</li>
+<li><strong>Description</strong>:<ul>
+<li>This index type is used for approximate nearest neighbor searches, ideal for large-scale datasets. HNSW provides a multi-level graph structure for searches, delivering superior query performance in terms of speed and recall compared to many other indexing methods.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Distance-Type: COSINE_DISTANCE</strong></p>
+<ul>
+<li><strong>Parameter</strong>: <code>distance-type</code></li>
+<li><strong>Value</strong>: <code>COSINE_DISTANCE</code></li>
+<li><strong>Description</strong>:<ul>
+<li>This distance function calculates the similarity between two vectors based on the cosine of the angle between them rather than their Euclidean distance. It is particularly effective when vectors are normalized to unit length, making it commonly used for measuring textual similarity.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Dimension: 1536</strong></p>
+<ul>
+<li><strong>Parameter</strong>: <code>dimension</code></li>
+<li><strong>Value</strong>: <code>1536</code></li>
+<li><strong>Description</strong>:<ul>
+<li>This parameter defines the number of features in each vector. A higher dimension captures more information but may increase the complexity and storage requirements. When creating vector tables, it’s essential to specify this dimension to ensure all stored vectors conform to this specification.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="Example-Code"><a href="#Example-Code" class="headerlink" title="Example Code:"></a>Example Code:</h3><p>The following Java code snippet demonstrates how to use the <code>PgVectorStore</code> to add documents and perform a similarity search:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Document&gt; documents = List.of(</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Document</span>(<span class="string">&quot;Spring AI rocks!! Spring AI rocks!! Spring AI rocks!! Spring AI rocks!! Spring AI rocks!!&quot;</span>,</span><br><span class="line">        Map.of(<span class="string">&quot;meta1&quot;</span>, <span class="string">&quot;meta1&quot;</span>)),</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Document</span>(<span class="string">&quot;The World is Big and Salvation Lurks Around the Corner&quot;</span>),</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Document</span>(<span class="string">&quot;You walk forward facing the past and you turn back toward the future.&quot;</span>,</span><br><span class="line">        Map.of(<span class="string">&quot;meta2&quot;</span>, <span class="string">&quot;meta2&quot;</span>)));</span><br><span class="line"></span><br><span class="line"><span class="type">VectorStore</span> <span class="variable">vectorStore</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PgVectorStore</span>(jdbcTemplate, openAiEmbeddingClient);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Add documents to PGVector</span></span><br><span class="line">vectorStore.add(documents);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Perform a similarity search</span></span><br><span class="line">List&lt;Document&gt; results = vectorStore.similaritySearch(SearchRequest.query(<span class="string">&quot;Spring&quot;</span>).withTopK(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">results.forEach(document -&gt; &#123;</span><br><span class="line">    System.out.println(document);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>Output</strong>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Document&#123;<span class="built_in">id</span>=<span class="string">&#x27;7a523baf-412d-4918-8404-4c8da38296d7&#x27;</span>, metadata=&#123;meta1=meta1, distance=0.18539967&#125;, content=<span class="string">&#x27;Spring AI rocks!! Spring AI rocks!! Spring AI rocks!! Spring AI rocks!! Spring AI rocks!!&#x27;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The result shows the document most similar to the query “Spring”, demonstrating how effectively the vector database handles and retrieves relevant data based on similarity.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><h3 id="Videos"><a href="#Videos" class="headerlink" title="Videos"></a>Videos</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://youtu.be/aNKDoiOUo9M?si=X0HTDh20FBgZaS56">Exploring Vector Databases with Spring AI</a></li>
+<li><a target="_blank" rel="noopener" href="https://youtu.be/yyvjT0v3lpY?si=WVHrplsKZkS_E6hL">Advanced Techniques in Spring AI</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/live/x6KmUyPWy2Q?si=yQgTjeMY3cTT4T_6">Live Discussion on Spring AI Features</a></li>
+<li><a target="_blank" rel="noopener" href="https://youtu.be/CuIr3FiG_fc?si=fTcOK-WYd7ok-4gB">Spring AI: Integrating AI with Spring Boot</a></li>
+<li><a target="_blank" rel="noopener" href="https://youtu.be/ZWE8faYJE6Q?si=KAXNJCkqe1YIZ23e">Utilizing pgVector with Spring AI</a></li>
+<li><a target="_blank" rel="noopener" href="https://youtu.be/TL3cko6YkgU?si=imM1eotfwKVsUkO6">Spring AI in Practice: Real-World Examples</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/live/TPY1WYHDNho?si=TusNqfFu3CpwE-At">Spring AI Live Coding Session</a></li>
+</ul>
+<h3 id="Documentation-and-Articles"><a href="#Documentation-and-Articles" class="headerlink" title="Documentation and Articles"></a>Documentation and Articles</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-ai/reference/api/vectordbs/pgvector.html">Spring AI Vector Databases Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.pluralsight.com/resources/blog/software-development/what-is-spring-ai">What is Spring AI? - Pluralsight Blog</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.linkedin.com/pulse/spring-ai-enhancing-java-artificial-intelligence-meisters-solutions-njsdf/">Enhancing Java AI with Spring AI - LinkedIn Article</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/markpollack/spring-ai-azure-workshop">Spring AI and Azure: Integration Workshop on GitHub</a></li>
+<li><a target="_blank" rel="noopener" href="https://dev.to/lucasnscr/generative-ai-with-springboot-services-471l">Generative AI with Spring Boot Services - Dev.to</a></li>
+<li><a target="_blank" rel="noopener" href="https://learning.oreilly.com/live-events/spring-ai/0790145045396/0790145067071/">Spring AI Event - O’Reilly Live Events</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/coffee-software-show/llm-rag-with-spring-ai/blob/main/service/src/main/java/bootiful/service/ServiceApplication.java">LLM RAG with Spring AI - GitHub Repository</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.didispace.com/article/spring-boot/spring-boot-openai-example.html">Spring Boot and OpenAI Example - DidiSpace Blog</a></li>
+<li><a target="_blank" rel="noopener" href="https://anjireddy-kata.medium.com/spring-ai-integration-framework-for-ai-applications-with-ai-apis-c33ecd6d6947">Spring AI Integration Framework for AI Applications with AI APIs - Medium Article</a></li>
+<li><a target="_blank" rel="noopener" href="https://pgthinker.me/2024/02/07/spring-ai-%E4%BD%BF%E7%94%A8%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%9E%E7%8E%B0%E6%A3%80%E7%B4%A2%E5%BC%8Fai%E5%AF%B9%E8%AF%9D/">Implementing Search-Style AI Conversations Using Vector Databases with Spring AI - PGThinker Blog</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>Sam Zhu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.samzhu.dev/2024/05/01/Building-AI-Applications-with-Spring-AI-3-Vector-Databases/" title="Building AI Applications with Spring AI (3): Vector Databases">https://blog.samzhu.dev/2024/05/01/Building-AI-Applications-with-Spring-AI-3-Vector-Databases/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Spring-AI/" rel="tag"># Spring AI</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/04/20/Publishing-Your-Package-to-Maven-Central-in-2024/" rel="prev" title="Publishing Your Package to Maven Central in 2024">
+                  <i class="fa fa-angle-left"></i> Publishing Your Package to Maven Central in 2024
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/05/07/Building-AI-Applications-with-Spring-AI-4-with-Function-Calling/" rel="next" title="Building AI Applications with Spring AI (4): with Function Calling">
+                  Building AI Applications with Spring AI (4): with Function Calling <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sam Zhu</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/samzhu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.3.0/mermaid.min.js","integrity":"sha256-9y71g5Lz/KLsHjB8uXwnkuWDtAMDSzD/HdIbqhJfTAI="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

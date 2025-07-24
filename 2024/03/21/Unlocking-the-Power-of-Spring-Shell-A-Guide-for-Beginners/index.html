@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.samzhu.dev","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Diving into the world of Java development, we often encounter the need to interact with applications directly through the command line. Enter Spring Shell, a project within the larger Spring Framework">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unlocking the Power of Spring Shell: A Guide for Beginners">
+<meta property="og:url" content="https://blog.samzhu.dev/2024/03/21/Unlocking-the-Power-of-Spring-Shell-A-Guide-for-Beginners/index.html">
+<meta property="og:site_name" content="Sam&#39;s programming note">
+<meta property="og:description" content="Diving into the world of Java development, we often encounter the need to interact with applications directly through the command line. Enter Spring Shell, a project within the larger Spring Framework">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.imgur.com/0Upmfep.jpeg">
+<meta property="article:published_time" content="2024-03-21T15:41:46.000Z">
+<meta property="article:modified_time" content="2025-07-24T15:41:45.582Z">
+<meta property="article:author" content="Sam Zhu">
+<meta property="article:tag" content="Spring Shell">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/0Upmfep.jpeg">
+<meta name="twitter:creator" content="@samzhu0318">
+
+
+<link rel="canonical" href="https://blog.samzhu.dev/2024/03/21/Unlocking-the-Power-of-Spring-Shell-A-Guide-for-Beginners/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.samzhu.dev/2024/03/21/Unlocking-the-Power-of-Spring-Shell-A-Guide-for-Beginners/","path":"2024/03/21/Unlocking-the-Power-of-Spring-Shell-A-Guide-for-Beginners/","title":"Unlocking the Power of Spring Shell: A Guide for Beginners"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Unlocking the Power of Spring Shell: A Guide for Beginners | Sam's programming note</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CFLHEYEETG"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-CFLHEYEETG","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<meta name="google-adsense-account" content="ca-pub-5880479202699914">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880479202699914"
+     crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sam's programming note</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#What%E2%80%99s-Spring-Shell"><span class="nav-number">1.</span> <span class="nav-text">What’s Spring Shell?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Key-Concepts-and-Annotations"><span class="nav-number">2.</span> <span class="nav-text">Key Concepts and Annotations</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CommandScan"><span class="nav-number">2.1.</span> <span class="nav-text">@CommandScan</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Command"><span class="nav-number">2.2.</span> <span class="nav-text">@Command</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Option"><span class="nav-number">2.3.</span> <span class="nav-text">@Option</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ShellComponent"><span class="nav-number">2.4.</span> <span class="nav-text">@ShellComponent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Interactive-Commands"><span class="nav-number">2.5.</span> <span class="nav-text">Interactive Commands</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Command-Grouping"><span class="nav-number">2.6.</span> <span class="nav-text">Command Grouping</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Building-a-Simple-CLI-with-Spring-Shell-Using-Modern-Annotations"><span class="nav-number">3.</span> <span class="nav-text">Building a Simple CLI with Spring Shell Using Modern Annotations</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-1-Initialize-Your-Spring-Boot-Application"><span class="nav-number">3.1.</span> <span class="nav-text">Step 1: Initialize Your Spring Boot Application</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-2-Activate-Command-Scanning"><span class="nav-number">3.2.</span> <span class="nav-text">Step 2: Activate Command Scanning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-3-Define-Commands-with-Command"><span class="nav-number">3.3.</span> <span class="nav-text">Step 3: Define Commands with @Command</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-4-Run-and-Interact-with-Your-CLI"><span class="nav-number">3.4.</span> <span class="nav-text">Step 4: Run and Interact with Your CLI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Explaining-the-Example-Program"><span class="nav-number">3.5.</span> <span class="nav-text">Explaining the Example Program</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Interactive-Implementation-Explained"><span class="nav-number">3.6.</span> <span class="nav-text">Interactive Implementation Explained</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Conclusion"><span class="nav-number">3.7.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Further-Reading"><span class="nav-number">3.8.</span> <span class="nav-text">Further Reading</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sam Zhu"
+      src="https://i.imgur.com/eLloI4N.png">
+  <p class="site-author-name" itemprop="name">Sam Zhu</p>
+  <div class="site-description" itemprop="description">Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">74</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/samzhu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;samzhu" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/samzhu0318" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;samzhu0318" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.samzhu.dev/2024/03/21/Unlocking-the-Power-of-Spring-Shell-A-Guide-for-Beginners/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.imgur.com/eLloI4N.png">
+      <meta itemprop="name" content="Sam Zhu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sam's programming note">
+      <meta itemprop="description" content="Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Unlocking the Power of Spring Shell: A Guide for Beginners | Sam's programming note">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Unlocking the Power of Spring Shell: A Guide for Beginners
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-03-21 23:41:46" itemprop="dateCreated datePublished" datetime="2024-03-21T23:41:46+08:00">2024-03-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-07-24 23:41:45" itemprop="dateModified" datetime="2025-07-24T23:41:45+08:00">2025-07-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Diving into the world of Java development, we often encounter the need to interact with applications directly through the command line. Enter Spring Shell, a project within the larger Spring Framework ecosystem designed to simplify the creation of interactive command-line applications. This beginner-friendly guide aims to introduce you to Spring Shell, helping you unlock its potential to build powerful CLI tools with ease. Whether you’re new to programming or looking to expand your Java toolkit, this journey will set the foundation for your command-line adventures.</p>
+<span id="more"></span>
+<h2 id="What’s-Spring-Shell"><a href="#What’s-Spring-Shell" class="headerlink" title="What’s Spring Shell?"></a>What’s Spring Shell?</h2><p>Spring Shell is a powerful library from the broader Spring Framework universe, tailored specifically for developing interactive command-line applications. Just as Spring Boot simplifies web application development, Spring Shell streamlines the creation of command-line interfaces (CLI), enabling developers to craft complex commands, manage dependencies, and handle input&#x2F;output with minimal fuss.</p>
+<p>Imagine having the ability to interact with your application through a text interface, executing tasks, querying data, or configuring features with simple commands. That’s the essence of Spring Shell. It leverages the robustness of the Spring Framework, including dependency injection and auto-configuration, to make CLI development as straightforward as building a web app.</p>
+<p>With Spring Shell, you’re not just writing scripts; you’re building a rich, interactive user interface that runs in the terminal. This is particularly useful for applications that need to run automated tasks, scripts, or management commands in environments where a graphical user interface (GUI) may not be available or necessary.</p>
+<p>Spring Shell excels in scenarios where complex inputs are required, supporting dynamic commands, parameter autocompletion, and even the grouping of commands into logical sets. It’s an ideal choice for both developers looking to add CLI capabilities to their Spring applications and for those aiming to build standalone command-line tools.</p>
+<h2 id="Key-Concepts-and-Annotations"><a href="#Key-Concepts-and-Annotations" class="headerlink" title="Key Concepts and Annotations"></a>Key Concepts and Annotations</h2><p>When venturing into the realm of Spring Shell, understanding its core concepts and the annotations that bring your command-line application to life is crucial. These elements are the building blocks that enable you to define how your application behaves in the command line environment.</p>
+<h3 id="CommandScan"><a href="#CommandScan" class="headerlink" title="@CommandScan"></a>@CommandScan</h3><ul>
+<li><strong>Purpose</strong>: Automatically discovers and registers command classes and methods throughout your application.</li>
+<li><strong>Usage</strong>: Placed on the main application class, it instructs Spring Shell to scan the application’s packages for classes and methods annotated with <code>@Command</code>, registering them as commands that users can execute.</li>
+</ul>
+<h3 id="Command"><a href="#Command" class="headerlink" title="@Command"></a>@Command</h3><ul>
+<li><strong>Purpose</strong>: Marks a method or class as containing executable commands. When applied to a method, it designates that method as a command. When used on a class, it serves as a namespace or grouping for related commands within that class.</li>
+<li><strong>Usage</strong>: This is where you define the actions your CLI can perform. Each command can be customized with a name, help text, and other attributes to guide users.</li>
+</ul>
+<h3 id="Option"><a href="#Option" class="headerlink" title="@Option"></a>@Option</h3><ul>
+<li><strong>Purpose</strong>: Specifies method parameters as command options, allowing users to pass arguments to commands.</li>
+<li><strong>Usage</strong>: Each <code>@Option</code>-annotated parameter in a command method becomes a user-specifiable option, making your commands versatile and interactive.</li>
+</ul>
+<h3 id="ShellComponent"><a href="#ShellComponent" class="headerlink" title="@ShellComponent"></a>@ShellComponent</h3><ul>
+<li><strong>Purpose</strong>: Identifies a class as a Spring Shell component, making it a candidate for auto-detection when using component scanning.</li>
+<li><strong>Usage</strong>: Classes annotated with <code>@ShellComponent</code> are automatically picked up by Spring Shell if <code>@CommandScan</code> is present on the application class. This simplifies the organization of command methods.</li>
+</ul>
+<h3 id="Interactive-Commands"><a href="#Interactive-Commands" class="headerlink" title="Interactive Commands"></a>Interactive Commands</h3><p>Spring Shell shines with its support for interactive commands. Through prompts and dynamic input handling, you can create a user-friendly CLI experience. Methods can prompt users for input if required options are not provided, or dynamically adjust available options based on previous inputs. This interactivity is achieved through careful design of your command methods and leveraging Spring Shell’s utilities for user input.</p>
+<h3 id="Command-Grouping"><a href="#Command-Grouping" class="headerlink" title="Command Grouping"></a>Command Grouping</h3><ul>
+<li><strong>Purpose</strong>: Organizes related commands under a common namespace or heading, improving the usability and navigability of your CLI application.</li>
+<li><strong>Usage</strong>: By structuring commands within classes and using class-level <code>@Command</code> annotations, you can create intuitive groupings that make it easier for users to find and use related commands.</li>
+</ul>
+<h2 id="Building-a-Simple-CLI-with-Spring-Shell-Using-Modern-Annotations"><a href="#Building-a-Simple-CLI-with-Spring-Shell-Using-Modern-Annotations" class="headerlink" title="Building a Simple CLI with Spring Shell Using Modern Annotations"></a>Building a Simple CLI with Spring Shell Using Modern Annotations</h2><p>Creating a CLI application with the new annotation-based approach in Spring Shell involves a straightforward yet powerful method of defining commands. This process enables you to design and implement an interactive command-line interface efficiently. Here’s how to get started with this enhanced model.</p>
+<h3 id="Step-1-Initialize-Your-Spring-Boot-Application"><a href="#Step-1-Initialize-Your-Spring-Boot-Application" class="headerlink" title="Step 1: Initialize Your Spring Boot Application"></a>Step 1: Initialize Your Spring Boot Application</h3><p>Begin by setting up a Spring Boot project. Utilize tools like <a target="_blank" rel="noopener" href="https://start.spring.io/">Spring Initializr</a> to include Spring Shell dependencies alongside Spring Web for a comprehensive setup.</p>
+<h3 id="Step-2-Activate-Command-Scanning"><a href="#Step-2-Activate-Command-Scanning" class="headerlink" title="Step 2: Activate Command Scanning"></a>Step 2: Activate Command Scanning</h3><p>Enable your application to auto-detect CLI commands by annotating the main class with <code>@CommandScan</code>. This crucial step prepares your application for recognizing commands you’ll define.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CommandScan</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyApp</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(MyApp.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Step-3-Define-Commands-with-Command"><a href="#Step-3-Define-Commands-with-Command" class="headerlink" title="Step 3: Define Commands with @Command"></a>Step 3: Define Commands with <code>@Command</code></h3><p>Craft your first command by annotating methods within a class designated for command definitions. The <code>@Command</code> annotation marks these methods as executable commands. Organize your commands in a meaningful way within your project structure.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GreetingCommands</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Command(description = &quot;Greet someone&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">greet</span><span class="params">(<span class="meta">@Option(names = &#123;&quot;--name&quot;, &quot;-n&quot;&#125;, description = &quot;Name of the person to greet&quot;)</span> String name)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> String.format(<span class="string">&quot;Hello, %s!&quot;</span>, name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong><code>@Command</code></strong>: Now directly used on methods to define a command. The <code>description</code> attribute allows for detailing what the command does.</li>
+<li><strong><code>@Option</code></strong>: Defines the parameters that can be passed to your command, making it flexible and interactive.</li>
+</ul>
+<h3 id="Step-4-Run-and-Interact-with-Your-CLI"><a href="#Step-4-Run-and-Interact-with-Your-CLI" class="headerlink" title="Step 4: Run and Interact with Your CLI"></a>Step 4: Run and Interact with Your CLI</h3><p>To run and interact with your CLI application using the <code>greet</code> command, after launching your application in the terminal, you would execute a command like this:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shell:&gt; greet --name &quot;Spring Shell User&quot;</span><br></pre></td></tr></table></figure>
+
+<p>In response, your CLI should output a personalized greeting, demonstrating the command’s functionality:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello, Spring Shell User!</span><br></pre></td></tr></table></figure>
+
+<p>This simple interaction showcases how users can execute commands and pass options to them, providing a straightforward example of the application’s capabilities.</p>
+<h3 id="Explaining-the-Example-Program"><a href="#Explaining-the-Example-Program" class="headerlink" title="Explaining the Example Program"></a>Explaining the Example Program</h3><p>The example program introduces a <code>ProjectGenerator</code> class that leverages Spring Shell to create an interactive CLI application. Key annotations include:</p>
+<ul>
+<li><strong><code>@Command</code></strong>: Marks the class for command discovery by Spring Shell, with a specific method <code>generator</code> defined to execute as a CLI command.</li>
+</ul>
+<p>The <code>generator</code> method uses <code>@Option</code> annotations to define various parameters like <code>buildTool</code>, <code>groupId</code>, and others, allowing users to input these values when running the command. It showcases interactive prompts for collecting user input directly from the CLI, employing helper methods such as <code>promptForBuildTool</code> and <code>promptForInput</code> to facilitate user choices or text input.</p>
+<h3 id="Interactive-Implementation-Explained"><a href="#Interactive-Implementation-Explained" class="headerlink" title="Interactive Implementation Explained"></a>Interactive Implementation Explained</h3><p>Interactive features in Spring Shell are highlighted through methods like <code>selectFromOptions</code> and <code>promptForInput</code>, which guide users through inputting necessary details. These methods leverage Spring Shell components like <code>SingleItemSelector</code> for option selection and <code>StringInput</code> for text inputs, demonstrating an engaging user experience by requesting additional information as needed.</p>
+<p>This program exemplifies the flexibility and user-friendly nature of Spring Shell for building CLI tools that require detailed user input, showing how developers can implement complex input logic in a structured and interactive way.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Command</span></span><br><span class="line"><span class="meta">@RequiredArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProjectGenerator</span> <span class="keyword">extends</span> <span class="title class_">AbstractShellComponent</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> GeneratorMapper generatorMapper;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> ProjectService projectService;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Command(command = &#123; &quot;generator&quot; &#125;)</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">generator</span><span class="params">(</span></span><br><span class="line"><span class="params">    <span class="meta">@Option(longNames = &quot;buildTool&quot;)</span> BuildToolEnum buildToolEnum,</span></span><br><span class="line"><span class="params">    <span class="meta">@Option(longNames = &quot;groupId&quot;)</span> String groupId,</span></span><br><span class="line"><span class="params">    <span class="meta">@Option(longNames = &quot;artifactId&quot;)</span> String artifactId,</span></span><br><span class="line"><span class="params">    <span class="meta">@Option(longNames = &quot;name&quot;)</span> String name,</span></span><br><span class="line"><span class="params">    <span class="meta">@Option(longNames = &quot;description&quot;)</span> String description,</span></span><br><span class="line"><span class="params">    <span class="meta">@Option(longNames = &quot;packageName&quot;)</span> String packageName,</span></span><br><span class="line"><span class="params">    <span class="meta">@Option(longNames = &quot;jvmVersion&quot;)</span> String jvmVersion,</span></span><br><span class="line"><span class="params">    <span class="meta">@Option(longNames = &quot;openapiFilePath&quot;)</span> String openapiFilePath,</span></span><br><span class="line"><span class="params">    <span class="meta">@Option(longNames = &quot;dbUrl&quot;)</span> String dbUrl,</span></span><br><span class="line"><span class="params">    <span class="meta">@Option(longNames = &quot;dbUsername&quot;)</span> String dbUsername,</span></span><br><span class="line"><span class="params">    <span class="meta">@Option(longNames = &quot;dbPassword&quot;)</span> String dbPassword,</span></span><br><span class="line"><span class="params">    <span class="meta">@Option(longNames = &quot;runtime&quot;)</span> RuntimeEnum runtimeEnum</span></span><br><span class="line"><span class="params">  )</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (ObjectUtils.isEmpty(buildToolEnum)) &#123;</span><br><span class="line">      <span class="type">String</span> <span class="variable">buildToolStr</span> <span class="operator">=</span> <span class="built_in">this</span>.promptForBuildTool();</span><br><span class="line">      buildToolEnum = BuildToolEnum.valueOf(buildToolStr.toUpperCase());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    groupId = StringUtils.hasText(groupId)</span><br><span class="line">      ? groupId</span><br><span class="line">      : promptForInput(<span class="string">&quot;Please enter group id&quot;</span>, <span class="string">&quot;com.example&quot;</span>);</span><br><span class="line">    artifactId = StringUtils.hasText(artifactId)</span><br><span class="line">      ? artifactId</span><br><span class="line">      : promptForInput(<span class="string">&quot;Please enter artifact id&quot;</span>, <span class="string">&quot;demo&quot;</span>);</span><br><span class="line">    name = StringUtils.hasText(name)</span><br><span class="line">      ? name</span><br><span class="line">      : promptForInput(<span class="string">&quot;Please enter project name&quot;</span>, <span class="string">&quot;demo&quot;</span>);</span><br><span class="line">    description = StringUtils.hasText(description)</span><br><span class="line">      ? description</span><br><span class="line">      : promptForInput(</span><br><span class="line">        <span class="string">&quot;Please enter project description&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Demo project for Spring Boot&quot;</span></span><br><span class="line">      );</span><br><span class="line">    packageName = StringUtils.hasText(packageName)</span><br><span class="line">      ? packageName</span><br><span class="line">      : promptForInput(<span class="string">&quot;Please enter package name&quot;</span>, <span class="string">&quot;com.example.demo&quot;</span>);</span><br><span class="line">    jvmVersion = StringUtils.hasText(jvmVersion)</span><br><span class="line">      ? jvmVersion</span><br><span class="line">      : promptForJvmVersion();</span><br><span class="line">    openapiFilePath = StringUtils.hasText(openapiFilePath)</span><br><span class="line">      ? openapiFilePath</span><br><span class="line">      : promptForInput(</span><br><span class="line">        <span class="string">&quot;Please enter OpenAPI file path&quot;</span>,</span><br><span class="line">        <span class="string">&quot;/path/to/openapi.yaml&quot;</span></span><br><span class="line">      );</span><br><span class="line">    dbUrl = StringUtils.hasText(dbUrl)</span><br><span class="line">      ? dbUrl</span><br><span class="line">      : promptForInput(</span><br><span class="line">        <span class="string">&quot;Please enter database URL&quot;</span>,</span><br><span class="line">        <span class="string">&quot;jdbc:postgresql://localhost:5432/mydatabase&quot;</span></span><br><span class="line">      );</span><br><span class="line">    dbUsername = StringUtils.hasText(dbUsername)</span><br><span class="line">      ? dbUsername</span><br><span class="line">      : promptForInput(<span class="string">&quot;Please enter database username&quot;</span>, <span class="string">&quot;myuser&quot;</span>);</span><br><span class="line">    dbPassword = StringUtils.hasText(dbPassword)</span><br><span class="line">      ? dbPassword</span><br><span class="line">      : promptForSecretInput(<span class="string">&quot;Please enter database password&quot;</span>, <span class="string">&quot;secret&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (ObjectUtils.isEmpty(runtimeEnum)) &#123;</span><br><span class="line">      <span class="type">String</span> <span class="variable">runtimeStr</span> <span class="operator">=</span> promptForRuntime();</span><br><span class="line">      runtimeEnum = RuntimeEnum.valueOf(runtimeStr.toUpperCase());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">CreateProjectCommand</span> <span class="variable">createProjectCommand</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="type">Path</span> <span class="variable">projectTempPath</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="type">Path</span> <span class="variable">userDirectoryPath</span> <span class="operator">=</span> Paths.get(<span class="string">&quot;&quot;</span>);</span><br><span class="line">      projectTempPath = userDirectoryPath.resolve(</span><br><span class="line">        Path.of(name + <span class="string">&quot;-&quot;</span> + <span class="keyword">new</span> <span class="title class_">Random</span>().nextInt(<span class="number">1000</span>))</span><br><span class="line">      );</span><br><span class="line"></span><br><span class="line">      createProjectCommand = generatorMapper.toCreateProjectCommand(</span><br><span class="line">        projectTempPath,</span><br><span class="line">        buildToolEnum,</span><br><span class="line">        groupId,</span><br><span class="line">        artifactId,</span><br><span class="line">        name,</span><br><span class="line">        description,</span><br><span class="line">        packageName,</span><br><span class="line">        jvmVersion,</span><br><span class="line">        openapiFilePath,</span><br><span class="line">        dbUrl,</span><br><span class="line">        dbUsername,</span><br><span class="line">        dbPassword,</span><br><span class="line">        runtimeEnum</span><br><span class="line">      );</span><br><span class="line">      projectService.create(createProjectCommand);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">      log.error(<span class="string">&quot;&quot;</span>, e);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> String <span class="title function_">promptForBuildTool</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> selectFromOptions(</span><br><span class="line">      <span class="string">&quot;Please choose a build tool&quot;</span>,</span><br><span class="line">      List.of(<span class="string">&quot;Gradle&quot;</span>, <span class="string">&quot;Maven&quot;</span>),</span><br><span class="line">      <span class="string">&quot;Gradle&quot;</span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> String <span class="title function_">promptForRuntime</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> selectFromOptions(</span><br><span class="line">      <span class="string">&quot;Please choose a runtime environment&quot;</span>,</span><br><span class="line">      List.of(<span class="string">&quot;CloudRun&quot;</span>, <span class="string">&quot;Kubernetes&quot;</span>),</span><br><span class="line">      <span class="string">&quot;CloudRun&quot;</span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> String <span class="title function_">promptForJvmVersion</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> selectFromOptions(</span><br><span class="line">      <span class="string">&quot;Please choose a Java version&quot;</span>,</span><br><span class="line">      List.of(<span class="string">&quot;17&quot;</span>),</span><br><span class="line">      <span class="string">&quot;17&quot;</span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> String <span class="title function_">selectFromOptions</span><span class="params">(</span></span><br><span class="line"><span class="params">    String prompt,</span></span><br><span class="line"><span class="params">    List&lt;String&gt; options,</span></span><br><span class="line"><span class="params">    String defaultValue</span></span><br><span class="line"><span class="params">  )</span> &#123;</span><br><span class="line">    List&lt;SelectorItem&lt;String&gt;&gt; items = options</span><br><span class="line">      .stream()</span><br><span class="line">      .map(option -&gt; SelectorItem.of(option, option.toUpperCase()))</span><br><span class="line">      .collect(Collectors.toList());</span><br><span class="line"></span><br><span class="line">    SingleItemSelector&lt;String, SelectorItem&lt;String&gt;&gt; selector =</span><br><span class="line">      <span class="keyword">new</span> <span class="title class_">SingleItemSelector</span>&lt;&gt;(getTerminal(), items, prompt, <span class="literal">null</span>);</span><br><span class="line">    configureComponent(selector);</span><br><span class="line">    SingleItemSelectorContext&lt;String, SelectorItem&lt;String&gt;&gt; context =</span><br><span class="line">      selector.run(SingleItemSelectorContext.empty());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> context</span><br><span class="line">      .getResultItem()</span><br><span class="line">      .map(SelectorItem::getItem)</span><br><span class="line">      .orElse(defaultValue);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> String <span class="title function_">promptForInput</span><span class="params">(String prompt, String defaultValue)</span> &#123;</span><br><span class="line">    <span class="type">StringInput</span> <span class="variable">input</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringInput</span>(getTerminal(), prompt, defaultValue);</span><br><span class="line">    configureComponent(input);</span><br><span class="line">    <span class="type">StringInputContext</span> <span class="variable">context</span> <span class="operator">=</span> input.run(StringInputContext.empty());</span><br><span class="line">    <span class="keyword">return</span> context.getResultValue();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> String <span class="title function_">promptForSecretInput</span><span class="params">(String prompt, String defaultValue)</span> &#123;</span><br><span class="line">    <span class="type">StringInput</span> <span class="variable">input</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringInput</span>(getTerminal(), prompt, defaultValue);</span><br><span class="line">    input.setMaskCharacter(<span class="string">&#x27;*&#x27;</span>);</span><br><span class="line">    configureComponent(input);</span><br><span class="line">    <span class="type">StringInputContext</span> <span class="variable">context</span> <span class="operator">=</span> input.run(StringInputContext.empty());</span><br><span class="line">    <span class="keyword">return</span> context.getResultValue();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">configureComponent</span><span class="params">(</span></span><br><span class="line"><span class="params">    SingleItemSelector&lt;String, SelectorItem&lt;String&gt;&gt; component</span></span><br><span class="line"><span class="params">  )</span> &#123;</span><br><span class="line">    component.setResourceLoader(getResourceLoader());</span><br><span class="line">    component.setTemplateExecutor(getTemplateExecutor());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">configureComponent</span><span class="params">(StringInput component)</span> &#123;</span><br><span class="line">    component.setResourceLoader(getResourceLoader());</span><br><span class="line">    component.setTemplateExecutor(getTemplateExecutor());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>Exploring Spring Shell through the <code>ProjectGenerator</code> example offers a glimpse into building interactive CLI applications with Java. By harnessing annotations like <code>@Command</code> and <code>@Option</code>, coupled with interactive prompts, developers can create sophisticated, user-friendly command-line interfaces. This guide underscores Spring Shell’s capability to elevate CLI tool development, making it accessible even for beginners in the Java ecosystem.</p>
+<h3 id="Further-Reading"><a href="#Further-Reading" class="headerlink" title="Further Reading"></a>Further Reading</h3><p>To deepen your understanding of Spring Shell and explore more advanced features, the following resources are invaluable:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://spring.io/projects/spring-shell">Developing CLI Applications with Spring Shell</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.baeldung.com/spring-shell-cli">Baeldung on Spring Shell</a></li>
+<li><a target="_blank" rel="noopener" href="https://wearenotch.com/developing-cli-application-with-spring-shell-part-1/">Developing CLI Application with Spring Shell (part 1)</a></li>
+<li><a target="_blank" rel="noopener" href="https://dev.to/noelopez/spring-shell-build-cli-apps-2l1o">Spring Shell - Build CLI apps</a></li>
+</ul>
+<p><img src="https://i.imgur.com/0Upmfep.jpeg" alt="cover"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>Sam Zhu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.samzhu.dev/2024/03/21/Unlocking-the-Power-of-Spring-Shell-A-Guide-for-Beginners/" title="Unlocking the Power of Spring Shell: A Guide for Beginners">https://blog.samzhu.dev/2024/03/21/Unlocking-the-Power-of-Spring-Shell-A-Guide-for-Beginners/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Spring-Shell/" rel="tag"># Spring Shell</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/03/21/Unleashing-the-Power-of-Spring-Native-and-AOT/" rel="prev" title="Unleashing the Power of Spring Native and AOT">
+                  <i class="fa fa-angle-left"></i> Unleashing the Power of Spring Native and AOT
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/04/07/Building-AI-Applications-with-Spring-AI-1-Your-First-Prompt/" rel="next" title="Building AI Applications with Spring AI(1): Your First Prompt">
+                  Building AI Applications with Spring AI(1): Your First Prompt <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sam Zhu</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/samzhu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.3.0/mermaid.min.js","integrity":"sha256-9y71g5Lz/KLsHjB8uXwnkuWDtAMDSzD/HdIbqhJfTAI="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

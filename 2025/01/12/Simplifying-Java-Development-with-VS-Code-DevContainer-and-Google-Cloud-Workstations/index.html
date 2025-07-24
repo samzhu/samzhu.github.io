@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.samzhu.dev","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Developers often face challenges in setting up consistent and reliable environments across teams. With the rapid pace of technological advancement, tools like VS Code DevContainer and Google Cloud Wor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Simplifying Java Development with VS Code DevContainer and Google Cloud Workstations">
+<meta property="og:url" content="https://blog.samzhu.dev/2025/01/12/Simplifying-Java-Development-with-VS-Code-DevContainer-and-Google-Cloud-Workstations/index.html">
+<meta property="og:site_name" content="Sam&#39;s programming note">
+<meta property="og:description" content="Developers often face challenges in setting up consistent and reliable environments across teams. With the rapid pace of technological advancement, tools like VS Code DevContainer and Google Cloud Wor">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.imgur.com/HEXuM7H.jpeg">
+<meta property="og:image" content="https://i.imgur.com/7TvWtNM.jpeg">
+<meta property="og:image" content="https://i.imgur.com/OaY9fEV.jpeg">
+<meta property="og:image" content="https://i.imgur.com/0NLpbYu.jpeg">
+<meta property="og:image" content="https://i.imgur.com/EuoyYBn.jpeg">
+<meta property="og:image" content="https://i.imgur.com/Cm9AlqS.jpeg">
+<meta property="og:image" content="https://i.imgur.com/ysfwalx.jpeg">
+<meta property="og:image" content="https://i.imgur.com/a4sZ8vL.jpeg">
+<meta property="og:image" content="https://i.imgur.com/jQYJROP.jpeg">
+<meta property="og:image" content="https://i.imgur.com/0LdeXoM.jpeg">
+<meta property="og:image" content="https://i.imgur.com/0LdeXoM.jpeg">
+<meta property="og:image" content="https://i.imgur.com/aIRBfK6.jpeg">
+<meta property="og:image" content="https://i.imgur.com/brAHRWm.jpeg">
+<meta property="og:image" content="https://i.imgur.com/omVzFKR.jpeg">
+<meta property="og:image" content="https://i.imgur.com/n17kMEO.jpeg">
+<meta property="og:image" content="https://i.imgur.com/wrHv4hx.jpeg">
+<meta property="article:published_time" content="2025-01-12T14:16:18.000Z">
+<meta property="article:modified_time" content="2025-07-24T15:41:45.585Z">
+<meta property="article:author" content="Sam Zhu">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="DevContainer">
+<meta property="article:tag" content="Google Cloud Workstations">
+<meta property="article:tag" content="Development Environment">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/HEXuM7H.jpeg">
+<meta name="twitter:creator" content="@samzhu0318">
+
+
+<link rel="canonical" href="https://blog.samzhu.dev/2025/01/12/Simplifying-Java-Development-with-VS-Code-DevContainer-and-Google-Cloud-Workstations/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.samzhu.dev/2025/01/12/Simplifying-Java-Development-with-VS-Code-DevContainer-and-Google-Cloud-Workstations/","path":"2025/01/12/Simplifying-Java-Development-with-VS-Code-DevContainer-and-Google-Cloud-Workstations/","title":"Simplifying Java Development with VS Code DevContainer and Google Cloud Workstations"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Simplifying Java Development with VS Code DevContainer and Google Cloud Workstations | Sam's programming note</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CFLHEYEETG"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-CFLHEYEETG","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<meta name="google-adsense-account" content="ca-pub-5880479202699914">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880479202699914"
+     crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sam's programming note</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%9C%A8-Key-Features"><span class="nav-number">1.</span> <span class="nav-text">✨ Key Features</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Table-of-Contents"><span class="nav-number">2.</span> <span class="nav-text">Table of Contents</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Using-VS-Code-DevContainer"><span class="nav-number">3.</span> <span class="nav-text">Using VS Code DevContainer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Prerequisites"><span class="nav-number">3.1.</span> <span class="nav-text">Prerequisites</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Quick-Start"><span class="nav-number">3.2.</span> <span class="nav-text">Quick Start</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Additional-Information"><span class="nav-number">3.3.</span> <span class="nav-text">Additional Information</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Using-Google-Cloud-Workstations"><span class="nav-number">4.</span> <span class="nav-text">Using Google Cloud Workstations</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Building-Workstations-Image"><span class="nav-number">4.1.</span> <span class="nav-text">Building Workstations Image</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Setting-up-Workstations-Environment"><span class="nav-number">4.2.</span> <span class="nav-text">Setting up Workstations Environment</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Step-1-Create-a-Workstation-Cluster"><span class="nav-number">4.2.1.</span> <span class="nav-text">Step 1: Create a Workstation Cluster</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Step-2-Create-Workstation-Configuration"><span class="nav-number">4.2.2.</span> <span class="nav-text">Step 2: Create Workstation Configuration</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Step-3-Create-a-Workstation"><span class="nav-number">4.2.3.</span> <span class="nav-text">Step 3: Create a Workstation</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-Your-Workstation"><span class="nav-number">4.3.</span> <span class="nav-text">Using Your Workstation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gemini-Code-Assistant"><span class="nav-number">4.4.</span> <span class="nav-text">Gemini Code Assistant</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Quick-Install-Git-Hooks"><span class="nav-number">4.5.</span> <span class="nav-text">Quick Install Git Hooks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Creating-a-Spring-Boot-Project"><span class="nav-number">4.6.</span> <span class="nav-text">Creating a Spring Boot Project</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Additional-Spring-CLI-Commands"><span class="nav-number">4.6.1.</span> <span class="nav-text">Additional Spring CLI Commands</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sam Zhu"
+      src="https://i.imgur.com/eLloI4N.png">
+  <p class="site-author-name" itemprop="name">Sam Zhu</p>
+  <div class="site-description" itemprop="description">Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">74</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/samzhu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;samzhu" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/samzhu0318" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;samzhu0318" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.samzhu.dev/2025/01/12/Simplifying-Java-Development-with-VS-Code-DevContainer-and-Google-Cloud-Workstations/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.imgur.com/eLloI4N.png">
+      <meta itemprop="name" content="Sam Zhu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sam's programming note">
+      <meta itemprop="description" content="Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Simplifying Java Development with VS Code DevContainer and Google Cloud Workstations | Sam's programming note">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Simplifying Java Development with VS Code DevContainer and Google Cloud Workstations
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-01-12 22:16:18" itemprop="dateCreated datePublished" datetime="2025-01-12T22:16:18+08:00">2025-01-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-07-24 23:41:45" itemprop="dateModified" datetime="2025-07-24T23:41:45+08:00">2025-07-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Developers often face challenges in setting up consistent and reliable environments across teams. With the rapid pace of technological advancement, tools like VS Code DevContainer and Google Cloud Workstations have become invaluable in standardizing development setups. This guide walks you through creating a robust Java development environment tailored to modern needs.</p>
+<p>All configurations and scripts mentioned in this post are available in the <a target="_blank" rel="noopener" href="https://github.com/samzhu/java-dev-env-template">Java Development Environment Template repository</a>. Feel free to explore and adapt it to your needs.</p>
+<span id="more"></span>
+
+<h2 id="✨-Key-Features"><a href="#✨-Key-Features" class="headerlink" title="✨ Key Features"></a>✨ Key Features</h2><ul>
+<li>Java 21 (Liberica JDK)</li>
+<li>VS Code DevContainer support</li>
+<li>Google Cloud Workstations integration</li>
+<li>Git hooks for automated code formatting</li>
+<li>Pre-configured development tools</li>
+<li>Ready-to-use development setup</li>
+</ul>
+<h2 id="Table-of-Contents"><a href="#Table-of-Contents" class="headerlink" title="Table of Contents"></a>Table of Contents</h2><ul>
+<li><a href="#using-vs-code-devcontainer">Using VS Code DevContainer</a></li>
+<li><a href="#using-google-cloud-workstations">Using Google Cloud Workstations</a></li>
+</ul>
+<h2 id="Using-VS-Code-DevContainer"><a href="#Using-VS-Code-DevContainer" class="headerlink" title="Using VS Code DevContainer"></a>Using VS Code DevContainer</h2><h3 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://code.visualstudio.com/">Visual Studio Code</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.docker.com/products/docker-desktop/">Docker Desktop</a></li>
+<li>VS Code Extension:<ul>
+<li><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack">Remote Development</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h3><ol>
+<li>Copy the .devcontainer directory</li>
+<li>Ensure Docker Desktop is running</li>
+<li>Open the project directory in VS Code</li>
+<li>VS Code will detect the <code>.devcontainer</code> directory and prompt to reopen the project in container</li>
+<li>Click <strong>“Reopen in Container”</strong> in the bottom-right corner or click the green button <strong>“&gt;&lt;”</strong> in the bottom-left corner and select <strong>“Reopen in Container”</strong></li>
+</ol>
+<h3 id="Additional-Information"><a href="#Additional-Information" class="headerlink" title="Additional Information"></a>Additional Information</h3><p>The development container provides:</p>
+<ul>
+<li>Pre-installed Java 21 (Liberica JDK)</li>
+<li>VS Code extensions for Java development</li>
+</ul>
+<p>After container creation, the following setup is automatically performed:</p>
+<ol>
+<li>Installation of Google Java Formatter</li>
+<li>Configuration of Git Hooks</li>
+</ol>
+<p>Note: Git configurations are automatically synchronized from the host machine to the container (Mac)</p>
+<h2 id="Using-Google-Cloud-Workstations"><a href="#Using-Google-Cloud-Workstations" class="headerlink" title="Using Google Cloud Workstations"></a>Using Google Cloud Workstations</h2><h3 id="Building-Workstations-Image"><a href="#Building-Workstations-Image" class="headerlink" title="Building Workstations Image"></a>Building Workstations Image</h3><p>Open <code>workstations/cloudbuild.yaml</code> and modify the following variables:</p>
+<ul>
+<li><code>_PROJECT_ID</code>: Your GCP project ID</li>
+<li><code>_REPOSITORY_NAME</code>: Your Artifact Registry repository name</li>
+<li><code>_IMAGE_NAME</code>: Your Workstations image name</li>
+<li><code>_IMAGE_TAG</code>: Your Workstations image version</li>
+</ul>
+<p>Then run the following commands:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PROJECT_ID=&#123;Your GCP project ID&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> workstations</span><br><span class="line">gcloud builds submit --config=cloudbuild.yaml --project=<span class="variable">$&#123;PROJECT_ID&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>This will build and push a Docker image with pre-installed Java 21 environment to Artifact Registry.</p>
+<h3 id="Setting-up-Workstations-Environment"><a href="#Setting-up-Workstations-Environment" class="headerlink" title="Setting up Workstations Environment"></a>Setting up Workstations Environment</h3><h4 id="Step-1-Create-a-Workstation-Cluster"><a href="#Step-1-Create-a-Workstation-Cluster" class="headerlink" title="Step 1: Create a Workstation Cluster"></a>Step 1: Create a Workstation Cluster</h4><p>Navigate to Google Cloud Workstations page, select Cluster Manager, and create a Workstation Cluster.</p>
+<p><img src="https://i.imgur.com/HEXuM7H.jpeg" alt="Cluster Manager"></p>
+<p><img src="https://i.imgur.com/7TvWtNM.jpeg" alt="Create Workstation Cluster"></p>
+<p>After creation is complete:</p>
+<p><img src="https://i.imgur.com/OaY9fEV.jpeg" alt="Workstation Cluster"></p>
+<p>Next, select Workstation Configurations:</p>
+<p><img src="https://i.imgur.com/0NLpbYu.jpeg" alt="Workstation Configurations"></p>
+<h4 id="Step-2-Create-Workstation-Configuration"><a href="#Step-2-Create-Workstation-Configuration" class="headerlink" title="Step 2: Create Workstation Configuration"></a>Step 2: Create Workstation Configuration</h4><ol>
+<li><p>Basic Information</p>
+<ul>
+<li>Name: <code>config-spring</code></li>
+<li>Select your created cluster</li>
+<li>Quick start: Disabled (recommended for lower costs)</li>
+</ul>
+</li>
+<li><p>Labels and Tags</p>
+<ul>
+<li>Labels: Add labels to categorize and manage resources</li>
+<li>Tags: Add tags to categorize and manage resources</li>
+</ul>
+</li>
+</ol>
+<p><img src="https://i.imgur.com/EuoyYBn.jpeg" alt="Basic Information"></p>
+<ol start="3">
+<li>Machine Configuration<ul>
+<li>Series: Choose based on your needs:<ul>
+<li>N2: Recommended for development</li>
+<li>E2: Cost-optimized general purpose workloads</li>
+<li>T2D: AMD-based alternative with good price&#x2F;performance ratio</li>
+</ul>
+</li>
+<li>Machine type: Select based on your development requirements:<ul>
+<li>n2-standard-2 (2 vCPU, 8 GB memory): Light development</li>
+<li>n2-standard-4 (4 vCPU, 16 GB memory): Standard development</li>
+<li>n2-standard-8 (8 vCPU, 32 GB memory): Heavy development</li>
+</ul>
+</li>
+<li>Zones: asia-east1-a and asia-east1-c</li>
+<li>Auto-sleep: After 2 hours of inactivity (recommended for cost savings)</li>
+</ul>
+</li>
+</ol>
+<p>Note: Cost estimate for n2-standard-4 (asia-east1)</p>
+<ul>
+<li>Hourly rate: $0.224904</li>
+<li>Daily usage: 9 hours</li>
+<li>Monthly working days: 20 days</li>
+<li>Monthly cost estimate: $0.224904 × 9 × 20 &#x3D; ~$40.48</li>
+</ul>
+<p>Cost saving tips:</p>
+<ol>
+<li>Use Auto-sleep feature</li>
+<li>Stop workstation when not in use</li>
+</ol>
+<p><img src="https://i.imgur.com/Cm9AlqS.jpeg" alt="Machine Settings"></p>
+<ol>
+<li>Environment Settings<ul>
+<li>Container image: Custom container image</li>
+<li>Container image URL: <code>asia-east1-docker.pkg.dev/$&#123;PROJECT_ID&#125;/$&#123;REPOSITORY_NAME&#125;/$&#123;IMAGE_NAME&#125;:$&#123;IMAGE_TAG&#125;</code></li>
+<li>Service account: Compute Engine default service account</li>
+<li>Storage: Create new empty persistent disk</li>
+<li>Disk type: Balanced</li>
+</ul>
+</li>
+</ol>
+<p><img src="https://i.imgur.com/ysfwalx.jpeg" alt="Environment Settings"></p>
+<ol>
+<li>Access Control<ul>
+<li>Users and permissions: Users can create workstations through the console</li>
+<li>Add authorized users or groups as needed</li>
+<li>Keep Advanced options as default</li>
+</ul>
+</li>
+</ol>
+<p><img src="https://i.imgur.com/a4sZ8vL.jpeg" alt="Users and Permissions"></p>
+<p>Click CREATE to complete the configuration:</p>
+<p><img src="https://i.imgur.com/jQYJROP.jpeg" alt="Workstation Configurations"></p>
+<h4 id="Step-3-Create-a-Workstation"><a href="#Step-3-Create-a-Workstation" class="headerlink" title="Step 3: Create a Workstation"></a>Step 3: Create a Workstation</h4><p>Navigate to the Workstations page:</p>
+<p><img src="https://i.imgur.com/0LdeXoM.jpeg" alt="Workstations"></p>
+<p>Click CREATE WORKSTATION and configure the following:</p>
+<p><img src="https://i.imgur.com/0LdeXoM.jpeg" alt="Create Workstation"></p>
+<p>Configure the following settings:</p>
+<ul>
+<li>Name: (e.g., w-samzhucn480th9v)</li>
+<li>Display Name: (e.g., sam)</li>
+<li>Configuration: Select your created configuration (e.g., config-spring)</li>
+</ul>
+<p><img src="https://i.imgur.com/aIRBfK6.jpeg" alt="Create Workstation"></p>
+<p>After creation, your workstation will appear:</p>
+<p><img src="https://i.imgur.com/brAHRWm.jpeg" alt="your Workstation"></p>
+<h3 id="Using-Your-Workstation"><a href="#Using-Your-Workstation" class="headerlink" title="Using Your Workstation"></a>Using Your Workstation</h3><p>Start your workstation and click the Launch button to access it:</p>
+<p><img src="https://i.imgur.com/omVzFKR.jpeg" alt="Launch Workstation"></p>
+<p>The environment comes pre-configured with Java 21, Google Java Format tool, and predefined extensions:</p>
+<p><img src="https://i.imgur.com/n17kMEO.jpeg" alt="Workstation Environment"></p>
+<h3 id="Gemini-Code-Assistant"><a href="#Gemini-Code-Assistant" class="headerlink" title="Gemini Code Assistant"></a>Gemini Code Assistant</h3><p>You can also enable Gemini Code Assistant to help with development:</p>
+<p><img src="https://i.imgur.com/wrHv4hx.jpeg" alt="Gemini Code Assistant"></p>
+<p>Your development environment is now ready for Java development with all necessary tools and extensions installed.</p>
+<h3 id="Quick-Install-Git-Hooks"><a href="#Quick-Install-Git-Hooks" class="headerlink" title="Quick Install Git Hooks"></a>Quick Install Git Hooks</h3><p>Run the following command to install Git Hooks. This will automatically configure the pre-commit hook for Java code formatting:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://raw.githubusercontent.com/samzhu/java-dev-env-template/main/workstations/install-java-format-hooks.sh | bash</span><br></pre></td></tr></table></figure>
+
+<h3 id="Creating-a-Spring-Boot-Project"><a href="#Creating-a-Spring-Boot-Project" class="headerlink" title="Creating a Spring Boot Project"></a>Creating a Spring Boot Project</h3><p><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/cli/using-the-cli.html">Spring Boot CLI</a> is pre-installed in the environment for quick project creation.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> workspace &amp;&amp; <span class="built_in">cd</span> workspace</span><br><span class="line"></span><br><span class="line">spring init --java-version=21 --dependencies=web,actuator sample-app.zip</span><br><span class="line"></span><br><span class="line">unzip sample-app.zip -d sample-app</span><br></pre></td></tr></table></figure>
+
+<p>After extraction, open the <code>sample-app</code> directory in VS Code to start developing your Spring Boot application.</p>
+<h4 id="Additional-Spring-CLI-Commands"><a href="#Additional-Spring-CLI-Commands" class="headerlink" title="Additional Spring CLI Commands"></a>Additional Spring CLI Commands</h4><p>Use <code>spring init --list</code> to view all available options:</p>
+<ul>
+<li>Dependencies: View all supported dependencies</li>
+<li>Java versions: Check supported Java versions</li>
+<li>Project types: See available project types</li>
+<li>Packaging options: JAR or WAR</li>
+<li>Language options: Java, Kotlin, or Groovy</li>
+</ul>
+<p>You can type spring help to get more details <code>spring help init</code>.</p>
+<p>Common usage examples:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create a Gradle project with Java</span></span><br><span class="line">spring init --<span class="built_in">type</span>=gradle-project \</span><br><span class="line">            --java-version=21 \</span><br><span class="line">            --dependencies=web,data-jpa \</span><br><span class="line">            my-gradle-app.zip</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create a project with custom name and description</span></span><br><span class="line">spring init --name=MyApp \</span><br><span class="line">            --description=<span class="string">&quot;My Spring Boot Application&quot;</span> \</span><br><span class="line">            --package=com.example.myapp \</span><br><span class="line">            custom-app.zip</span><br><span class="line"></span><br><span class="line"><span class="comment"># Common Spring Boot Dependencies</span></span><br><span class="line">spring init --<span class="built_in">type</span>=gradle-project \</span><br><span class="line">            --language=java \</span><br><span class="line">            --boot-version=3.4.1 \</span><br><span class="line">            --packaging=jar \</span><br><span class="line">            --java-version=21 \</span><br><span class="line">            --groupId=com.example \</span><br><span class="line">            --artifactId=demo \</span><br><span class="line">            --name=demo \</span><br><span class="line">            --description=<span class="string">&quot;Demo project for Spring Boot&quot;</span> \</span><br><span class="line">            --package-name=com.example.demo \</span><br><span class="line">            --dependencies=devtools,lombok,configuration-processor,docker-compose,web,oauth2-client,postgresql,data-jpa,batch,validation,actuator,sbom-cyclone-dx,otlp-metrics,cloud-resilience4j,cloud-feign,prometheus,distributed-tracing,testcontainers \</span><br><span class="line">            demo.zip</span><br></pre></td></tr></table></figure>
+
+<p>Common Dependencies Explained</p>
+<ul>
+<li>web: Web application development with Spring MVC and embedded Tomcat</li>
+<li>devtools: Development tools including automatic restart and live reload</li>
+<li>lombok: Annotation-based code generator to reduce boilerplate</li>
+<li>configuration-processor: Metadata generation for custom configuration properties</li>
+<li>docker-compose: Integration with Docker Compose for container orchestration</li>
+<li>oauth2-client: OAuth 2.0 client support for authentication</li>
+<li>postgresql: PostgreSQL JDBC driver and database connectivity</li>
+<li>data-jpa: JPA data persistence with Hibernate</li>
+<li>batch: Batch processing framework for enterprise applications</li>
+<li>validation: Bean validation using Hibernate Validator</li>
+<li>actuator: Production-ready features for monitoring and management</li>
+<li>sbom-cyclone-dx: CycloneDX SBOM format for software supply chain security</li>
+<li>otlp-metrics: OpenTelemetry protocol support for metrics export</li>
+<li>cloud-resilience4j: Circuit breaker and fault tolerance patterns</li>
+<li>cloud-feign: Declarative REST client with Netflix Feign</li>
+<li>prometheus: Prometheus metrics collection and monitoring</li>
+<li>distributed-tracing: Distributed tracing with OpenTelemetry</li>
+<li>testcontainers: Container-based integration testing framework</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>Sam Zhu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.samzhu.dev/2025/01/12/Simplifying-Java-Development-with-VS-Code-DevContainer-and-Google-Cloud-Workstations/" title="Simplifying Java Development with VS Code DevContainer and Google Cloud Workstations">https://blog.samzhu.dev/2025/01/12/Simplifying-Java-Development-with-VS-Code-DevContainer-and-Google-Cloud-Workstations/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/DevContainer/" rel="tag"># DevContainer</a>
+              <a href="/tags/Google-Cloud-Workstations/" rel="tag"># Google Cloud Workstations</a>
+              <a href="/tags/Development-Environment/" rel="tag"># Development Environment</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/11/18/Vben-Admin-Extending-with-Vue-Flow-for-Advanced-Flow-Editing/" rel="prev" title="Vben Admin: Extending with Vue Flow for Advanced Flow Editing">
+                  <i class="fa fa-angle-left"></i> Vben Admin: Extending with Vue Flow for Advanced Flow Editing
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/02/08/Spring-AI-with-Gemini-API-Easy-Onboarding-via-OpenAI-Compatibility/" rel="next" title="Spring AI with Gemini API: Easy Onboarding via OpenAI Compatibility">
+                  Spring AI with Gemini API: Easy Onboarding via OpenAI Compatibility <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sam Zhu</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/samzhu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.3.0/mermaid.min.js","integrity":"sha256-9y71g5Lz/KLsHjB8uXwnkuWDtAMDSzD/HdIbqhJfTAI="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

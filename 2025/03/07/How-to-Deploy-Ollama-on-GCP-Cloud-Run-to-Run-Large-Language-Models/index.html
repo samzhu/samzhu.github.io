@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.samzhu.dev","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Ollama is an open-source framework that allows you to easily run open-source large language models like Llama 3.3, Mistral, and Gemma 2. Google Cloud Run provides a containerized environment with GPU">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to Deploy Ollama on GCP Cloud Run to Run Large Language Models">
+<meta property="og:url" content="https://blog.samzhu.dev/2025/03/07/How-to-Deploy-Ollama-on-GCP-Cloud-Run-to-Run-Large-Language-Models/index.html">
+<meta property="og:site_name" content="Sam&#39;s programming note">
+<meta property="og:description" content="Ollama is an open-source framework that allows you to easily run open-source large language models like Llama 3.3, Mistral, and Gemma 2. Google Cloud Run provides a containerized environment with GPU">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.imgur.com/rIx115v.jpeg">
+<meta property="og:image" content="https://i.imgur.com/qq4pilV.jpeg">
+<meta property="og:image" content="https://i.imgur.com/itwJg0h.jpeg">
+<meta property="og:image" content="https://i.imgur.com/HxGG2gY.jpeg">
+<meta property="og:image" content="https://i.imgur.com/yFL7emx.jpeg">
+<meta property="og:image" content="https://i.imgur.com/ZkSqvao.jpeg">
+<meta property="og:image" content="https://i.imgur.com/s8nizre.jpeg">
+<meta property="og:image" content="https://i.imgur.com/qrB06nt.jpeg">
+<meta property="og:image" content="https://i.imgur.com/XGMV4hP.jpeg">
+<meta property="og:image" content="https://i.imgur.com/4Q1CFVv.jpeg">
+<meta property="og:image" content="https://i.imgur.com/jDpW4WG.jpeg">
+<meta property="og:image" content="https://i.imgur.com/9sjlXX0.jpeg">
+<meta property="og:image" content="https://i.imgur.com/UZ9i293.jpeg">
+<meta property="og:image" content="https://i.imgur.com/ITfRJfo.jpeg">
+<meta property="og:image" content="https://i.imgur.com/PhqGEdf.jpeg">
+<meta property="og:image" content="https://i.imgur.com/RfZkKlB.jpeg">
+<meta property="og:image" content="https://i.imgur.com/V438m3h.jpeg">
+<meta property="article:published_time" content="2025-03-06T16:50:36.000Z">
+<meta property="article:modified_time" content="2025-07-24T15:41:45.585Z">
+<meta property="article:author" content="Sam Zhu">
+<meta property="article:tag" content="GCP">
+<meta property="article:tag" content="Ollama">
+<meta property="article:tag" content="Cloud Run">
+<meta property="article:tag" content="LLM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/rIx115v.jpeg">
+<meta name="twitter:creator" content="@samzhu0318">
+
+
+<link rel="canonical" href="https://blog.samzhu.dev/2025/03/07/How-to-Deploy-Ollama-on-GCP-Cloud-Run-to-Run-Large-Language-Models/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.samzhu.dev/2025/03/07/How-to-Deploy-Ollama-on-GCP-Cloud-Run-to-Run-Large-Language-Models/","path":"2025/03/07/How-to-Deploy-Ollama-on-GCP-Cloud-Run-to-Run-Large-Language-Models/","title":"How to Deploy Ollama on GCP Cloud Run to Run Large Language Models"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>How to Deploy Ollama on GCP Cloud Run to Run Large Language Models | Sam's programming note</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CFLHEYEETG"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-CFLHEYEETG","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<meta name="google-adsense-account" content="ca-pub-5880479202699914">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880479202699914"
+     crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sam's programming note</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-Use-Cloud-Run"><span class="nav-number">1.</span> <span class="nav-text">Why Use Cloud Run?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Creating-a-GCS-Bucket"><span class="nav-number">2.</span> <span class="nav-text">Creating a GCS Bucket</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Creating-an-ollama-volume-Bucket"><span class="nav-number">2.1.</span> <span class="nav-text">Creating an ollama_volume Bucket</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Preparing-a-Service-Account-with-GCS-Bucket-Access"><span class="nav-number">2.2.</span> <span class="nav-text">Preparing a Service Account with GCS Bucket Access</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deploying-Ollama-on-Google-Cloud-Run"><span class="nav-number">3.</span> <span class="nav-text">Deploying Ollama on Google Cloud Run</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Testing-the-Ollama-Service"><span class="nav-number">4.</span> <span class="nav-text">Testing the Ollama Service</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">5.</span> <span class="nav-text">Conclusion</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sam Zhu"
+      src="https://i.imgur.com/eLloI4N.png">
+  <p class="site-author-name" itemprop="name">Sam Zhu</p>
+  <div class="site-description" itemprop="description">Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">74</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/samzhu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;samzhu" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/samzhu0318" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;samzhu0318" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.samzhu.dev/2025/03/07/How-to-Deploy-Ollama-on-GCP-Cloud-Run-to-Run-Large-Language-Models/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.imgur.com/eLloI4N.png">
+      <meta itemprop="name" content="Sam Zhu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sam's programming note">
+      <meta itemprop="description" content="Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="How to Deploy Ollama on GCP Cloud Run to Run Large Language Models | Sam's programming note">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          How to Deploy Ollama on GCP Cloud Run to Run Large Language Models
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-03-07 00:50:36" itemprop="dateCreated datePublished" datetime="2025-03-07T00:50:36+08:00">2025-03-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-07-24 23:41:45" itemprop="dateModified" datetime="2025-07-24T23:41:45+08:00">2025-07-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Ollama is an open-source framework that allows you to easily run open-source large language models like Llama 3.3, Mistral, and Gemma 2. Google Cloud Run provides a containerized environment with GPU support, making it ideal for deploying AI inference services. This article will guide you through deploying Ollama on Cloud Run.</p>
+<span id="more"></span>
+
+<h2 id="Why-Use-Cloud-Run"><a href="#Why-Use-Cloud-Run" class="headerlink" title="Why Use Cloud Run?"></a>Why Use Cloud Run?</h2><ul>
+<li>GPU acceleration: Supports NVIDIA L4 GPU for faster inference</li>
+<li>Pay-per-use: Serverless operation, you only pay when the service is running</li>
+<li>Auto-scaling: Automatically adjusts the number of instances based on traffic</li>
+<li>Simple management: No need to handle server configuration and maintenance</li>
+</ul>
+<h2 id="Creating-a-GCS-Bucket"><a href="#Creating-a-GCS-Bucket" class="headerlink" title="Creating a GCS Bucket"></a>Creating a GCS Bucket</h2><p>When deploying Ollama on Cloud Run, using a Google Cloud Storage (GCS) bucket is important for several reasons:</p>
+<ol>
+<li>Persistent storage: Cloud Run instances are stateless, and data in the container is lost when instances restart or scale. Using a GCS bucket provides persistent storage to ensure model files aren’t lost.</li>
+<li>Model sharing: Large language model files are typically very large (several GB to tens of GB), and downloading these models takes time. By storing models in a GCS bucket, multiple Cloud Run instances can share the same model files, avoiding duplicate downloads.</li>
+<li>Cost-effectiveness: When Cloud Run scales to multiple instances, if each instance needs to download the model, it consumes significant bandwidth and time. Using a GCS bucket reduces this redundancy and lowers costs.</li>
+<li>Startup time optimization: By pre-storing model files in a GCS bucket, you can significantly reduce the startup time of Cloud Run instances, as instances can directly mount the bucket instead of downloading the model.</li>
+</ol>
+<h3 id="Creating-an-ollama-volume-Bucket"><a href="#Creating-an-ollama-volume-Bucket" class="headerlink" title="Creating an ollama_volume Bucket"></a>Creating an ollama_volume Bucket</h3><p>First, we need to create a GCS bucket to store Ollama’s model files:</p>
+<p>Navigate to the Cloud Storage page in the Google Cloud Console.</p>
+<p>Click the “Create a bucket” button to start creating a new bucket.</p>
+<p>In the “Get Started” section, name your bucket. In our example, we use “ollama_volume” as the bucket name. Remember that GCS bucket names must be globally unique, so you may need to add some unique identifiers.</p>
+<p>Expand the “Optimize storage for data-intensive workloads” option and check the “Enable Hierarchical namespace on this bucket” option. As shown in the image, this option is important for optimizing AI&#x2F;ML workloads, as it provides a filesystem-like hierarchy, supporting atomic folder renames, faster folder listings, and other features that will help optimize LLM access efficiency.</p>
+<p>In the description of “Optimize for AI&#x2F;ML and analytics with a filesystem-like hierarchical structure,” you can see that this permanent option enables enhancements not available in standard buckets.</p>
+<p><img src="https://i.imgur.com/rIx115v.jpeg" alt="bucket name"></p>
+<p>Next, we need to choose the location type and region for the bucket. In the “Choose where to store your data” step:</p>
+<p>In the “Location type” section, select the “Region” (single region) option, which will provide the lowest latency within a single region.<br>From the dropdown menu, select “us-central1 (Iowa)” as the storage region. This is an important choice because:</p>
+<ul>
+<li>It defines the geographic location of the data</li>
+<li>Affects cost, performance, and availability</li>
+<li>Cannot be changed once set</li>
+<li>Should match the region where you plan to deploy your Cloud Run service to reduce latency and optimize performance</li>
+</ul>
+<p><img src="https://i.imgur.com/qq4pilV.jpeg" alt="Location type"></p>
+<p>On the storage class selection page, use the “Standard” option, which is best suited for frequently accessed LLM model files.</p>
+<p><img src="https://i.imgur.com/itwJg0h.jpeg" alt="Storage class"></p>
+<p>On the “Choose how to control access to objects” page, select access control settings:</p>
+<p><img src="https://i.imgur.com/HxGG2gY.jpeg" alt="Access control"></p>
+<p>This page contains two main sections:</p>
+<ul>
+<li>Public access prevention: The “Enforce public access prevention on this bucket” option is checked, which limits data from being publicly accessible</li>
+<li>Access control method: Select the “Uniform” option, which will ensure unified access to all objects using only bucket-level permissions (IAM)</li>
+</ul>
+<p>On the data protection settings page, keep the default data protection options:<br><img src="https://i.imgur.com/yFL7emx.jpeg" alt="Data protection"></p>
+<p>After clicking the “CREATE” button, the system will display a confirmation dialog reminding you about the public access settings for the bucket:</p>
+<p><img src="https://i.imgur.com/ZkSqvao.jpeg" alt="Confirm access"></p>
+<p>Click the “CONFIRM” button to confirm these settings and complete the bucket creation.</p>
+<h3 id="Preparing-a-Service-Account-with-GCS-Bucket-Access"><a href="#Preparing-a-Service-Account-with-GCS-Bucket-Access" class="headerlink" title="Preparing a Service Account with GCS Bucket Access"></a>Preparing a Service Account with GCS Bucket Access</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set environment variables</span></span><br><span class="line">PROJECT_ID=$(gcloud config get-value project)  <span class="comment"># Your current project ID</span></span><br><span class="line">SA_NAME=<span class="string">&quot;ollama-service-account&quot;</span>              <span class="comment"># Service account name</span></span><br><span class="line">SA_DISPLAY_NAME=<span class="string">&quot;Ollama Service Account&quot;</span>      <span class="comment"># Service account display name</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Create service account</span></span><br><span class="line">gcloud iam service-accounts create <span class="variable">$SA_NAME</span> \</span><br><span class="line">  --display-name=<span class="string">&quot;<span class="variable">$SA_DISPLAY_NAME</span>&quot;</span> \</span><br><span class="line">  --project=<span class="variable">$PROJECT_ID</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Get the full service account email address</span></span><br><span class="line">SA_EMAIL=<span class="string">&quot;<span class="variable">$&#123;SA_NAME&#125;</span>@<span class="variable">$&#123;PROJECT_ID&#125;</span>.iam.gserviceaccount.com&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Grant Cloud Run necessary permissions</span></span><br><span class="line">gcloud projects add-iam-policy-binding <span class="variable">$PROJECT_ID</span> \</span><br><span class="line">  --member=<span class="string">&quot;serviceAccount:<span class="variable">$SA_EMAIL</span>&quot;</span> \</span><br><span class="line">  --role=<span class="string">&quot;roles/storage.objectAdmin&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Deploying-Ollama-on-Google-Cloud-Run"><a href="#Deploying-Ollama-on-Google-Cloud-Run" class="headerlink" title="Deploying Ollama on Google Cloud Run"></a>Deploying Ollama on Google Cloud Run</h2><p>After creating the GCS bucket and service account, we can start deploying the Ollama service on Google Cloud Run. First, navigate to the Cloud Run page in the Google Cloud Console:</p>
+<p><img src="https://i.imgur.com/s8nizre.jpeg" alt="Cloud Run page"></p>
+<p>Click the “DEPLOY CONTAINER” button at the top to begin the deployment process. On the deployment page:</p>
+<p><img src="https://i.imgur.com/qrB06nt.jpeg" alt="Deployment page"></p>
+<ol>
+<li>Select “Deploy one revision from an existing container image”</li>
+<li>Enter <code>ollama/ollama:0.5.13</code> in the “Container image URL” field</li>
+<li>Enter <code>ollama</code> in the “Service name” field</li>
+<li>Choose <code>us-central1 (Iowa)</code> for “Region”, ensuring it matches your GCS bucket region</li>
+<li>Select “Require authentication” for “Authentication”, which will provide basic security protection</li>
+</ol>
+<p>In the billing and traffic settings section, configure the following:</p>
+<p><img src="https://i.imgur.com/XGMV4hP.jpeg" alt="Billing and traffic settings"></p>
+<ol>
+<li>Select “Instance-based” for “Billing”, which keeps instances running even when idle</li>
+<li>Choose “Auto scaling” for “Service scaling”</li>
+<li>Set “Minimum number of instances” to 0, so you won’t incur costs when there are no requests</li>
+<li>Select “All” for “Ingress”, allowing direct access to the service from the internet</li>
+</ol>
+<p>These settings allow your Ollama service to scale automatically based on demand while not incurring costs when there’s no traffic, achieving truly serverless deployment.</p>
+<p>Next, you need to link the GCS bucket as a Cloud Run volume. Click the “VOLUMES” tab at the top:</p>
+<p><img src="https://i.imgur.com/4Q1CFVv.jpeg" alt="Volume settings"></p>
+<p>On the volume configuration page:</p>
+<ol>
+<li>Click “New Volume” to expand volume creation options</li>
+<li>Select “Cloud Storage bucket” for “Volume type”</li>
+<li>Enter <code>gcs-1</code> for “Volume name”</li>
+<li>Select the <code>ollama_volume</code> bucket you created earlier for “Bucket”</li>
+<li>Uncheck the “Read-only” option, as Ollama needs to write model files to the bucket</li>
+</ol>
+<p>This step is very important as it mounts the GCS bucket to the Cloud Run service, allowing Ollama to persistently store downloaded model files, avoiding redownloading models each time instances restart.</p>
+<p>Click “DONE” to complete the volume setup, then we need to mount this volume to the container.</p>
+<p>After creating the volume, you need to mount it to the container. Click the “GO TO CONTAINER(S) TAB” button, then select the “VOLUME MOUNTS” tab:</p>
+<p><img src="https://i.imgur.com/jDpW4WG.jpeg" alt="Volume settings"></p>
+<p>On the volume mount configuration page:</p>
+<p><img src="https://i.imgur.com/9sjlXX0.jpeg" alt="Volume mount settings"></p>
+<ol>
+<li>Select the <code>gcs-1</code> volume you created earlier from the “Name” dropdown</li>
+<li>Enter <code>/root/.ollama</code> in the “Mount path” field (note the dot before “ollama”)</li>
+<li>This path is crucial as it’s the default location where Ollama stores model files</li>
+</ol>
+<p>With this setup, when Ollama downloads models, the files will be saved in the GCS bucket rather than the container’s temporary storage. This ensures model files aren’t lost when instances restart or scale, and can be shared across multiple instances, greatly improving efficiency and startup speed.</p>
+<p>Click “DONE” to complete the volume mount setup.</p>
+<p>In the “SECURITY” tab, you need to configure the service account to ensure Ollama can access the GCS bucket:</p>
+<p><img src="https://i.imgur.com/UZ9i293.jpeg" alt="Security settings"></p>
+<p>On the security settings page:</p>
+<ol>
+<li>Select “Ollama Service Account” from the “Service account” dropdown, which is the service account we created earlier</li>
+<li>This service account has been granted <code>storage.objectAdmin</code> permissions, allowing Ollama to read and write to the GCS bucket</li>
+<li>Keep the default “Google-managed encryption key” option for “Encryption”</li>
+</ol>
+<p>Setting the correct service account is a key step in ensuring Ollama can properly access the GCS bucket. Without appropriate permissions, the Cloud Run service won’t be able to read or write model files in the bucket.</p>
+<p>Next, you need to set environment variables for the Ollama container. Click the “VARIABLES &amp; SECRETS” tab:</p>
+<p><img src="https://i.imgur.com/ITfRJfo.jpeg" alt="Environment variables"></p>
+<p>On the environment variables page:</p>
+<ol>
+<li>Enter <code>OLLAMA_HOST</code> in the “Name” field</li>
+<li>Enter <code>0.0.0.0:8080</code> in the “Value” field</li>
+</ol>
+<p>This environment variable is crucial as it tells Ollama to listen for requests on port 8080 in the container, rather than the default port 11434. Cloud Run requires containers to receive requests on port 8080, so this setting is necessary.</p>
+<p>If you need to add more environment variables, you can click the “ADD VARIABLE” button. Click “DONE” after setting up the environment variables to continue to the next configuration step.</p>
+<p>Next, you need to set up appropriate computing resources for the Ollama container. Click the “SETTINGS” tab and configure the “Resources” section:</p>
+<p><img src="https://i.imgur.com/PhqGEdf.jpeg" alt="Resource settings"></p>
+<p>On the resource settings page:</p>
+<ol>
+<li>Select <code>16 GiB</code> for “Memory”, which is the minimum memory required to run large language models</li>
+<li>Select <code>4</code> for “CPU”, which is the minimum CPU count that supports 16 GiB of memory</li>
+<li>Check the “GPU” option to enable GPU acceleration</li>
+<li>Select <code>NVIDIA L4</code> for “GPU type”, which is the GPU type supported by Cloud Run</li>
+<li>Set “Number of GPUs” to <code>1</code></li>
+</ol>
+<p>These resource settings are crucial for Ollama’s performance:</p>
+<ul>
+<li>16 GiB of memory and 4 CPUs are the basic requirements for running medium to large LLMs</li>
+<li>NVIDIA L4 GPU significantly accelerates model inference, improving response times</li>
+<li>Using a GPU requires at least 4 CPUs, which is a Google Cloud requirement</li>
+</ul>
+<p>Click “DONE” after setting up the resources to continue to the final configuration step.</p>
+<p>Finally, you need to configure request handling parameters. In the request settings section:</p>
+<p><img src="https://i.imgur.com/RfZkKlB.jpeg" alt="Request settings"></p>
+<p>On the request settings page:</p>
+<ol>
+<li>Set “Request timeout” to <code>300</code> seconds (5 minutes), which is a reasonable timeout for processing LLM inference requests</li>
+<li>Keep “Maximum concurrent requests per instance” at <code>80</code>, which is the maximum number of requests each instance can handle simultaneously</li>
+<li>Keep “Minimum number of instances” at <code>0</code>, so you won’t incur costs when there’s no traffic</li>
+<li>Set “Maximum number of instances” to <code>3</code>, which limits the upper bound of auto-scaling, preventing excessive costs due to traffic spikes</li>
+</ol>
+<p>Limiting the maximum number of instances to a low value (like 3 or 4) is an important safety measure. If your service is attacked or experiences abnormal traffic increases, this prevents the system from automatically scaling to many instances, avoiding unexpected high costs.</p>
+<p>After completing all the settings, click the “CREATE” button to create the service. The system will begin deploying the Ollama service, which may take a few minutes.</p>
+<p>After following all the configuration steps and clicking the “CREATE” button, Google Cloud Run will deploy your Ollama service. Once the deployment is complete, you’ll see a screen similar to this:</p>
+<p><img src="https://i.imgur.com/V438m3h.jpeg" alt="Deployment Complete"></p>
+<p>The deployment success page shows your Ollama service is now up and running. Key information displayed includes:</p>
+<ul>
+<li><strong>Service URL</strong>: The unique URL for your Ollama service (e.g., <a target="_blank" rel="noopener" href="https://ollama-xxxxxxxxxxxx.us-central1.run.app/">https://ollama-xxxxxxxxxxxx.us-central1.run.app</a>)</li>
+<li><strong>Region</strong>: Confirms the service is deployed in us-central1</li>
+<li><strong>CPU and Memory</strong>: Shows the allocated resources (4 CPUs, 16 GiB memory)</li>
+<li><strong>GPU</strong>: Indicates 1 NVIDIA L4 GPU is attached</li>
+<li><strong>Revision status</strong>: “Serving traffic” means the service is active and ready to process requests</li>
+<li><strong>Authentication</strong>: “Require authentication” indicates that requests must include authentication</li>
+</ul>
+<p>You can now use this service to pull models and make inference requests. The service URL is what you’ll use in your API calls, and you’ll need to include authentication as shown in the testing examples below.</p>
+<h2 id="Testing-the-Ollama-Service"><a href="#Testing-the-Ollama-Service" class="headerlink" title="Testing the Ollama Service"></a>Testing the Ollama Service</h2><p>Downloading a model:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl --location <span class="string">&#x27;https://ollama-xxxxxxxxxxxx.us-central1.run.app/api/pull&#x27;</span> \</span><br><span class="line">--header <span class="string">&quot;Authorization: Bearer <span class="subst">$(gcloud auth print-identity-token)</span>&quot;</span> \</span><br><span class="line">--data  <span class="string">&#x27;&#123;</span></span><br><span class="line"><span class="string">  &quot;model&quot;: &quot;deepseek-r1:1.5b&quot;</span></span><br><span class="line"><span class="string">&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>Output:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;status&quot;</span>:<span class="string">&quot;pulling manifest&quot;</span>&#125;</span><br><span class="line">&#123;<span class="string">&quot;status&quot;</span>:<span class="string">&quot;pulling aabd4debf0c8&quot;</span>,<span class="string">&quot;digest&quot;</span>:<span class="string">&quot;sha256:aabd4debf0c8f08881923f2c25fc0fdeed24435271c2b3e92c4af36704040dbc&quot;</span>,<span class="string">&quot;total&quot;</span>:1117320512&#125;</span><br><span class="line">&#123;<span class="string">&quot;status&quot;</span>:<span class="string">&quot;pulling aabd4debf0c8&quot;</span>,<span class="string">&quot;digest&quot;</span>:<span class="string">&quot;sha256:aabd4debf0c8f08881923f2c25fc0fdeed24435271c2b3e92c4af36704040dbc&quot;</span>,<span class="string">&quot;total&quot;</span>:1117320512&#125;</span><br><span class="line">&#123;<span class="string">&quot;status&quot;</span>:<span class="string">&quot;pulling aabd4debf0c8&quot;</span>,<span class="string">&quot;digest&quot;</span>:<span class="string">&quot;sha256:aabd4debf0c8f08881923f2c25fc0fdeed24435271c2b3e92c4af36704040dbc&quot;</span>,<span class="string">&quot;total&quot;</span>:1117320512,<span class="string">&quot;completed&quot;</span>:2346405&#125;</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">&#123;<span class="string">&quot;status&quot;</span>:<span class="string">&quot;verifying sha256 digest&quot;</span>&#125;</span><br><span class="line">&#123;<span class="string">&quot;status&quot;</span>:<span class="string">&quot;writing manifest&quot;</span>&#125;</span><br><span class="line">&#123;<span class="string">&quot;status&quot;</span>:<span class="string">&quot;success&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Next, we can test a conversation:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">curl --location <span class="string">&#x27;https://ollama-xxxxxxxxxxxx.us-central1.run.app/api/chat&#x27;</span> \</span><br><span class="line">--header <span class="string">&quot;Authorization: Bearer <span class="subst">$(gcloud auth print-identity-token)</span>&quot;</span> \</span><br><span class="line">--data <span class="string">&#x27;&#123;</span></span><br><span class="line"><span class="string">  &quot;model&quot;: &quot;deepseek-r1:1.5b&quot;,</span></span><br><span class="line"><span class="string">  &quot;stream&quot;: false,</span></span><br><span class="line"><span class="string">  &quot;messages&quot;: [</span></span><br><span class="line"><span class="string">    &#123; &quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;why is the sky blue&quot; &#125;</span></span><br><span class="line"><span class="string">  ]</span></span><br><span class="line"><span class="string">&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>Output:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;model&quot;</span><span class="punctuation">:</span><span class="string">&quot;deepseek-r1:1.5b&quot;</span><span class="punctuation">,</span><span class="attr">&quot;created_at&quot;</span><span class="punctuation">:</span><span class="string">&quot;2025-03-06T16:37:18.674426239Z&quot;</span><span class="punctuation">,</span><span class="attr">&quot;message&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;role&quot;</span><span class="punctuation">:</span><span class="string">&quot;assistant&quot;</span><span class="punctuation">,</span><span class="attr">&quot;content&quot;</span><span class="punctuation">:</span><span class="string">&quot;\u003cthink\u003e\n\n\u003c/think\u003e\n\nThe blue color of the sky is called **blue coloring** or **violet sky**, and it has to do with a phenomenon called **blue shift**. Here&#x27;s how it works:\n\n1. **Infrared Radiation**: The Earth absorbs most of the visible light that enters our atmosphere, particularly in the red and orange wavelengths. However, it reflects some infrared radiation, which is absorbed by the atmosphere.\n\n2. **Blue Shift**: As sunlight travels through the Earth&#x27;s atmosphere, the blue-inflated infrared radiation from the sun is quickly scattered away. But the longer wavelength (orange and red) light gets \&quot;blown away\&quot; by the atmosphere, while the shorter blue light accumulates in the sky. This causes the blue light to appear blue-violet when it reaches Earth.\n\n3. **Scattering**: The atmosphere also scatters visible light off of particles, such as nitrogen molecules and water vapor, creating the cloudy appearance. However, this scattered blue light dominates the sky&#x27;s color due to the blue shift.\n\nThis phenomenon is more pronounced during clear days with less pollution, but even in polluted skies, you can still see a blue sky because some light remains visible after passing through the atmosphere.&quot;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span><span class="attr">&quot;done_reason&quot;</span><span class="punctuation">:</span><span class="string">&quot;stop&quot;</span><span class="punctuation">,</span><span class="attr">&quot;done&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span><span class="attr">&quot;total_duration&quot;</span><span class="punctuation">:</span><span class="number">25267446418</span><span class="punctuation">,</span><span class="attr">&quot;load_duration&quot;</span><span class="punctuation">:</span><span class="number">21595303847</span><span class="punctuation">,</span><span class="attr">&quot;prompt_eval_count&quot;</span><span class="punctuation">:</span><span class="number">8</span><span class="punctuation">,</span><span class="attr">&quot;prompt_eval_duration&quot;</span><span class="punctuation">:</span><span class="number">1311000000</span><span class="punctuation">,</span><span class="attr">&quot;eval_count&quot;</span><span class="punctuation">:</span><span class="number">245</span><span class="punctuation">,</span><span class="attr">&quot;eval_duration&quot;</span><span class="punctuation">:</span><span class="number">2359000000</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Deploying Ollama on Google Cloud Run provides a powerful, flexible, and cost-effective solution for running large language models. By following this guide, you’ve created a serverless AI inference service that:</p>
+<ul>
+<li><strong>Leverages GPU acceleration</strong> for much faster model inference compared to CPU-only solutions</li>
+<li><strong>Scales automatically</strong> based on your traffic needs, from zero to multiple instances</li>
+<li><strong>Maintains efficiency</strong> by using GCS buckets to avoid redundant model downloads</li>
+<li><strong>Optimizes costs</strong> by only running when needed and controlling maximum instance counts</li>
+<li><strong>Provides robust security</strong> through service account permissions and authentication</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>Sam Zhu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.samzhu.dev/2025/03/07/How-to-Deploy-Ollama-on-GCP-Cloud-Run-to-Run-Large-Language-Models/" title="How to Deploy Ollama on GCP Cloud Run to Run Large Language Models">https://blog.samzhu.dev/2025/03/07/How-to-Deploy-Ollama-on-GCP-Cloud-Run-to-Run-Large-Language-Models/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/GCP/" rel="tag"># GCP</a>
+              <a href="/tags/Ollama/" rel="tag"># Ollama</a>
+              <a href="/tags/Cloud-Run/" rel="tag"># Cloud Run</a>
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/02/22/Setting-Up-a-Clean-Gradle-Multi-Project-Structure-from-Scratch/" rel="prev" title="Setting Up a Clean Gradle Multi-Project Structure from Scratch">
+                  <i class="fa fa-angle-left"></i> Setting Up a Clean Gradle Multi-Project Structure from Scratch
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/03/25/Building-a-Complete-Grafana-LGTM-Observability-Platform-with-Docker-Compose/" rel="next" title="Building a Complete Grafana LGTM Observability Platform with Docker Compose">
+                  Building a Complete Grafana LGTM Observability Platform with Docker Compose <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sam Zhu</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/samzhu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.3.0/mermaid.min.js","integrity":"sha256-9y71g5Lz/KLsHjB8uXwnkuWDtAMDSzD/HdIbqhJfTAI="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.samzhu.dev","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="As of February 1, 2024, Sonatype has abandoned the old way of registering via Jira tickets for Maven Central. This article will guide you through the new process of publishing a Jar file to the Maven">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Publishing Your Package to Maven Central in 2024">
+<meta property="og:url" content="https://blog.samzhu.dev/2024/04/20/Publishing-Your-Package-to-Maven-Central-in-2024/index.html">
+<meta property="og:site_name" content="Sam&#39;s programming note">
+<meta property="og:description" content="As of February 1, 2024, Sonatype has abandoned the old way of registering via Jira tickets for Maven Central. This article will guide you through the new process of publishing a Jar file to the Maven">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.imgur.com/T3OqHGj.jpeg">
+<meta property="og:image" content="https://i.imgur.com/iaeYn08.jpeg">
+<meta property="og:image" content="https://central.sonatype.org/images/verifynamespace.png">
+<meta property="og:image" content="https://i.imgur.com/7UA98DG.jpeg">
+<meta property="og:image" content="https://i.imgur.com/41nfKyA.png">
+<meta property="og:image" content="https://i.imgur.com/L4q3Ggc.jpeg">
+<meta property="og:image" content="https://i.imgur.com/wu9IG5H.jpeg">
+<meta property="og:image" content="https://i.imgur.com/uDcb1qs.jpeg">
+<meta property="og:image" content="https://i.imgur.com/FEjNgyU.jpeg">
+<meta property="article:published_time" content="2024-04-20T03:57:31.000Z">
+<meta property="article:modified_time" content="2025-07-24T15:41:45.583Z">
+<meta property="article:author" content="Sam Zhu">
+<meta property="article:tag" content="Maven">
+<meta property="article:tag" content="Artifact">
+<meta property="article:tag" content="GPG">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/T3OqHGj.jpeg">
+<meta name="twitter:creator" content="@samzhu0318">
+
+
+<link rel="canonical" href="https://blog.samzhu.dev/2024/04/20/Publishing-Your-Package-to-Maven-Central-in-2024/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.samzhu.dev/2024/04/20/Publishing-Your-Package-to-Maven-Central-in-2024/","path":"2024/04/20/Publishing-Your-Package-to-Maven-Central-in-2024/","title":"Publishing Your Package to Maven Central in 2024"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Publishing Your Package to Maven Central in 2024 | Sam's programming note</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CFLHEYEETG"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-CFLHEYEETG","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<meta name="google-adsense-account" content="ca-pub-5880479202699914">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880479202699914"
+     crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sam's programming note</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Registering-a-Maven-Central-Account"><span class="nav-number">1.</span> <span class="nav-text">Registering a Maven Central Account</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Register-a-Namespace"><span class="nav-number">2.</span> <span class="nav-text">Register a Namespace</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Preparing-for-Maven-Central"><span class="nav-number">3.</span> <span class="nav-text">Preparing for Maven Central</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Configuring-Plugins"><span class="nav-number">4.</span> <span class="nav-text">Configuring Plugins</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Maven-Source-Plugin"><span class="nav-number">4.1.</span> <span class="nav-text">Maven Source Plugin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Maven-Javadoc-Plugin"><span class="nav-number">4.2.</span> <span class="nav-text">Maven Javadoc Plugin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Maven-GPG-Plugin"><span class="nav-number">4.3.</span> <span class="nav-text">Maven GPG Plugin</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GPG-Configuration-for-Maven-Central"><span class="nav-number">5.</span> <span class="nav-text">GPG Configuration for Maven Central</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Installing-GnuPG"><span class="nav-number">5.1.</span> <span class="nav-text">Installing GnuPG</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Verify-Installation"><span class="nav-number">5.2.</span> <span class="nav-text">Verify Installation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generating-a-Key-Pair"><span class="nav-number">5.3.</span> <span class="nav-text">Generating a Key Pair</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Distributing-Your-Public-Key"><span class="nav-number">5.4.</span> <span class="nav-text">Distributing Your Public Key</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Configuring-settings-xml"><span class="nav-number">6.</span> <span class="nav-text">Configuring settings.xml</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-1-Generate-a-User-Token"><span class="nav-number">6.1.</span> <span class="nav-text">Step 1: Generate a User Token</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-2-Update-settings-xml"><span class="nav-number">6.2.</span> <span class="nav-text">Step 2: Update settings.xml</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Publishing-to-Maven-Central"><span class="nav-number">7.</span> <span class="nav-text">Publishing to Maven Central</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-1-Set-GPG-Passphrase-Environment-Variable"><span class="nav-number">7.1.</span> <span class="nav-text">Step 1: Set GPG Passphrase Environment Variable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-2-Deploy-Your-Artifacts"><span class="nav-number">7.2.</span> <span class="nav-text">Step 2: Deploy Your Artifacts</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-3-Verify-Deployment-on-Sonatype%E2%80%99s-Publishing-Settings"><span class="nav-number">7.3.</span> <span class="nav-text">Step 3: Verify Deployment on Sonatype’s Publishing Settings</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-4-Search-Your-Artifacts-in-Maven-Central"><span class="nav-number">7.4.</span> <span class="nav-text">Step 4: Search Your Artifacts in Maven Central</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">8.</span> <span class="nav-text">References</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sam Zhu"
+      src="https://i.imgur.com/eLloI4N.png">
+  <p class="site-author-name" itemprop="name">Sam Zhu</p>
+  <div class="site-description" itemprop="description">Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">74</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/samzhu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;samzhu" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/samzhu0318" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;samzhu0318" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.samzhu.dev/2024/04/20/Publishing-Your-Package-to-Maven-Central-in-2024/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.imgur.com/eLloI4N.png">
+      <meta itemprop="name" content="Sam Zhu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sam's programming note">
+      <meta itemprop="description" content="Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Publishing Your Package to Maven Central in 2024 | Sam's programming note">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Publishing Your Package to Maven Central in 2024
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-04-20 11:57:31" itemprop="dateCreated datePublished" datetime="2024-04-20T11:57:31+08:00">2024-04-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-07-24 23:41:45" itemprop="dateModified" datetime="2025-07-24T23:41:45+08:00">2025-07-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SoftwareDevelopment/" itemprop="url" rel="index"><span itemprop="name">SoftwareDevelopment</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>As of February 1, 2024, Sonatype has abandoned the old way of registering via Jira tickets for Maven Central. This article will guide you through the new process of publishing a Jar file to the Maven Central Repository.</p>
+<span id="more"></span>
+
+<p><img src="https://i.imgur.com/T3OqHGj.jpeg" alt="cover"></p>
+<h2 id="Registering-a-Maven-Central-Account"><a href="#Registering-a-Maven-Central-Account" class="headerlink" title="Registering a Maven Central Account"></a>Registering a Maven Central Account</h2><p>First, you need to set up an account on Maven Central:</p>
+<ol>
+<li><p>Go to <a target="_blank" rel="noopener" href="https://central.sonatype.com/">Sonatype Central</a>.</p>
+</li>
+<li><p>If you don’t already have an account, you will need to create one. Enter a username, a valid email address, and a password. Then click “Continue.”</p>
+</li>
+</ol>
+<p><img src="https://i.imgur.com/iaeYn08.jpeg" alt="Registration Screen"></p>
+<h2 id="Register-a-Namespace"><a href="#Register-a-Namespace" class="headerlink" title="Register a Namespace"></a>Register a Namespace</h2><p>A namespace in the Maven ecosystem, also known as a <code>groupId</code>, uniquely identifies your library among all others. It is one of the three coordinates needed to publish any component to Maven Central — the other two being <code>artifactId</code> and <code>version</code>.</p>
+<p>For instance, if you are using a GitHub Organization, your namespace might be something like <code>io.github.cloud-technology</code>. After adding your namespace, it will initially be in an “Unverified” state.</p>
+<p><img src="https://central.sonatype.org/images/verifynamespace.png" alt="Verify Namespace"></p>
+<p>You will then need to create an empty repository on GitHub to verify your namespace.</p>
+<p><img src="https://i.imgur.com/7UA98DG.jpeg" alt="Empty GitHub Repo"></p>
+<p>Clicking “Confirm” will change your request status to “Verification Pending.” If there are no issues with your namespace, it should be verified quickly.</p>
+<p><img src="https://i.imgur.com/41nfKyA.png" alt="Verification Successful"></p>
+<h2 id="Preparing-for-Maven-Central"><a href="#Preparing-for-Maven-Central" class="headerlink" title="Preparing for Maven Central"></a>Preparing for Maven Central</h2><p>To successfully deploy your library to Maven Central, there are several prerequisites you must meet according to Sonatype:</p>
+<ul>
+<li><strong>Non-SNAPSHOT Versions</strong>: Maven Central only accepts release versions of your library, not snapshot versions which are typically used during development.</li>
+<li><strong>Project Metadata</strong>: This includes a descriptive name, description, and a URL for your project.</li>
+<li><strong>Licensing Information</strong>: Clearly defined license(s) under which your library is distributed.</li>
+<li><strong>Developer Information</strong>: Details about the contributors to your library.</li>
+<li><strong>Source Code Management (SCM) Information</strong>: Links to the source code repository.</li>
+<li><strong>Signing Artifacts</strong>: All artifacts must be signed with GPG&#x2F;PGP signatures.</li>
+</ul>
+<p>Adding project description, URL, and SCM (Source Code Management) details in your <code>pom.xml</code> file is crucial as it helps others understand the purpose of your project, how to access its source, and under what license it is distributed. Below is a detailed breakdown of each element in the snippet you provided, explaining what each part does and why it’s important:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">name</span>&gt;</span>custom-boot-starter-parent<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>Name</strong>: The <code>&lt;name&gt;</code> tag specifies the human-readable name of your project. This should be descriptive enough to give someone an immediate idea of the project’s purpose. Here, “custom-boot-starter-parent” suggests that this project is a parent POM (Project Object Model) that provides dependency and plugin management for applications built with Maven.</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">description</span>&gt;</span>Parent pom providing dependency and plugin management for applications built with Maven<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>Description</strong>: This tag offers a more detailed explanation of what the project does. In this case, it states that the POM manages dependencies and plugins, which is essential for maintaining a consistent build environment across multiple development teams or project modules.</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">url</span>&gt;</span>https://github.com/cloud-technology/custom-boot-starter-parent<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>URL</strong>: The <code>&lt;url&gt;</code> tag should point to where the project can be found online. It is typically a link to the project’s repository or homepage. This URL is used by project users, contributors, and Maven Central visitors to find more information about your project.</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">scm</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url</span>&gt;</span>https://github.com/cloud-technology/custom-boot-starter-parent<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">connection</span>&gt;</span>scm:git@github.com:cloud-technology/custom-boot-starter-parent.git<span class="tag">&lt;/<span class="name">connection</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">developerConnection</span>&gt;</span>scm:git:ssh://github.com:cloud-technology/custom-boot-starter-parent.git<span class="tag">&lt;/<span class="name">developerConnection</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">scm</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>SCM Details</strong>:<ul>
+<li><strong>URL</strong>: The SCM URL points to the project’s source code repository. This is particularly useful for developers who may want to check out your project.</li>
+<li><strong>Connection</strong>: This is the anonymous connection string used to check out the project from a version control system. For public projects, this typically uses a read-only URL (<code>git://</code>).</li>
+<li><strong>Developer Connection</strong>: This is used for project contributors who have commit access; it usually uses a protocol that allows writing (<code>ssh://</code>). It’s important to specify this so that contributors know how to push changes.</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">licenses</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">license</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>Apache License, Version 2.0<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://www.apache.org/licenses/LICENSE-2.0<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">license</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">licenses</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>Licenses</strong>: The <code>&lt;licenses&gt;</code> section describes under what licenses your project is distributed. This is critical for both users and contributors to understand their rights and restrictions with respect to using and modifying your project. <ul>
+<li><strong>Name</strong>: The name of the license, “Apache License, Version 2.0,” tells users what type of license the project uses.</li>
+<li><strong>URL</strong>: This points to where the actual text of the license can be found, providing an easy reference for those needing to examine the legal details.</li>
+</ul>
+</li>
+</ul>
+<p>Including these details in your <code>pom.xml</code> not only meets Maven Central’s requirements but also enhances the project’s transparency and accessibility to the community. It ensures that anyone looking at your project on Maven Central can easily navigate to its source, understand its purpose, and know its licensing terms without needing to search elsewhere.</p>
+<h2 id="Configuring-Plugins"><a href="#Configuring-Plugins" class="headerlink" title="Configuring Plugins"></a>Configuring Plugins</h2><p>To ensure that your library includes both source code and documentation, and that your artifacts are securely signed, configure the following Maven plugins in your <code>pom.xml</code>:</p>
+<h3 id="Maven-Source-Plugin"><a href="#Maven-Source-Plugin" class="headerlink" title="Maven Source Plugin"></a>Maven Source Plugin</h3><p>The <strong>Maven Source Plugin</strong> plays a critical role in preparing your Java project for distribution. It packages all the source code of your project into a single JAR file. This is especially useful when you want to share your source code with other developers or users who might want to examine, extend, or modify the code. It promotes transparency and facilitates collaboration by making the original code easily accessible alongside the compiled binaries.  </p>
+<p>Usage in <code>pom.xml</code>:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-source-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.3.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>attach-sources<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">goal</span>&gt;</span>jar-no-fork<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong><code>&lt;id&gt;</code></strong>: This gives a unique identifier to the task, making it easier to reference in other parts of your build script. Here, <code>attach-sources</code> is an identifier that implies this task is about attaching source code to the project’s build output.<ul>
+<li><strong><code>&lt;goals&gt;</code></strong>: Goals describe what the task actually does:<ul>
+<li><strong><code>&lt;goal&gt;</code></strong>: The <code>jar-no-fork</code> goal tells Maven to create a JAR file containing the source code without initiating a separate or new build lifecycle. This means it doesn’t restart the entire build process but directly packages the source code into a JAR file. This is efficient because it avoids unnecessary recompilation or retesting of the code, speeding up the build process when you only need to update the packaged sources.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>In essence, using the Maven Source Plugin with this configuration ensures that every time your project is built, the source code is automatically packaged into a JAR file and ready for distribution, without disrupting the build sequence. This setup is beneficial for maintaining an efficient and transparent workflow.</p>
+<h3 id="Maven-Javadoc-Plugin"><a href="#Maven-Javadoc-Plugin" class="headerlink" title="Maven Javadoc Plugin"></a>Maven Javadoc Plugin</h3><p>The <strong>Maven Javadoc Plugin</strong> is crucial for generating documentation for your Java project. This plugin automates the creation of Javadoc, which is the standard documentation generated from Java source code. Javadoc includes comprehensive information about the classes, methods, variables, and other elements in your code, making it easier for other developers to understand how to use and integrate with your project.</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-javadoc-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.6.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>attach-javadocs<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">goal</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong><code>&lt;goals&gt;</code></strong>: This section lists the goals or objectives of this task:<ul>
+<li><strong><code>&lt;goal&gt;</code></strong>: The <code>jar</code> goal in this context directs the plugin to package the generated Javadoc into a JAR file. This JAR file can then be distributed or deployed along with your project, providing a self-contained documentation resource that is easy to access and use.</li>
+</ul>
+</li>
+</ul>
+<p>Using the <strong>Maven Javadoc Plugin</strong> in this manner ensures that every time your project is built, it not only compiles the source code but also automatically generates and packages up-to-date documentation. This JAR file of Javadocs can be invaluable for anyone who needs to understand the internals of your project without digging directly into the source code. This approach promotes better knowledge sharing and helps maintain high code quality and usability.</p>
+<h3 id="Maven-GPG-Plugin"><a href="#Maven-GPG-Plugin" class="headerlink" title="Maven GPG Plugin"></a>Maven GPG Plugin</h3><p>The <strong>Maven GPG Plugin</strong> is an essential tool for enhancing the security of your Java projects. It signs your project’s artifacts with GNU Privacy Guard (GPG), which is a widely used encryption software that provides cryptographic privacy and authentication. Signing your artifacts confirms their origin and integrity, reassuring users that the files have not been tampered with since they were published.</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-gpg-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.2.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">gpgArguments</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">arg</span>&gt;</span>--pinentry-mode<span class="tag">&lt;/<span class="name">arg</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">arg</span>&gt;</span>loopback<span class="tag">&lt;/<span class="name">arg</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">gpgArguments</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>sign-artifacts<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">phase</span>&gt;</span>verify<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">goal</span>&gt;</span>sign<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong><code>&lt;id&gt;</code></strong>: <code>sign-artifacts</code> is the name given to this specific task, indicating its purpose to sign the project’s artifacts.</li>
+<li><strong><code>&lt;phase&gt;</code></strong>: The <code>verify</code> phase is chosen for this task, which is a late phase in the build lifecycle, ensuring that all compiled packages are signed before the final package is assembled.</li>
+<li><strong><code>&lt;goals&gt;</code></strong>: Lists the objectives of this task:<ul>
+<li><strong><code>&lt;goal&gt;</code></strong>: The <code>sign</code> goal directs the plugin to sign the artifacts using GPG. This adds a layer of verification to the build artifacts by attaching a cryptographic signature.</li>
+</ul>
+</li>
+</ul>
+<p>Using the <strong>Maven GPG Plugin</strong> to sign your artifacts during the <code>verify</code> phase has several advantages:</p>
+<ul>
+<li><strong>Security and Trust</strong>: Signing your artifacts provides a security layer by ensuring that the artifacts are from a trusted source (you) and have not been altered.</li>
+<li><strong>Verification</strong>: Users and other developers can verify the signatures to confirm the authenticity of the artifacts.</li>
+<li><strong>Compliance</strong>: Many repositories, including Maven Central, require that all uploaded artifacts be signed to enhance security measures across their platforms.</li>
+</ul>
+<h2 id="GPG-Configuration-for-Maven-Central"><a href="#GPG-Configuration-for-Maven-Central" class="headerlink" title="GPG Configuration for Maven Central"></a>GPG Configuration for Maven Central</h2><p>To ensure the security and integrity of artifacts published to Maven Central, it is essential to use GPG (GNU Privacy Guard) for signing your packages. Here’s a detailed guide on setting up and using GnuPG for this purpose:  </p>
+<h3 id="Installing-GnuPG"><a href="#Installing-GnuPG" class="headerlink" title="Installing GnuPG"></a>Installing GnuPG</h3><p>GnuPG is a free encryption software that provides cryptographic privacy and authentication. It is widely used in the security of data communications and package verification processes.</p>
+<ol>
+<li><p><strong>Update Homebrew</strong>:<br>Keep your Homebrew updated to ensure you install the latest available version of GnuPG:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew update --auto-update</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Install GnuPG</strong>:<br>After updating Homebrew, proceed to install GnuPG by running:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install gnupg</span><br></pre></td></tr></table></figure>
+<p>This command installs the latest version of GnuPG, setting up all necessary components on your system.</p>
+</li>
+</ol>
+<h3 id="Verify-Installation"><a href="#Verify-Installation" class="headerlink" title="Verify Installation"></a>Verify Installation</h3><p>It’s crucial to verify that GnuPG has been installed correctly:</p>
+<ul>
+<li>Run the following command to check the GnuPG version:<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpg --version</span><br></pre></td></tr></table></figure></li>
+<li>The output should detail the installed version and the supported cryptographic standards, confirming that GnuPG is ready for use.</li>
+</ul>
+<h3 id="Generating-a-Key-Pair"><a href="#Generating-a-Key-Pair" class="headerlink" title="Generating a Key Pair"></a>Generating a Key Pair</h3><p>A key pair consists of a private key (kept secret) and a public key (shared publicly). This is necessary for signing your Maven artifacts.</p>
+<ul>
+<li>To generate a GPG key pair, execute:<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpg --gen-key</span><br></pre></td></tr></table></figure></li>
+<li>During this process, you will be asked to input your identity details such as your name and email, which are used to create a user ID for your key.</li>
+</ul>
+<p>Here’s an example of the output you might see, which includes instructions and key details:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">gpg (GnuPG) 2.4.5; Copyright (C) 2024 g10 Code GmbH</span><br><span class="line">This is free software: you are free to change and redistribute it.</span><br><span class="line">There is NO WARRANTY, to the extent permitted by law.</span><br><span class="line"></span><br><span class="line">gpg: directory &#x27;/Users/samzhu/.gnupg&#x27; created</span><br><span class="line">Note: Use &quot;gpg --full-generate-key&quot; for a full-featured key generation dialog.</span><br><span class="line"></span><br><span class="line">GnuPG needs to construct a user ID to identify your key.</span><br><span class="line"></span><br><span class="line">Real name: samzhu</span><br><span class="line">Email address: samzhu@gmail.com</span><br><span class="line">You have chosen this User-ID:</span><br><span class="line">    &quot;samzhu &lt;samzhu@gmail.com&gt;&quot;</span><br><span class="line"></span><br><span class="line">gpg: /Users/samzhu/.gnupg/trustdb.gpg created</span><br><span class="line">gpg: directory &#x27;/Users/samzhu/.gnupg/openpgp-revocs.d&#x27; created</span><br><span class="line">gpg: revocation certificate stored as &#x27;/Users/samzhu/.gnupg/openpgp-revocs.d/94C07D78B92065ABEC66BC9142F75CF4D3EC5B2D.rev&#x27;</span><br><span class="line"></span><br><span class="line">Public and private key created and signed.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Remember Your Public Key ID</strong>:</p>
+<p>From the key generation output, make sure to note the public key ID:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">94C07D78B92065ABEC66BC9142F75CF4D3EC5B2D</span><br></pre></td></tr></table></figure>
+<p>This key ID is critical as it will be needed in the future to verify your signature’s authenticity, manage your keys, and when setting up your project’s build configuration to sign artifacts.</p>
+<p>By following these steps, you ensure that your artifacts can be securely signed, providing a layer of trust and integrity when distributing your software through Maven Central.</p>
+<h3 id="Distributing-Your-Public-Key"><a href="#Distributing-Your-Public-Key" class="headerlink" title="Distributing Your Public Key"></a>Distributing Your Public Key</h3><p>After generating your GPG key pair, the next step is to distribute your public key. This is important because it allows others, including Maven Central, to verify the signatures on your artifacts. Here’s how you can distribute your public key to a key server:</p>
+<p><strong>Command to Distribute Public Key:</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpg --keyserver keyserver.ubuntu.com --send-keys [Your-Key-ID]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Replace <code>[Your-Key-ID]</code> with your actual public key ID, which you noted earlier. For example, if your public key ID is <code>94C07D78B92065ABEC66BC9142F75CF4D3EC5B2D</code>, the command would be:<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpg --keyserver keyserver.ubuntu.com --send-keys 94C07D78B92065ABEC66BC9142F75CF4D3EC5B2D</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>This command uploads your public key to the specified key server, making it publicly accessible. The key server <code>keyserver.ubuntu.com</code> is commonly used for this purpose and integrates well with the GPG infrastructure and Maven Central requirements.</p>
+<h2 id="Configuring-settings-xml"><a href="#Configuring-settings-xml" class="headerlink" title="Configuring settings.xml"></a>Configuring <code>settings.xml</code></h2><p>When deploying artifacts to Maven Central through Sonatype’s Nexus Repository Manager, it’s imperative to configure your <code>settings.xml</code> file with the proper credentials. This file dictates how Maven interacts with various repositories and includes authentication details for secure access. Here’s a step-by-step guide on how to properly set up your <code>settings.xml</code>:</p>
+<h3 id="Step-1-Generate-a-User-Token"><a href="#Step-1-Generate-a-User-Token" class="headerlink" title="Step 1: Generate a User Token"></a>Step 1: Generate a User Token</h3><p>User tokens are used instead of your main account password to enhance security. They act as unique identifiers and secrets that only you and the server know. To generate a user token:</p>
+<ol>
+<li><p><strong>Login to your Sonatype Nexus Repository Manager Account</strong>: Navigate to the account management or security settings page.</p>
+</li>
+<li><p><strong>Generate Token</strong>: Find the option to generate a new API token or user token. Follow the instructions to create one. You will typically receive a token ID (acts as the username) and a token secret (acts as the password).</p>
+<p><img src="https://i.imgur.com/L4q3Ggc.jpeg" alt="User Token Generation"></p>
+</li>
+</ol>
+<h3 id="Step-2-Update-settings-xml"><a href="#Step-2-Update-settings-xml" class="headerlink" title="Step 2: Update settings.xml"></a>Step 2: Update <code>settings.xml</code></h3><p>With your token generated, the next step is to incorporate this token into your Maven <code>settings.xml</code> file.</p>
+<ol>
+<li><p><strong>Open <code>settings.xml</code></strong>: This file is usually located in the <code>.m2</code> directory at <code>/Users/&lt;yourusername&gt;/.m2/settings.xml</code>.</p>
+</li>
+<li><p><strong>Add Server Configuration</strong>:<br>Insert the server configuration block with your token information. Here’s an example configuration:</p>
+ <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">settings</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/SETTINGS/1.0.0&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servers</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">server</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>central<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">username</span>&gt;</span>[Your Token ID]<span class="tag">&lt;/<span class="name">username</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">password</span>&gt;</span>[Your Token Secret]<span class="tag">&lt;/<span class="name">password</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">server</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">servers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Replace <code>[Your Token ID]</code> and <code>[Your Token Secret]</code> with the actual values you received when generating your token.</p>
+</li>
+</ol>
+<h2 id="Publishing-to-Maven-Central"><a href="#Publishing-to-Maven-Central" class="headerlink" title="Publishing to Maven Central"></a>Publishing to Maven Central</h2><p>Once your <code>settings.xml</code> is correctly configured and your GPG key is set up, the next step is to publish your artifacts to Maven Central. This process involves a few straightforward steps to ensure your deployment is successfully uploaded and becomes searchable in the Maven repository.</p>
+<h3 id="Step-1-Set-GPG-Passphrase-Environment-Variable"><a href="#Step-1-Set-GPG-Passphrase-Environment-Variable" class="headerlink" title="Step 1: Set GPG Passphrase Environment Variable"></a>Step 1: Set GPG Passphrase Environment Variable</h3><p>If your GPG key is secured with a passphrase (which it should be for security), you’ll need to provide this passphrase to Maven so it can sign your artifacts during the build process. To do this without exposing your passphrase in scripts or logs, set it as an environment variable:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> MAVEN_GPG_PASSPHRASE=&lt;your key passphrase&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Replace <code>&lt;your key passphrase&gt;</code> with the actual passphrase for your GPG key.</p>
+<h3 id="Step-2-Deploy-Your-Artifacts"><a href="#Step-2-Deploy-Your-Artifacts" class="headerlink" title="Step 2: Deploy Your Artifacts"></a>Step 2: Deploy Your Artifacts</h3><p>With your environment prepared, you can now run the Maven command to clean your project, compile your sources, package them, and finally deploy the artifacts to Maven Central:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./mvnw clean deploy</span><br></pre></td></tr></table></figure>
+
+<p>This command does several things:</p>
+<ul>
+<li><strong>Clean</strong>: Removes any files from any previous builds.</li>
+<li><strong>Compile</strong>: Compiles your source code into bytecode.</li>
+<li><strong>Package</strong>: Packages the compiled code into JAR files, along with any other resources like properties files.</li>
+<li><strong>Deploy</strong>: Uploads the packaged artifacts along with their POMs and metadata to Maven Central.</li>
+</ul>
+<h3 id="Step-3-Verify-Deployment-on-Sonatype’s-Publishing-Settings"><a href="#Step-3-Verify-Deployment-on-Sonatype’s-Publishing-Settings" class="headerlink" title="Step 3: Verify Deployment on Sonatype’s Publishing Settings"></a>Step 3: Verify Deployment on Sonatype’s Publishing Settings</h3><p>After running the deploy command, navigate to Sonatype’s Nexus Repository Manager where you can view the status of your deployment. This interface will show you whether your deployment is in a “pending” state awaiting approval, or if there are issues that need to be addressed:</p>
+<p><img src="https://i.imgur.com/wu9IG5H.jpeg" alt="Deployment Status"></p>
+<p>Although your deployment might still be in the central staging area at this point, you have the options to either drop it or proceed to publication. This step is crucial as it determines whether your package is ready to be searchable and accessible on Maven Central:</p>
+<ul>
+<li><strong>Drop the Deployment</strong>: If you notice any issues with your deployment or wish to cancel the publication, you can opt to drop the deployment. This action removes the package from the staging area.</li>
+<li><strong>Execute Publish</strong>: If all looks good, you can publish your deployment, making it live on Maven Central. This is the final step to make your package publicly available.</li>
+</ul>
+<p>Once your artifacts are published, they will appear in Maven Central as shown below:</p>
+<p><img src="https://i.imgur.com/uDcb1qs.jpeg" alt="Published Artifacts"></p>
+<h3 id="Step-4-Search-Your-Artifacts-in-Maven-Central"><a href="#Step-4-Search-Your-Artifacts-in-Maven-Central" class="headerlink" title="Step 4: Search Your Artifacts in Maven Central"></a>Step 4: Search Your Artifacts in Maven Central</h3><p>After publication, your artifacts will be indexed and made searchable in Maven Central. This may take a few minutes to a few hours. You can confirm that your package is accessible by searching for it on Maven Central’s search engine:</p>
+<p><img src="https://i.imgur.com/FEjNgyU.jpeg" alt="Search Artifacts in Maven Central"></p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://central.sonatype.org/register/namespace/#for-code-hosting-services-with-personal-groupid">Registering a Namespace on Sonatype</a>: Detailed instructions on how to register and verify a namespace in the Maven ecosystem.</li>
+<li><a target="_blank" rel="noopener" href="https://central.sonatype.org/publish/publish-portal-maven/">Publishing Portal on Maven</a>: Comprehensive guide on how to use the Sonatype Nexus Repository Manager for publishing.</li>
+<li><a target="_blank" rel="noopener" href="https://central.sonatype.org/publish/requirements/gpg/">GPG Requirements for Maven Central</a>: Specific guidelines on how to configure GPG signing for your artifacts.</li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/simform-engineering/publishing-library-in-maven-central-part-1-994c5fe0c004">Publishing Library in Maven Central Part 1</a>: A practical, step-by-step tutorial on starting the publishing process on Maven Central.</li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/simform-engineering/publishing-library-in-maven-central-part-2-515c5d54f566">Publishing Library in Maven Central Part 2</a>: Continuation of the step-by-step guide, focusing on finalizing the publishing steps.</li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/@marcelogdomingues/publishing-your-java-library-to-maven-central-a-step-by-step-tutorial-9a15f7edb3af">Publishing Your Java Library to Maven Central - A Step-by-Step Tutorial</a>: A detailed tutorial by Marcelo Domingues on the comprehensive process from start to finish.</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/happylishang/AntiFakerAndroidChecker/blob/master/publish.gradle">Gradle Publish</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>Sam Zhu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.samzhu.dev/2024/04/20/Publishing-Your-Package-to-Maven-Central-in-2024/" title="Publishing Your Package to Maven Central in 2024">https://blog.samzhu.dev/2024/04/20/Publishing-Your-Package-to-Maven-Central-in-2024/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Maven/" rel="tag"># Maven</a>
+              <a href="/tags/Artifact/" rel="tag"># Artifact</a>
+              <a href="/tags/GPG/" rel="tag"># GPG</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/04/08/Building-AI-Applications-with-Spring-AI-2-Implementing-Chat-Histories-and-Instant-SSE-Responses/" rel="prev" title="Building AI Applications with Spring AI (2): Implementing Chat Histories and Instant SSE Responses">
+                  <i class="fa fa-angle-left"></i> Building AI Applications with Spring AI (2): Implementing Chat Histories and Instant SSE Responses
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/05/01/Building-AI-Applications-with-Spring-AI-3-Vector-Databases/" rel="next" title="Building AI Applications with Spring AI (3): Vector Databases">
+                  Building AI Applications with Spring AI (3): Vector Databases <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sam Zhu</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/samzhu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.3.0/mermaid.min.js","integrity":"sha256-9y71g5Lz/KLsHjB8uXwnkuWDtAMDSzD/HdIbqhJfTAI="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

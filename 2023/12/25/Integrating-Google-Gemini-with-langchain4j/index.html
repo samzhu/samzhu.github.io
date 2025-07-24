@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.samzhu.dev","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="This article is intended for junior developers and focuses on how to integrate Google’s Gemini model using Java and the langchain4j framework. We’ll cover configuration settings, model strategies, and">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Integrating Google Gemini with langchain4j">
+<meta property="og:url" content="https://blog.samzhu.dev/2023/12/25/Integrating-Google-Gemini-with-langchain4j/index.html">
+<meta property="og:site_name" content="Sam&#39;s programming note">
+<meta property="og:description" content="This article is intended for junior developers and focuses on how to integrate Google’s Gemini model using Java and the langchain4j framework. We’ll cover configuration settings, model strategies, and">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-12-25T08:20:42.000Z">
+<meta property="article:modified_time" content="2025-07-24T15:41:45.582Z">
+<meta property="article:author" content="Sam Zhu">
+<meta property="article:tag" content="Spring">
+<meta property="article:tag" content="Langchain4j">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@samzhu0318">
+
+
+<link rel="canonical" href="https://blog.samzhu.dev/2023/12/25/Integrating-Google-Gemini-with-langchain4j/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.samzhu.dev/2023/12/25/Integrating-Google-Gemini-with-langchain4j/","path":"2023/12/25/Integrating-Google-Gemini-with-langchain4j/","title":"Integrating Google Gemini with langchain4j"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Integrating Google Gemini with langchain4j | Sam's programming note</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CFLHEYEETG"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-CFLHEYEETG","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<meta name="google-adsense-account" content="ca-pub-5880479202699914">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880479202699914"
+     crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sam's programming note</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Configuration-Settings"><span class="nav-number">1.</span> <span class="nav-text">Configuration Settings</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Configuration-File-Explanation"><span class="nav-number">1.1.</span> <span class="nav-text">Configuration File Explanation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ModelProvider-Enumeration"><span class="nav-number">1.2.</span> <span class="nav-text">ModelProvider Enumeration</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gemini-Chat-Model-Strategy"><span class="nav-number">2.</span> <span class="nav-text">Gemini Chat Model Strategy</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Implementation-of-GeminiChatModelStrategy"><span class="nav-number">2.1.</span> <span class="nav-text">Implementation of GeminiChatModelStrategy</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chat-Stream-Proxy"><span class="nav-number">3.</span> <span class="nav-text">Chat Stream Proxy</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Role-and-Functionality-of-ChatStreamProxy"><span class="nav-number">3.1.</span> <span class="nav-text">Role and Functionality of ChatStreamProxy</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chat-Service-Implementation"><span class="nav-number">4.</span> <span class="nav-text">Chat Service Implementation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Overview-of-the-ChatService-Class"><span class="nav-number">4.1.</span> <span class="nav-text">Overview of the ChatService Class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Key-Code-Segment-in-ChatService"><span class="nav-number">4.2.</span> <span class="nav-text">Key Code Segment in ChatService</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Explanation-of-Key-Code"><span class="nav-number">4.3.</span> <span class="nav-text">Explanation of Key Code</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Special-Considerations"><span class="nav-number">5.</span> <span class="nav-text">Special Considerations</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Handling-of-SystemMessage"><span class="nav-number">5.1.</span> <span class="nav-text">Handling of SystemMessage</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">6.</span> <span class="nav-text">References</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sam Zhu"
+      src="https://i.imgur.com/eLloI4N.png">
+  <p class="site-author-name" itemprop="name">Sam Zhu</p>
+  <div class="site-description" itemprop="description">Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">74</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/samzhu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;samzhu" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/samzhu0318" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;samzhu0318" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.samzhu.dev/2023/12/25/Integrating-Google-Gemini-with-langchain4j/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.imgur.com/eLloI4N.png">
+      <meta itemprop="name" content="Sam Zhu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sam's programming note">
+      <meta itemprop="description" content="Hello, I'm Sam, a tech-savvy blogger with a passion for programming. I share insights on programming, cloud computing, and more, including topics like SpringBoot, SpringCloud, GCP. My blog aims to assist both newcomers and professionals in these fields.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Integrating Google Gemini with langchain4j | Sam's programming note">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Integrating Google Gemini with langchain4j
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-12-25 16:20:42" itemprop="dateCreated datePublished" datetime="2023-12-25T16:20:42+08:00">2023-12-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-07-24 23:41:45" itemprop="dateModified" datetime="2025-07-24T23:41:45+08:00">2025-07-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>This article is intended for junior developers and focuses on how to integrate Google’s Gemini model using Java and the <code>langchain4j</code> framework. We’ll cover configuration settings, model strategies, and implementation, with a focus on special considerations for using Gemini and a thorough explanation of the provided Java code.</p>
+<span id="more"></span>
+
+<h2 id="Configuration-Settings"><a href="#Configuration-Settings" class="headerlink" title="Configuration Settings"></a>Configuration Settings</h2><h3 id="Configuration-File-Explanation"><a href="#Configuration-File-Explanation" class="headerlink" title="Configuration File Explanation"></a>Configuration File Explanation</h3><p>The <code>config/application-dev.yml</code> file defines key parameters for the Gemini model:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">gai:</span></span><br><span class="line">  <span class="attr">models:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">gemini-pro</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">Google</span> <span class="string">Gemini</span> <span class="string">Pro</span></span><br><span class="line">      <span class="attr">projectId:</span> <span class="string">google-lab</span></span><br><span class="line">      <span class="attr">location:</span> <span class="string">asia-northeast1</span></span><br><span class="line">      <span class="attr">modelName:</span> <span class="string">gemini-pro</span></span><br><span class="line">      <span class="attr">topP:</span> <span class="number">1.0</span></span><br><span class="line">      <span class="attr">temperature:</span> <span class="number">0.9</span></span><br><span class="line">      <span class="attr">maxTokens:</span> <span class="number">-1</span></span><br><span class="line">      <span class="attr">modelProvider:</span> <span class="string">GEMINI</span></span><br></pre></td></tr></table></figure>
+
+<p>These parameters include model ID, location, characteristics, etc., essential for connecting to and using the Gemini model.</p>
+<h3 id="ModelProvider-Enumeration"><a href="#ModelProvider-Enumeration" class="headerlink" title="ModelProvider Enumeration"></a>ModelProvider Enumeration</h3><p>The <code>ModelProvider</code> enumeration includes the <code>GEMINI</code> option for identifying different model providers:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">ModelProvider</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    GEMINI,</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Gemini-Chat-Model-Strategy"><a href="#Gemini-Chat-Model-Strategy" class="headerlink" title="Gemini Chat Model Strategy"></a>Gemini Chat Model Strategy</h2><h3 id="Implementation-of-GeminiChatModelStrategy"><a href="#Implementation-of-GeminiChatModelStrategy" class="headerlink" title="Implementation of GeminiChatModelStrategy"></a>Implementation of GeminiChatModelStrategy</h3><p><code>GeminiChatModelStrategy</code> defines the strategy for creating and configuring the Gemini model, which is activated when <code>ModelProvider.GEMINI</code> is detected:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Ref:</span></span><br><span class="line"><span class="comment"> * https://cloud.google.com/vertex-ai/docs/generative-ai/model-reference/gemini</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GeminiChatModelStrategy</span> <span class="keyword">implements</span> <span class="title class_">ChatModelCreationStrategy</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">applies</span><span class="params">(ModelProvider provider)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> provider == ModelProvider.GEMINI;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> ChatStreamProxy <span class="title function_">createChat</span><span class="params">(LLMProperties properties)</span> &#123;</span><br><span class="line">        log.debug(<span class="string">&quot;Using GeminiChatModelStrategy to create VertexAiGeminiStreamingChatModel&quot;</span>);</span><br><span class="line">        <span class="type">StreamingChatLanguageModel</span> <span class="variable">streamingChatLanguageModel</span> <span class="operator">=</span> VertexAiGeminiStreamingChatModel.builder()</span><br><span class="line">                .project(properties.getProjectId())</span><br><span class="line">                .location(properties.getLocation())</span><br><span class="line">                .modelName(properties.getModelName())</span><br><span class="line">                .build();</span><br><span class="line">        <span class="type">ChatStreamProxy</span> <span class="variable">chatStreamProxy</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ChatStreamProxy</span>(streamingChatLanguageModel);</span><br><span class="line">        chatStreamProxy.setCanHandleSystemMessages(Boolean.FALSE);</span><br><span class="line">        <span class="keyword">return</span> chatStreamProxy;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>In this class, the strategy for when to use the Gemini model is defined. When the provider is <code>GEMINI</code>, a <code>VertexAiGeminiStreamingChatModel</code> is created with the provided properties. The <code>ChatStreamProxy</code> created here is configured not to handle system messages, as Gemini currently doesn’t support them.</p>
+<h2 id="Chat-Stream-Proxy"><a href="#Chat-Stream-Proxy" class="headerlink" title="Chat Stream Proxy"></a>Chat Stream Proxy</h2><h3 id="Role-and-Functionality-of-ChatStreamProxy"><a href="#Role-and-Functionality-of-ChatStreamProxy" class="headerlink" title="Role and Functionality of ChatStreamProxy"></a>Role and Functionality of ChatStreamProxy</h3><p>The <code>ChatStreamProxy</code> class plays a pivotal role in chat functionalities, deciding the method based on the model type (streaming or non-streaming):</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Proxy handling chat stream capabilities, including support for streaming and system messages.</span></span><br><span class="line"><span class="comment"> * StreamingChatLanguageModel is used if the model supports streaming.</span></span><br><span class="line"><span class="comment"> * Otherwise, ChatLanguageModel is used and streaming is simulated.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@FieldDefaults(level = lombok.AccessLevel.PRIVATE)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ChatStreamProxy</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Indicates if this proxy supports streaming chat.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="type">Boolean</span> <span class="variable">canStreamChat</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Indicates if this proxy can handle system messages.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Setter</span> <span class="meta">@Getter</span></span><br><span class="line">    <span class="type">Boolean</span> <span class="variable">canHandleSystemMessages</span> <span class="operator">=</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="type">ChatLanguageModel</span> <span class="variable">chatLanguageModel</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="type">StreamingChatLanguageModel</span> <span class="variable">streamingChatLanguageModel</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Constructor for non-streaming models</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ChatStreamProxy</span><span class="params">(ChatLanguageModel chatLanguageModel)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.chatLanguageModel = chatLanguageModel;</span><br><span class="line">        <span class="built_in">this</span>.canStreamChat = <span class="literal">false</span>;</span><br><span class="line">        log.debug(<span class="string">&quot;Established non-streaming chat proxy canStreamChat=&#123;&#125;, chatLanguageModel=&#123;&#125;&quot;</span>, canStreamChat, chatLanguageModel);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Constructor for streaming models</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ChatStreamProxy</span><span class="params">(StreamingChatLanguageModel streamingChatLanguageModel)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.streamingChatLanguageModel = streamingChatLanguageModel;</span><br><span class="line">        <span class="built_in">this</span>.canStreamChat = <span class="literal">true</span>;</span><br><span class="line">        log.debug(<span class="string">&quot;Established streaming chat proxy canStreamChat=&#123;&#125;, streamingChatLanguageModel=&#123;&#125;&quot;</span>, canStreamChat,</span><br><span class="line">                streamingChatLanguageModel);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Generates chat responses based on the model type.</span></span><br><span class="line"><span class="comment">     * Simulates streaming for non-streaming models by breaking down AI messages into characters.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> messages Chat messages list</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> handler  Handler for streaming responses</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">generate</span><span class="params">(List&lt;ChatMessage&gt; messages, StreamingResponseHandler&lt;AiMessage&gt; handler)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.canStreamChat) &#123;</span><br><span class="line">            streamingChatLanguageModel.generate(messages, handler);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// Handling non-streaming models</span></span><br><span class="line">            Response&lt;AiMessage&gt; response = chatLanguageModel.generate(messages);</span><br><span class="line">            <span class="type">String</span> <span class="variable">aiMessageText</span> <span class="operator">=</span> response.content().text();</span><br><span class="line">            log.debug(<span class="string">&quot;Received complete AI response: &#123;&#125;&quot;</span>, aiMessageText);</span><br><span class="line">            <span class="comment">// Simulating streaming response</span></span><br><span class="line">            simulateStreamingResponse(aiMessageText, handler);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Simulates streaming response, sending message content character by character.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> aiMessageText AI message text</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> handler       Streaming response handler</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">simulateStreamingResponse</span><span class="params">(String aiMessageText, StreamingResponseHandler&lt;AiMessage&gt; handler)</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">char</span> character : aiMessageText.toCharArray()) &#123;</span><br><span class="line">            handler.onNext(String.valueOf(character));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// Completing the process</span></span><br><span class="line">        Response&lt;AiMessage&gt; response = Response.from(</span><br><span class="line">                AiMessage.from(aiMessageText),</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">TokenUsage</span>(<span class="number">0</span>, <span class="number">0</span>), <span class="comment">// <span class="doctag">TODO:</span> Token calculation</span></span><br><span class="line">                FinishReason.STOP);</span><br><span class="line">        handler.onComplete(response);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>In this class, constructors cater to different model types, with the ability to simulate streaming for non-streaming models.</p>
+<h2 id="Chat-Service-Implementation"><a href="#Chat-Service-Implementation" class="headerlink" title="Chat Service Implementation"></a>Chat Service Implementation</h2><h3 id="Overview-of-the-ChatService-Class"><a href="#Overview-of-the-ChatService-Class" class="headerlink" title="Overview of the ChatService Class"></a>Overview of the ChatService Class</h3><p>The <code>ChatService</code> class in our implementation manages the interactions with the chat functionality within the application. It plays a crucial role in initializing chat models, handling requests, and generating responses based on user inputs and application configurations.</p>
+<h3 id="Key-Code-Segment-in-ChatService"><a href="#Key-Code-Segment-in-ChatService" class="headerlink" title="Key Code Segment in ChatService"></a>Key Code Segment in ChatService</h3><p>An important segment in the <code>ChatService</code> class is as follows:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// It is important to know the model to be used beforehand, as SystemMessage is currently not supported by Gemini</span></span><br><span class="line"><span class="type">ChatStreamProxy</span> <span class="variable">chatStreamProxy</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="comment">// Some code omitted for brevity</span></span><br><span class="line">log.debug(<span class="string">&quot;Using default model &#123;&#125;&quot;</span>, modelConfig.getProvider());</span><br><span class="line"><span class="type">LLMProperties</span> <span class="variable">properties</span> <span class="operator">=</span> chatModelFactory.getModelProperties(applicationProperties.getModels(),</span><br><span class="line">                    modelConfig.getProvider());</span><br><span class="line">chatStreamProxy = chatModelFactory.createChat(properties);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Applying variables and creating the final prompt</span></span><br><span class="line">promptVariables.put(<span class="string">&quot;prePrompt&quot;</span>, app.getPrePrompt());</span><br><span class="line"><span class="type">Prompt</span> <span class="variable">prompt</span> <span class="operator">=</span> promptTemplate.apply(promptVariables);</span><br><span class="line">log.debug(<span class="string">&quot;SystemMessage=&#123;&#125;&quot;</span>, prompt.toSystemMessage().text());</span><br><span class="line"><span class="keyword">if</span> (chatStreamProxy.getCanHandleSystemMessages()) &#123;</span><br><span class="line">    chatMemory.add(prompt.toSystemMessage());</span><br><span class="line">    chatMemory.add(UserMessage.from(chatRqDto.getHumanMessage()));</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    chatMemory.add(UserMessage.from(prompt.text() + chatRqDto.getHumanMessage()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>In this code, the determination of the model to be used is crucial, especially since Gemini does not currently support <code>SystemMessage</code>. The <code>ChatStreamProxy</code> instance is created based on the model configuration. The application of variables and creation of the final prompt are then carried out, with a check to see if the model can handle system messages. If it can, both the prompt (as a system message) and the user message are added to the chat memory. If not, the system message text is concatenated with the user message, addressing the limitation that Gemini does not support <code>SystemMessage</code>.</p>
+<h3 id="Explanation-of-Key-Code"><a href="#Explanation-of-Key-Code" class="headerlink" title="Explanation of Key Code"></a>Explanation of Key Code</h3><ol>
+<li><p><strong>Model Determination</strong>: Initially, the model to be used is determined. This is crucial because the Gemini model currently does not support <code>SystemMessage</code>, which affects how messages are processed and added to the chat memory.</p>
+</li>
+<li><p><strong>ChatStreamProxy Creation</strong>: Depending on the model selected, a <code>ChatStreamProxy</code> is instantiated. This proxy will determine how the chat model will be interacted with, especially in terms of streaming capabilities and handling system messages.</p>
+</li>
+<li><p><strong>Prompt Creation and Application</strong>: The <code>prePrompt</code> from the application settings is applied to the prompt template. This step is essential for constructing the final message format to be sent to the chat model.</p>
+</li>
+<li><p><strong>Handling System Messages</strong>: The system checks if the model, encapsulated within <code>ChatStreamProxy</code>, can handle system messages. If it can, the system and user messages are added separately to the chat memory. If not, due to the current limitation of Gemini, the system message text is concatenated with the user message before being added to the chat memory. This adaptation is crucial for ensuring compatibility with models that do not support <code>SystemMessage</code>.</p>
+</li>
+</ol>
+<h2 id="Special-Considerations"><a href="#Special-Considerations" class="headerlink" title="Special Considerations"></a>Special Considerations</h2><h3 id="Handling-of-SystemMessage"><a href="#Handling-of-SystemMessage" class="headerlink" title="Handling of SystemMessage"></a>Handling of SystemMessage</h3><p>In using Gemini, it’s important to note the lack of support for <code>SystemMessage</code>. This limitation necessitates adapting the <code>ChatService</code> implementation to ensure that functionalities depending on system messages are appropriately modified or redesigned.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/langchain4j/langchain4j/tree/main">Langchain4j</a></li>
+</ul>
+<p>I would like to sincerely thank all the contributors of <code>langchain4j</code> for their invaluable work and dedication. Their efforts have significantly eased the process of implementing complex language models like Gemini, allowing developers, including myself, to achieve rapid and efficient integration.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>Sam Zhu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.samzhu.dev/2023/12/25/Integrating-Google-Gemini-with-langchain4j/" title="Integrating Google Gemini with langchain4j">https://blog.samzhu.dev/2023/12/25/Integrating-Google-Gemini-with-langchain4j/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Spring/" rel="tag"># Spring</a>
+              <a href="/tags/Langchain4j/" rel="tag"># Langchain4j</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/12/19/Integrating-Vector-Data-with-Langchain4j-PostgreSQL-and-Liquibase-in-Spring-Boot/" rel="prev" title="Integrating Vector Data with Langchain4j PostgreSQL and Liquibase in Spring Boot">
+                  <i class="fa fa-angle-left"></i> Integrating Vector Data with Langchain4j PostgreSQL and Liquibase in Spring Boot
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/01/11/Achieving-Seamless-SSH-Experience-and-Java-Development-Setup-in-VS-Code-Dev-Containers/" rel="next" title="Achieving Seamless SSH Experience and Java Development Setup in VS Code DevContainers">
+                  Achieving Seamless SSH Experience and Java Development Setup in VS Code DevContainers <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sam Zhu</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/samzhu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.3.0/mermaid.min.js","integrity":"sha256-9y71g5Lz/KLsHjB8uXwnkuWDtAMDSzD/HdIbqhJfTAI="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
